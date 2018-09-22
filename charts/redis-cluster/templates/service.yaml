@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "redis-cluster.fullname" . }}
+  labels:
+    app: {{ template "redis-cluster.name" . }}
+    chart: {{ template "redis-cluster.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 6379
+      targetPort: client
+      protocol: TCP
+      name: client
+    # NOTE: we expose only one port so MDNS request will return actual amount of redis instances. Need to modify redis-trib script in case of multiple ports
+    # - port: 16379
+    #   targetPort: gossip
+    #   protocol: TCP
+    #   name: gossip
+  selector:
+    app: {{ template "redis-cluster.name" . }}
+    release: {{ .Release.Name }}
