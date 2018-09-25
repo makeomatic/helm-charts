@@ -36,16 +36,18 @@ spec:
         {{- end }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          {{- if .Values.healtcheck.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.healtcheck.path }}
+              port: http
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.healtcheck.path }}
+              port: http
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

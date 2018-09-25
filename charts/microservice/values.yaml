@@ -9,6 +9,10 @@ service:
   type: ClusterIP
   port: 8080
 
+healtcheck:
+  enabled: false
+  path: /
+
 ingress:
   enabled: false
   annotations: {}
