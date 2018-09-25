@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+ensure() {
+  eval value=\$$1
+  if [ -z "$value" ]; then
+    echo "variable $1 shoud be set"
+    exit 1
+  fi
+}
+
+ensure CLOUDSDK_API_KEY
+ensure CLOUDSDK_COMPUTE_ZONE
+ensure CLOUDSDK_CORE_PROJECT
+ensure KUBERNETES_CLUSTER
+
+echo "Setup kubernetes access to ${CLOUDSDK_CORE_PROJECT}/${KUBERNETES_CLUSTER}"
+echo $CLOUDSDK_API_KEY | base64 -d > ./gcloud-api-key.json
+gcloud auth activate-service-account --key-file gcloud-api-key.json
+gcloud container clusters get-credentials $KUBERNETES_CLUSTER
+gcloud auth configure-docker --quiet
