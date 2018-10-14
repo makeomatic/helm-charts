@@ -1,6 +1,6 @@
 FROM node:10.9.0-alpine
 
-RUN apk --no-cache add bash git openssh-client docker curl \
+RUN apk --no-cache add bash git openssh-client docker curl jq \
     python py-crcmod libc6-compat gnupg
 
 ENV CLOUD_SDK_VERSION=216.0.0
