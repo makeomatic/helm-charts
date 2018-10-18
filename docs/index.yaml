@@ -3,7 +3,16 @@ entries:
   microservice:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-14T22:06:54.033575+03:00
+    created: 2018-10-19T00:32:21.525402+03:00
+    description: Base chart for makeomatic microservices
+    digest: de029970a2a1d53d59d972711be654e1e204b132b741d745dc0f115ba5d7d73f
+    name: microservice
+    urls:
+    - https://makeomatic.github.io/helm-charts/microservice-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-10-19T00:32:21.525041+03:00
     description: Base chart for makeomatic microservices
     digest: fca78f1eb28b205e45475ef9eee0dcd3395303f330f201aca58264f24824d69b
     name: microservice
@@ -12,7 +21,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-14T22:06:54.033256+03:00
+    created: 2018-10-19T00:32:21.524439+03:00
     description: Base chart for makeomatic microservices
     digest: 075ff6def990208db8961ce22cd686d1b06ebc882062782dc7c1beb662b4337b
     name: microservice
@@ -21,7 +30,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-14T22:06:54.032468+03:00
+    created: 2018-10-19T00:32:21.523688+03:00
     description: Base chart for makeomatic microservices
     digest: 3235762157aea49fe9aba789df8b0386db222b964074e6d820813abe1758576b
     name: microservice
@@ -31,11 +40,11 @@ entries:
   redis-cluster:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-14T22:06:54.033872+03:00
+    created: 2018-10-19T00:32:21.525715+03:00
     description: Redis cluster service
-    digest: 070c7a1b58101ca6b4f2a4b423d32fe7339ce299ccc0229ce4fcdf6a555ab981
+    digest: 40f91e3a4daf36a7ed125d90c0cb2b383b2ad560934f3dbb26906f2689ce8557
     name: redis-cluster
     urls:
     - https://makeomatic.github.io/helm-charts/redis-cluster-0.1.0.tgz
     version: 0.1.0
-generated: 2018-10-14T22:06:54.03112+03:00
+generated: 2018-10-19T00:32:21.521723+03:00

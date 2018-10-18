@@ -17,6 +17,6 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      app: {{ template "ms.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "ms.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

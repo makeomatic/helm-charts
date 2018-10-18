@@ -1,8 +1,7 @@
+fullnameOverride: ""
 replicaCount: 2
 
 nameOverride: ""
-fullnameOverride: ""
-
 serviceAccountName: ""
 
 image:
@@ -34,16 +33,27 @@ tolerations: []
 
 antiAffinity: "soft"
 
+# https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 podDisruptionBudget:
   enabled: true
   minAvailable: 1
   # maxUnavailable: 1
 
 extraVars: {}
-# - name: TCMALLOC_AGGRESSIVE_DECOMMIT
-#   value: "true"
+  # - name: TCMALLOC_AGGRESSIVE_DECOMMIT
+  #   value: "true"
 
-config:
-  enabled: false
-  name: ms-configs
-  path: /configs
+configuration: {}
+# configuration:
+#   config.js: |-
+#     module.exports = {
+#       logger: {
+#         defaultLogger: true,
+#         debug: true,
+#         streams: {
+#           sentry: {
+#             dns: '...',
+#           },
+#         },
+#       }
+#     }

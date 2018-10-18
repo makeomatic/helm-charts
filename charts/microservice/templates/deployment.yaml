@@ -28,15 +28,15 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-        {{- if .Values.extraVars }}
           env:
+            - name: NCONF_FILE_PATH
+              value: /config
+        {{- if .Values.extraVars }}
 {{ toYaml .Values.extraVars | indent 12 }}
         {{- end }}
-        {{- if .Values.config.enabled }}
           volumeMounts:
-          - mountPath: {{ .Values.config.path }}
-            name: configs
-        {{- end }}
+          - mountPath: /config
+            name: config
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -82,9 +82,7 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
-      {{- if .Values.config.enabled }}  
       volumes:
-      - name: configs
+      - name: config
         configMap:
-          name: {{ .Values.config.name }}
-      {{- end }}
+          name: {{ include "ms.fullname" . }}-config
