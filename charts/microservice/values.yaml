@@ -1,5 +1,10 @@
 replicaCount: 2
 
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccountName: ""
+
 image:
   repository: nginx
   tag: stable
@@ -11,7 +16,7 @@ service:
 
 healtcheck:
   enabled: false
-  path: /
+  path: /generic/health
 
 ingress:
   enabled: false

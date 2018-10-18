@@ -1,25 +1,28 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "ms.fullname" . }}
+  name: {{ include "ms.fullname" . }}
   labels:
-    app: {{ template "ms.name" . }}
-    chart: {{ template "ms.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "ms.name" . }}
+    helm.sh/chart: {{ include "ms.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  revisionHistoryLimit: 10
+  {{- if eq .Values.serviceAccountName "" }}
   automountServiceAccountToken: false
+  {{- else }}
+  serviceAccountName: "{{ .Values.serviceAccountName }}"
+  {{- end }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "ms.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "ms.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "ms.name" . }}
-        release: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "ms.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -61,9 +64,8 @@ spec:
             - topologyKey: "kubernetes.io/hostname"
               labelSelector:
                 matchLabels:
-                  app: {{ template "ms.name" . }}
-                  chart: {{ template "ms.chart" . }}
-                  release: {{ .Release.Name }}
+                  app.kubernetes.io/name: {{ include "ms.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
       {{- else if eq .Values.antiAffinity "soft" }}
       affinity:
         podAntiAffinity:
@@ -73,9 +75,8 @@ spec:
               topologyKey: kubernetes.io/hostname
               labelSelector:
                 matchLabels:
-                  app: {{ template "ms.name" . }}
-                  chart: {{ template "ms.chart" . }}
-                  release: {{ .Release.Name }}
+                  app.kubernetes.io/name: {{ include "ms.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
       {{- end }}
     {{- with .Values.tolerations }}
       tolerations:
