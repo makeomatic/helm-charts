@@ -1,0 +1,44 @@
+# kubectl create job --from=cronjob/descheduler deschedule-manual
+image:
+  # TODO: use own image ?
+  repository: komljen/descheduler
+  tag: v0.7.0
+  pullPolicy: IfNotPresent
+
+schedule: "*/30 * * * *"
+
+cmdOptions:
+  v: 4
+  max-pods-to-evict-per-node: 10
+
+# https://github.com/kubernetes-incubator/descheduler#policy-and-strategies
+deschedulerPolicy:
+  strategies:
+    RemoveDuplicates:
+      enabled: false
+    LowNodeUtilization:
+      enabled: true
+      params:
+        nodeResourceUtilizationThresholds:
+          thresholds:
+            cpu: 20
+            memory: 20
+            pods: 20
+          targetThresholds:
+            cpu: 50
+            memory: 50
+            pods: 50
+    RemovePodsViolatingInterPodAntiAffinity:
+      enabled: true
+    RemovePodsViolatingNodeAffinity:
+      enabled: true
+      params:
+        nodeAffinityType:
+        - requiredDuringSchedulingIgnoredDuringExecution
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name:

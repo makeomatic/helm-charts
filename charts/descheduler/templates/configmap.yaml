@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "descheduler.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "descheduler.name" . }}
+    helm.sh/chart: {{ include "descheduler.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  deschedulerpolicy.yaml: |-
+    apiVersion: descheduler/v1alpha1
+    kind: DeschedulerPolicy
+{{ toYaml .Values.deschedulerPolicy | indent 4 }}

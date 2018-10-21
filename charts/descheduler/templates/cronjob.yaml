@@ -1,0 +1,48 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "descheduler.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "descheduler.name" . }}
+    helm.sh/chart: {{ include "descheduler.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "descheduler.name" . }}
+        helm.sh/chart: {{ include "descheduler.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: "true"
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+    spec:
+      parallelism: 1
+      completions: 1
+      template:
+        spec:
+          restartPolicy: Never
+          serviceAccountName: {{ include "descheduler.serviceAccountName" . }}
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            volumeMounts:
+            - mountPath: /policy-dir
+              name: policy-volume
+            command:
+            - /bin/descheduler
+            - --policy-config-file=/policy-dir/deschedulerpolicy.yaml
+            {{- range $key, $value := .Values.cmdOptions }}
+            - --{{ $key }}{{ if $value }}={{ $value }}{{ end }}
+            {{- end }}
+          volumes:
+          - name: policy-volume
+            configMap:
+              name: {{ include "descheduler.fullname" . }}
