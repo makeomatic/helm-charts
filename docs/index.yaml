@@ -1,18 +1,28 @@
 apiVersion: v1
 entries:
+  descheduler:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-10-21T19:25:19.195888+03:00
+    description: A Helm chart for Kubernetes Deschedyler
+    digest: d844b46a24218f88155e0b15175cf7d151875e26d538767da426a4d45a19efda
+    name: descheduler
+    urls:
+    - https://makeomatic.github.io/helm-charts/descheduler-0.1.0.tgz
+    version: 0.1.0
   microservice:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-19T00:32:21.525402+03:00
+    created: 2018-10-21T19:25:19.198819+03:00
     description: Base chart for makeomatic microservices
-    digest: de029970a2a1d53d59d972711be654e1e204b132b741d745dc0f115ba5d7d73f
+    digest: 224b4297fe818c614787621b3049454dc6aba0c8690595d1c89e5ec4606b5d70
     name: microservice
     urls:
     - https://makeomatic.github.io/helm-charts/microservice-1.0.0.tgz
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-19T00:32:21.525041+03:00
+    created: 2018-10-21T19:25:19.198366+03:00
     description: Base chart for makeomatic microservices
     digest: fca78f1eb28b205e45475ef9eee0dcd3395303f330f201aca58264f24824d69b
     name: microservice
@@ -21,7 +31,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-19T00:32:21.524439+03:00
+    created: 2018-10-21T19:25:19.197423+03:00
     description: Base chart for makeomatic microservices
     digest: 075ff6def990208db8961ce22cd686d1b06ebc882062782dc7c1beb662b4337b
     name: microservice
@@ -30,7 +40,7 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-19T00:32:21.523688+03:00
+    created: 2018-10-21T19:25:19.196478+03:00
     description: Base chart for makeomatic microservices
     digest: 3235762157aea49fe9aba789df8b0386db222b964074e6d820813abe1758576b
     name: microservice
@@ -40,11 +50,11 @@ entries:
   redis-cluster:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-10-19T00:32:21.525715+03:00
+    created: 2018-10-21T19:25:19.199109+03:00
     description: Redis cluster service
-    digest: 40f91e3a4daf36a7ed125d90c0cb2b383b2ad560934f3dbb26906f2689ce8557
+    digest: 47d9cb802bd89607e8307ce4bd896999ac9b4502de5828f6f20c6b7f024dc578
     name: redis-cluster
     urls:
     - https://makeomatic.github.io/helm-charts/redis-cluster-0.1.0.tgz
     version: 0.1.0
-generated: 2018-10-19T00:32:21.521723+03:00
+generated: 2018-10-21T19:25:19.194767+03:00
