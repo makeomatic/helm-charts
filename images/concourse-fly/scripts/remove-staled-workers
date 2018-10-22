@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+ensure() {
+  eval value=\$$1
+  if [ -z "$value" ]; then
+    echo "variable $1 shoud be set"
+    exit 1
+  fi
+}
+
+ensure URL
+ensure LOGIN
+ensure PASSWORD
+
+fly login -t sl -c $URL -u $LOGIN -p $PASSWORD
+for worker in `fly -t sl workers | grep stalled | awk '{print $1;}'`; do
+	echo "Removing worker ${worker}..."
+	fly -t sl prune-worker -w $worker
+done
