@@ -1,7 +1,15 @@
 {{/* vim: set filetype=mustache: */}}
-{{/*
-Expand the name of the chart.
-*/}}
+
+{{- define "http.serviceName" -}}
+{{- $defaultName := include "ms.fullname" . -}}
+{{- default (printf "%s-%s" $defaultName "http")  .Values.http.service.nameOverride -}}
+{{- end -}}
+
+{{- define "grpc.serviceName" -}}
+{{- $defaultName := include "ms.fullname" . -}}
+{{- default (printf "%s-%s" $defaultName "grpc")  .Values.grpc.service.nameOverride -}}
+{{- end -}}
+
 {{- define "ms.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}

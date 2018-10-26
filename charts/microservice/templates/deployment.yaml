@@ -38,18 +38,25 @@ spec:
           - mountPath: /config
             name: config
           ports:
+          {{ if .Values.http.enabled }}
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.http.service.port }}
               protocol: TCP
-          {{- if .Values.healtcheck.enabled }}
+          {{- end }}
+          {{ if .Values.grpc.enabled }}
+            - name: grpc
+              containerPort: {{ .Values.grpc.service.port }}
+              protocol: TCP
+          {{- end }}
+          {{- if .Values.health.enabled }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.healtcheck.path }}
-              port: http
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.healtcheck.path }}
-              port: http
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

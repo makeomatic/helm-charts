@@ -1,0 +1,33 @@
+{{- if and .Values.grpc.enabled (ne .Values.grpc.ingress.host "") }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "ms.fullname" . }}-grpc
+  labels:
+    app.kubernetes.io/name: {{ include "ms.name" . }}
+    helm.sh/chart: {{ include "ms.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+{{- with .Values.grpc.ingress.annotations }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.grpc.ingress.createTls }}
+  tls:
+    - hosts:
+        - {{ .Values.grpc.ingress.host }}
+      secretName: {{ include "ms.fullname" . }}-grpc-tls
+{{- end }}
+  rules:
+    - host: {{ .Values.grpc.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.grpc.ingress.path }}
+            backend:
+              serviceName: {{ include "grpc.serviceName" .}}
+              servicePort: {{ .Values.grpc.service.port }}
+{{- end }}
