@@ -19,7 +19,7 @@ http:
   service:
     nameOverride: "" # ability to rewrite default service name
     type: ClusterIP
-    port: 8080
+    port: 3000
   ingress:
     host: "" # do not create ingress if empty
     path: /
@@ -31,7 +31,7 @@ grpc:
   service:
     nameOverride: ""
     type: ClusterIP
-    port: 8081
+    port: 4000
   ingress:
     host: ""
     path: /
