@@ -1,5 +1,5 @@
 rabbitmq-ha:
-  enabled: true
+  enabled: false
   fullnameOverride: amqp
   replicaCount: 2
   terminationGracePeriodSeconds: 1
@@ -17,5 +17,12 @@ rabbitmq-ha:
   rabbitmqErlangCookie: WDlWNno4N1R0QmhncFNnMVpTMGpzQUozbXBZUmFncEI= # avoid reloading on each `helm diff`
 
 redis-cluster:
-  enabled: true
+  enabled: false
   fullnameOverride: redis
+
+redis-ha:
+  ebabled: false
+  fullnameOverride: redis
+  replicas:
+    servers: 1
+    sentinels: 1

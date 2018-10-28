@@ -7,3 +7,7 @@ dependencies:
     version: ~0.1.0
     repository: https://makeomatic.github.io/helm-charts
     condition: redis-cluster.enabled
+  - name: redis-ha
+    version: ~2.2.4
+    repository: https://makeomatic.github.io/helm-charts
+    condition: redis-ha.enabled
