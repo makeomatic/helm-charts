@@ -1,0 +1,12 @@
+dependencies:
+- name: rabbitmq-ha
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 1.10.0
+- name: redis-cluster
+  repository: https://makeomatic.github.io/helm-charts
+  version: 0.1.0
+- name: redis-ha
+  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 2.2.4
+digest: sha256:acdf27912ff25e1d93f196d32d5b08103f736b2c03be543f193e37529ea36036
+generated: 2018-10-28T15:31:20.311078+03:00

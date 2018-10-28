@@ -9,5 +9,5 @@ dependencies:
     condition: redis-cluster.enabled
   - name: redis-ha
     version: ~2.2.4
-    repository: https://makeomatic.github.io/helm-charts
+    repository: https://kubernetes-charts.storage.googleapis.com/
     condition: redis-ha.enabled
