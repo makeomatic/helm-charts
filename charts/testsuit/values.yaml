@@ -1,0 +1,21 @@
+rabbitmq-ha:
+  enabled: true
+  fullnameOverride: amqp
+  replicaCount: 2
+  terminationGracePeriodSeconds: 1
+  policies: |-
+    {
+      "name": "ha-all",
+      "pattern": ".*",
+      "vhost": "/",
+      "definition": {
+        "ha-mode": "all",
+        "ha-sync-mode": "automatic",
+        "ha-sync-batch-size": 1
+      }
+    }
+  rabbitmqErlangCookie: WDlWNno4N1R0QmhncFNnMVpTMGpzQUozbXBZUmFncEI= # avoid reloading on each `helm diff`
+
+redis-cluster:
+  enabled: true
+  fullnameOverride: redis

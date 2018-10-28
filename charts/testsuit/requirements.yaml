@@ -1,0 +1,9 @@
+dependencies:
+  - name: rabbitmq-ha
+    version: ~1.10.0
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    condition: rabbitmq-ha.enabled
+  - name: redis-cluster
+    version: ~0.1.0
+    repository: https://makeomatic.github.io/helm-charts
+    condition: redis-cluster.enabled
