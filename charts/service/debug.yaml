@@ -1,0 +1,6 @@
+fullnameOverride: test
+replicaCount: 1
+health:
+  enabled: false
+consulConfig:
+  enabled: true

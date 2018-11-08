@@ -1,0 +1,124 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "ms.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "ms.name" . }}
+    helm.sh/chart: {{ include "ms.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  {{- if eq .Values.serviceAccountName "" }}
+  automountServiceAccountToken: false
+  {{- else }}
+  serviceAccountName: "{{ .Values.serviceAccountName }}"
+  {{- end }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "ms.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "ms.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      initContainers:
+      
+      - name: consul-template
+        image: hashicorp/consul-template:alpine
+        env:
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+        volumeMounts:
+        - name: consul-template
+          mountPath: /template
+        - name: config
+          mountPath: /config
+        command:
+          - sh
+          - -ec
+          - |
+            USER_HOST="{{ .Values.consulConfig.host }}"
+            CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
+            CONSUL_PORT="{{ .Values.consulConfig.port }}"
+
+            consul-template \
+            -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
+            -config=/template/config.hcl \
+            -template "/template/config.tpl:/config/{{ .Values.consulConfig.file }}" \
+            -log-level=debug \
+            -once
+
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+        {{- if .Values.env }}
+{{ toYaml .Values.env | indent 12 }}
+        {{- end }}
+          volumeMounts:
+          - mountPath: {{ .Values.consulConfig.path }}
+            name: config
+          ports:
+          {{ if .Values.http.enabled }}
+            - name: http
+              containerPort: {{ .Values.http.service.port }}
+              protocol: TCP
+          {{- end }}
+          {{ if .Values.grpc.enabled }}
+            - name: grpc
+              containerPort: {{ .Values.grpc.service.port }}
+              protocol: TCP
+          {{- end }}
+          {{- if .Values.health.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.health.path }}
+              port: {{ .Values.health.port }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      {{- if eq .Values.antiAffinity "hard" }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "ms.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- else if eq .Values.antiAffinity "soft" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: {{ include "ms.name" . }}
+                  app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: config
+        emptyDir: {}
+      - name: consul-template
+        configMap:
+          name: {{ include "ms.fullname" . }}-consul-template

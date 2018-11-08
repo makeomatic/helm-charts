@@ -1,0 +1,79 @@
+fullnameOverride: ""
+replicaCount: 2
+
+nameOverride: ""
+serviceAccountName: ""
+
+image:
+  repository: nginx
+  tag: stable
+  pullPolicy: IfNotPresent
+
+health:
+  enabled: true
+  path: /generic/health
+  port: http
+
+http:
+  enabled: false
+  service:
+    nameOverride: "" # ability to rewrite default service name
+    type: ClusterIP
+    port: 3000
+  ingress:
+    host: "" # do not create ingress if empty
+    path: /
+    createTls: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+
+grpc:
+  enabled: false
+  service:
+    nameOverride: ""
+    type: ClusterIP
+    port: 4000
+  ingress:
+    host: ""
+    path: /
+    createTls: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+
+resources: {}
+  
+nodeSelector: {}
+
+tolerations: []
+
+antiAffinity: "soft"
+
+# https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# env: {}
+env:
+  # - name: NCONF_FILE_PATH
+  #   value: /config
+
+consulConfig:
+  enabled: false
+  host: "" # if consul host is not set - will take IP of the node
+  port: 8500
+  path: /config
+  file: config.txt
+  once: true
+  templateConfig: |-
+    consul {
+    }
+  template: |-
+    amqp:
+      host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+      password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+    redis:
+      settings:
+        host: {{ keyOrDefault "staging/redisHost" "redishost" }}
