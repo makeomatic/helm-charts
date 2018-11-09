@@ -93,9 +93,10 @@ consul:
     consul {
     }
   # do not watch for consul values (generate config once before service starts)
-  once: true
+  # once: true
   # execute command on config reload
-  onReload: "echo Config is rendered"
+  # onReload: "echo Config is rendered"
+  logLevel: debug
   # object with templates
   templates: {}
     # config.yml: |-

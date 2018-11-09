@@ -45,6 +45,16 @@ spec:
             USER_HOST="{{ .Values.consul.host }}"
             CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
             CONSUL_PORT="{{ .Values.consul.port }}"
+
+            consul-template \
+            -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
+            -consul-retry-attempts=3 \
+            -config=/template/config.hcl \
+            {{- range $filename, $content := .Values.consul.templates }}
+            -template "/template/{{ $filename }}:/config/{{ $filename }}" \
+            {{- end }}
+            -log-level={{ .Values.consul.logLevel }} \
+            -once
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -115,5 +125,5 @@ spec:
       {{- if .Values.consul.templates }}
       - name: consul-template
         configMap:
-          name: {{ include "ms.fullname" . }}-consul-template
+          name: {{ include "ms.fullname" . }}-consul-templates
       {{- end }}
