@@ -1,4 +1,4 @@
-{{ if .Values.http.enabled }}
+{{ if .Values.http.service.port }}
 apiVersion: v1
 kind: Service
 metadata:

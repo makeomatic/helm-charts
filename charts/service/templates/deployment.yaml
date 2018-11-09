@@ -24,8 +24,8 @@ spec:
         app.kubernetes.io/name: {{ include "ms.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.consul.templates }}
       initContainers:
-      
       - name: consul-template
         image: hashicorp/consul-template:alpine
         env:
@@ -42,17 +42,10 @@ spec:
           - sh
           - -ec
           - |
-            USER_HOST="{{ .Values.consulConfig.host }}"
+            USER_HOST="{{ .Values.consul.host }}"
             CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
-            CONSUL_PORT="{{ .Values.consulConfig.port }}"
-
-            consul-template \
-            -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
-            -config=/template/config.hcl \
-            -template "/template/config.tpl:/config/{{ .Values.consulConfig.file }}" \
-            -log-level=debug \
-            -once
-
+            CONSUL_PORT="{{ .Values.consul.port }}"
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -62,20 +55,20 @@ spec:
 {{ toYaml .Values.env | indent 12 }}
         {{- end }}
           volumeMounts:
-          - mountPath: {{ .Values.consulConfig.path }}
+          - mountPath: {{ .Values.consul.path }}
             name: config
           ports:
-          {{ if .Values.http.enabled }}
+          {{ if .Values.http.service.port }}
             - name: http
               containerPort: {{ .Values.http.service.port }}
               protocol: TCP
           {{- end }}
-          {{ if .Values.grpc.enabled }}
+          {{ if .Values.grpc.service.port }}
             - name: grpc
               containerPort: {{ .Values.grpc.service.port }}
               protocol: TCP
           {{- end }}
-          {{- if .Values.health.enabled }}
+          {{- if .Values.health.path }}
           livenessProbe:
             httpGet:
               path: {{ .Values.health.path }}
@@ -119,6 +112,8 @@ spec:
       volumes:
       - name: config
         emptyDir: {}
+      {{- if .Values.consul.templates }}
       - name: consul-template
         configMap:
           name: {{ include "ms.fullname" . }}-consul-template
+      {{- end }}

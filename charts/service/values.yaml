@@ -1,39 +1,50 @@
+### overvite instances name using custom one
 fullnameOverride: ""
+
+### amout of service replicas
 replicaCount: 2
 
-nameOverride: ""
+### if empty - no service token will be mounted into pods
+### othervise will mount token for specified service account
 serviceAccountName: ""
 
+### service docker image
 image:
   repository: nginx
   tag: stable
   pullPolicy: IfNotPresent
 
+### health checks using http routes
+# enabled if `health.path` is set
 health:
-  enabled: true
-  path: /generic/health
+  path: ""
   port: http
 
+### http transport settings
+# enabled if `http.service.port` is set
 http:
   enabled: false
   service:
-    nameOverride: "" # ability to rewrite default service name
+    # ability to rewrite default service name
+    nameOverride: ""
     type: ClusterIP
-    port: 3000
+    port: "" # 3000
   ingress:
-    host: "" # do not create ingress if empty
+    # do not create ingress if host is empty
+    host: ""
     path: /
+    # create tls certificate for specified ingress
     createTls: true
     annotations:
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
 
+### grpc transport settings (same as for .http)
 grpc:
-  enabled: false
   service:
     nameOverride: ""
     type: ClusterIP
-    port: 4000
+    port: "" # 4000
   ingress:
     host: ""
     path: /
@@ -42,38 +53,55 @@ grpc:
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
 
+### amount of resources allowed for the service
 resources: {}
-  
+  # requests:
+  #   memory: 200Mi
+  #   cpu: 100m
+  # limits:
+  #   memory: 700Mi
+
+### 
 nodeSelector: {}
-
 tolerations: []
-
 antiAffinity: "soft"
 
+### tune availability of the service by setting distruption budgets
 # https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
+podDisruptionBudget: {}
+  # maxUnavailable: 1
+  # minAvailable: 1
 
-# env: {}
-env:
+### env variables to inject into pods
+env: {}
   # - name: NCONF_FILE_PATH
   #   value: /config
 
-consulConfig:
-  enabled: false
-  host: "" # if consul host is not set - will take IP of the node
+### service is able to get settings from consul using `consul-template`
+# enabled if `consul.templates` is set
+# https://github.com/hashicorp/consul-template
+consul:
+  # if `consul.host` is not set - will take IP of the node
+  # it is a best practice to launch consul clients on every node
+  host: ""
+  # default consul port
   port: 8500
+  # place where to mount rendered configs
   path: /config
-  file: config.txt
-  once: true
-  templateConfig: |-
+  # additional configuration for `consul-template`
+  config: |-
     consul {
     }
-  template: |-
-    amqp:
-      host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
-      password: {{ keyOrDefault "staging/amqpPassword" "password" }}
-    redis:
-      settings:
-        host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+  # do not watch for consul values (generate config once before service starts)
+  once: true
+  # execute command on config reload
+  onReload: "echo Config is rendered"
+  # object with templates
+  templates: {}
+    # config.yml: |-
+    #   amqp:
+    #     host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+    #     password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+    #   redis:
+    #     settings:
+    #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}

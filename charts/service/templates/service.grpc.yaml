@@ -1,4 +1,4 @@
-{{- if .Values.grpc.enabled -}}
+{{- if .Values.grpc.service.port -}}
 apiVersion: v1
 kind: Service
 metadata:

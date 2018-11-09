@@ -1,4 +1,4 @@
-{{- if and .Values.grpc.enabled (ne .Values.grpc.ingress.host "") }}
+{{- if and .Values.grpc.service.port (ne .Values.grpc.ingress.host "") }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

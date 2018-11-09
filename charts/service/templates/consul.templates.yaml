@@ -1,7 +1,8 @@
+{{ if .Values.consul.templates }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "ms.fullname" . }}-consul-template
+  name: {{ include "ms.fullname" . }}-consul-templates
   labels:
     app.kubernetes.io/name: {{ include "ms.name" . }}
     helm.sh/chart: {{ include "ms.chart" . }}
@@ -9,6 +10,6 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   config.hcl: |-
-{{ .Values.consulConfig.templateConfig | indent 4 }}
-  config.tpl: |-
-{{ .Values.consulConfig.template | indent 4 }}
+{{ .Values.consul.config | indent 4 }}
+{{ toYaml .Values.consul.templates | indent 2 }}
+{{ end }}

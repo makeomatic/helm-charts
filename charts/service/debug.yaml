@@ -1,6 +1,18 @@
+# helm template ./charts/service --name test -f ./charts/service/debug.yaml -x templates/consul.templates.yaml
+# helm install -n test ./charts/service -f ./charts/service/debug.yaml --dry-run --debug
 fullnameOverride: test
 replicaCount: 1
-health:
-  enabled: false
-consulConfig:
-  enabled: true
+
+http:
+  service:
+    port: 3000
+
+consul:
+  templates:
+    config.yml: |-
+      amqp:
+        host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+        password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+      redis:
+        settings:
+          host: {{ keyOrDefault "staging/redisHost" "redishost" }}
