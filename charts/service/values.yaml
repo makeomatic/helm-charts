@@ -11,7 +11,7 @@ serviceAccountName: ""
 ### service docker image
 image:
   repository: nginx
-  tag: stable
+  tag: latest
   pullPolicy: IfNotPresent
 
 ### health checks using http routes
@@ -23,7 +23,6 @@ health:
 ### http transport settings
 # enabled if `http.service.port` is set
 http:
-  enabled: false
   service:
     # ability to rewrite default service name
     nameOverride: ""
@@ -80,6 +79,15 @@ env: {}
 ### service is able to get settings from consul using `consul-template`
 # enabled if `consul.templates` is set
 # https://github.com/hashicorp/consul-template
+#
+# How to debug templates:
+# 1) Proxy k8s consul instance to local port:
+# `kubectl port-forward service/consul-ui 8500:80`
+# 2) Store template to file `in.tpl`
+# 3) Generate config:
+# `consul-template -template "in.tpl:out.txt" -log-level debug -once`
+# 4) Ensure config is generated:
+# `cat out.txt`
 consul:
   # if `consul.host` is not set - will take IP of the node
   # it is a best practice to launch consul clients on every node
