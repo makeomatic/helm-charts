@@ -1,4 +1,4 @@
-{{- if and .Values.http.service.port (ne .Values.http.ingress.host "") }}
+{{ if and .Values.http.service.port (ne .Values.http.ingress.host "") }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -27,4 +27,4 @@ spec:
             backend:
               serviceName: {{ include "http.serviceName" .}}
               servicePort: {{ .Values.http.service.port }}
-{{- end }}
+{{ end }}

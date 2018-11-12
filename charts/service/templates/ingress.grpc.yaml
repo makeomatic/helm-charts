@@ -1,4 +1,4 @@
-{{- if and .Values.grpc.service.port (ne .Values.grpc.ingress.host "") }}
+{{ if and .Values.grpc.service.port (ne .Values.grpc.ingress.host "") }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -28,4 +28,4 @@ spec:
             backend:
               serviceName: {{ include "grpc.serviceName" .}}
               servicePort: {{ .Values.grpc.service.port }}
-{{- end }}
+{{ end }}

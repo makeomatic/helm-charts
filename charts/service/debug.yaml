@@ -1,19 +1,38 @@
-# helm template ./charts/service --name test -f ./charts/service/debug.yaml -x templates/consul.templates.yaml
+# helm template . --name test -f debug.yaml -x templates/cronjobs.yaml
 # helm install -n test ./charts/service -f ./charts/service/debug.yaml --dry-run --debug
 # kubectl logs -l app.kubernetes.io/instance=test -c consul-template
 fullnameOverride: test
 replicaCount: 1
 
-http:
-  service:
-    port: 3000
+image:
+  repository: ""
 
-consul:
-  templates:
-    config.yml: |-
-      amqp:
-        host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
-        password: {{ keyOrDefault "staging/amqpPassword" "password" }}
-      redis:
-        settings:
-          host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+# http:
+#   service:
+#     port: 3000
+
+# consul:
+#   templates:
+#     config.yml: |-
+#       amqp:
+#         host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+#         password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+#       redis:
+#         settings:
+#           host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+
+jobs:
+  testjob:
+    # schedule: "0 0 * * *"
+    image: busybox
+    # command: ["echo", "hello from $testvalue"]
+    # env:
+    #   - name: TEST
+    #     value: testvalue
+  second:
+    # schedule: "0 0 * * *"
+    image: busybox
+    # command: ["echo", "hello from $testvalue"]
+    # env:
+    #   - name: TEST
+    #     value: testvalue

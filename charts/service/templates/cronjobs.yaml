@@ -1,0 +1,60 @@
+{{- $default := .Values.jobDefaults }}
+{{- $serviceName := include "ms.fullname" . }}
+{{- $releaseName := .Release.Name  }}
+{{- $releaseService := .Release.Service }}
+{{- $chartName := include "ms.chart" . }}
+{{- $name := include "ms.name" . }}
+{{- range $jobName, $job := .Values.jobs }}
+{{- $serviceAccountName := $job.serviceAccountName | default $default.serviceAccountName }}
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ $serviceName }}-{{ $jobName }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+    helm.sh/chart: {{ $chartName }}
+    app.kubernetes.io/instance: {{ $releaseName }}
+    app.kubernetes.io/managed-by: {{ $releaseService }}
+spec:
+  concurrencyPolicy: {{ $job.concurrencyPolicy | default $default.concurrencyPolicy }}
+  schedule: {{ $job.schedule | default $default.schedule | quote }}
+  successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit | default $default.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit | default $default.failedJobsHistoryLimit }}
+  suspend: {{ $job.suspend | default $default.suspend }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ $job.backoffLimit | default $default.backoffLimit }}
+      activeDeadlineSeconds: {{ $job.activeDeadlineSeconds | default $default.activeDeadlineSeconds }}
+      completition: {{ $job.completition | default $default.completition }}
+      parallelism: {{ $job.parallelism | default $default.parallelism }}
+      template:
+        spec:
+          {{- if eq $serviceAccountName "" }}
+          automountServiceAccountToken: false
+          {{- else }}
+          serviceAccountName: "{{ $serviceAccountName }}"
+          {{- end }}
+          containers:
+          - name: {{ $jobName }}
+            image: {{ $job.image }}
+            imagePullPolicy: {{ $job.imagePullPolicy | default $default.imagePullPolicy }}
+            {{- with $job.args }}
+            args:
+{{ toYaml $job.args | indent 14 }}
+            {{- end }}
+            {{- with $job.command }}
+            command:
+{{ toYaml $job.command | indent 14 }}
+            {{- end }}
+            {{- with $job.resources }}
+            resources:
+{{ toYaml $job.resources | indent 14 }}
+            {{- end }}
+            {{- with $job.env }}
+            env:
+{{ toYaml $job.env | indent 12 }}
+            {{- end }}
+          restartPolicy: {{ $job.restartPolicy | default $default.restartPolicy }}
+{{- end }}
+

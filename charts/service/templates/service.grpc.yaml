@@ -1,4 +1,4 @@
-{{- if .Values.grpc.service.port -}}
+{{ if .Values.grpc.service.port }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,4 +18,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "ms.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
+{{ end }}
