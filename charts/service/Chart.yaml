@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: ""
 description: Default chat for creating distrubuted services with http and grpc transports
 name: service
-version: 1.0.0
+version: 1.0.1

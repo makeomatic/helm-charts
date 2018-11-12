@@ -1,3 +1,9 @@
+### TODO:
+# - http/grpc/whatever services in one map
+# - env variables from array to map
+# - prometheus metrics/alerts
+
+
 ### overvite instances name using custom one
 fullnameOverride: ""
 
