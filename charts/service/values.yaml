@@ -16,7 +16,7 @@ serviceAccountName: ""
 
 ### service docker image
 image:
-  repository: nginx
+  repository: ""
   tag: latest
   pullPolicy: IfNotPresent
 
