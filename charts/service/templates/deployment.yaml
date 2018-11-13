@@ -84,10 +84,12 @@ spec:
             httpGet:
               path: {{ .Values.health.path }}
               port: {{ .Values.health.port }}
+              initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.health.path }}
               port: {{ .Values.health.port }}
+              initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

@@ -25,6 +25,7 @@ image:
 health:
   path: ""
   port: http
+  initialDelaySeconds: 5
 
 ### http transport settings
 # enabled if `http.service.port` is set
@@ -75,6 +76,13 @@ antiAffinity: "soft"
 # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/
 # https://en.wikipedia.org/wiki/Cron
 jobs: {}
+  # test:
+  #   image: ""
+  #   resources: {}
+  #   command: []
+  #   args: []
+  #   env: []
+
 # default values for the cronjob
 jobDefaults:
   serviceAccountName: ""
@@ -85,17 +93,13 @@ jobDefaults:
   successfulJobsHistoryLimit: 0
   failedJobsHistoryLimit: 1
   # job template specific
-  backoffLimit: 1 # amount of retries before consider job failed
+  backoffLimit: 0 # amount of retries before consider job failed
   # amount of seconds before killing the job (1 day by default)
   activeDeadlineSeconds: 86400
   restartPolicy: Never
   imagePullPolicy: IfNotPresent
   completions: 1
   parallelism: 1
-  # resources: {}
-  # command: []
-  # args: []
-  # env: []
 
 ### tune availability of the service by setting distruption budgets
 # https://kubernetes.io/docs/tasks/run-application/configure-pdb/

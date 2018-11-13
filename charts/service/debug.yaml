@@ -4,8 +4,8 @@
 fullnameOverride: test
 replicaCount: 1
 
-image:
-  repository: ""
+# image:
+#   repository: ""
 
 # http:
 #   service:
@@ -22,17 +22,10 @@ image:
 #           host: {{ keyOrDefault "staging/redisHost" "redishost" }}
 
 jobs:
-  testjob:
-    # schedule: "0 0 * * *"
-    image: busybox
-    # command: ["echo", "hello from $testvalue"]
-    # env:
-    #   - name: TEST
-    #     value: testvalue
-  second:
-    # schedule: "0 0 * * *"
-    image: busybox
-    # command: ["echo", "hello from $testvalue"]
-    # env:
-    #   - name: TEST
-    #     value: testvalue
+  backup-api:
+    schedule: "@daily"
+    backoffLimit: 1
+    image: fulldive/mongobackup:aug2018
+    env:
+      - name: AUTH_DB
+        value: admin
