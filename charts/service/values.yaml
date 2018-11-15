@@ -84,6 +84,9 @@ jobs: {}
   #   env: []
 
 ### prometheus operator entities
+# NOTE: namespace with tracked service should be labeled with according value
+# from "serviceMonitorNamespaceSelector" prometheus property
+# ex.: kubectl label namespace/monitoring prometheus=prometheus
 metrics:
   # generate ServiceMonitor CRD
   enabled: false
