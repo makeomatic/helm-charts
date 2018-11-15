@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "ms.fullname" . }}
+  name: {{ .Release.Name }}
   namespace: {{ .Values.metrics.namespace }}
   labels:
 {{ toYaml .Values.metrics.labels | indent 4 }}
