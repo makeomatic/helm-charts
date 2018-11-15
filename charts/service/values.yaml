@@ -83,6 +83,19 @@ jobs: {}
   #   args: []
   #   env: []
 
+### prometheus operator entities
+metrics:
+  # generate ServiceMonitor CRD
+  enabled: false
+  # namespace for metrics
+  namespace: monitoring
+  # servicemonitor labels selector
+  labels:
+    prometheus: prometheus
+  # if set - expects to be secret with corresponding name created
+  # in namespace .monitoring.namespace
+  authSecret: ""
+
 # default values for the cronjob
 jobDefaults:
   serviceAccountName: ""

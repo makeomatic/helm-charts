@@ -1,0 +1,28 @@
+{{ if .Values.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: test
+  namespace: {{ include "ms.fullname" . }}
+  labels:
+{{ toYaml .Values.metrics.labels | indent 4 }}
+spec:
+  endpoints:
+  - port: http
+{{- if .Values.metrics.authSecret }}
+    basicAuth:
+      password:
+        key: password
+        name: {{ .Values.metrics.authSecret }}
+      username:
+        key: user
+        name: {{ .Values.metrics.authSecret }}
+{{- end }}
+  jobLabel: app.kubernetes.io/instance
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace}}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
