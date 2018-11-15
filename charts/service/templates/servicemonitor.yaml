@@ -2,8 +2,8 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: test
-  namespace: {{ include "ms.fullname" . }}
+  name: {{ include "ms.fullname" . }}
+  namespace: {{ .Values.metrics.namespace }}
   labels:
 {{ toYaml .Values.metrics.labels | indent 4 }}
 spec:
