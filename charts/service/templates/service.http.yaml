@@ -8,6 +8,8 @@ metadata:
     helm.sh/chart: {{ include "ms.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    # this label is used to manage instances in prometheus database
+    component: microservice
 spec:
   type: {{ .Values.http.service.type }}
   ports:

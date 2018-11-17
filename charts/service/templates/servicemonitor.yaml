@@ -5,6 +5,10 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.metrics.namespace }}
   labels:
+    app.kubernetes.io/name: {{ include "ms.name" . }}
+    helm.sh/chart: {{ include "ms.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{ toYaml .Values.metrics.labels | indent 4 }}
 spec:
   endpoints:
@@ -19,6 +23,9 @@ spec:
         name: {{ .Values.metrics.authSecret }}
 {{- end }}
   jobLabel: app.kubernetes.io/instance
+  # forward service label to job so it can be managed by query
+  targetLabels:
+    - component
   namespaceSelector:
     matchNames:
     - {{ .Release.Namespace}}
