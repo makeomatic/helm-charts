@@ -70,8 +70,13 @@ spec:
 {{ toYaml .Values.env | indent 12 }}
         {{- end }}
           volumeMounts:
-          - mountPath: {{ .Values.consul.path }}
-            name: config
+          - name: config
+            mountPath: {{ .Values.consul.path }}
+          {{- range $name, $path := .Values.mountSecret }}
+          - name: {{ $name }}
+            mountPath: {{ $path }}
+          {{- end }}
+
           {{- if .Values.service }}
           ports:
             {{- range $name, $svc := .Values.service }}
@@ -80,16 +85,16 @@ spec:
               protocol: TCP
           {{- end }}
           {{- end }}
-          {{- if and .Values.health.path .Values.service.http }}
+          {{- if .Values.health.path }}
           livenessProbe:
             httpGet:
               path: {{ .Values.health.path }}
-              port: http
+              port: {{ .Values.health.port | default "http" }}
               initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.health.path }}
-              port: http
+              port: {{ .Values.health.port | default "http" }}
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -130,4 +135,9 @@ spec:
         configMap:
           name: {{ include "ms.fullname" . }}-consul-templates
       {{- end }}
+    {{- range $name, $path := .Values.mountSecret }}
+      - name: {{ $name }}
+        secret:
+          secretName: {{ $name }}
+    {{- end }}
 {{ end }}

@@ -24,6 +24,7 @@ image:
 # enabled if `health.path` is set and `service.http` exists
 health:
   path: ""
+  # port: 8080 # default - "http"
   # delay in seconds before starting liveness check
   initialDelaySeconds: 5
 
@@ -56,6 +57,11 @@ resources: {}
 nodeSelector: {}
 tolerations: []
 antiAffinity: "soft"
+
+###
+mountSecret: {}
+  # name: /var/www
+
 
 ### jobs to launch with service
 # https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/

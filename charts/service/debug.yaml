@@ -1,20 +1,34 @@
 # helm template . --name test -f debug.yaml -x templates/cronjobs.yaml
 # helm install -n test ./charts/service -f ./charts/service/debug.yaml --dry-run --debug
 # kubectl logs -l app.kubernetes.io/instance=test -c consul-template
-fullnameOverride: test
-replicaCount: 1
+fullnameOverride: grpc-proxy
+replicaCount: 2
 
 image:
-  repository: qwe
+  repository: gcr.io/peak-orbit-214114/sl-grpc-proxy
+
+health:
+  path: /sl-grpc-proxy/generic/health
+  port: 3000
 
 service:
-  http:
-    nameOverride: ""
+  grpc:
+    port: 50051
     type: LoadBalancer
-    port: 3000
-    ingress:
-      host: some.domain.tld
-      tls: true # create tls certificate for specified ingress
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        kubernetes.io/tls-acme: "true"
+
+mountSecret: {}
+  grpc-proxy-grpc-tls: /tls
+
+env:
+  - name: NCONF_FILE_PATH
+    value: /config
+
+consul:
+  path: /config
+  templates:
+    config.js: |-
+      module.exports = {
+        amqp: {{ tree "staging/amqp" | explode | toJSON }},
+        logger: {{ tree "staging/grpc-proxy/logger" | explode | toJSON }},
+        validator: { ajv: { coerceTypes: true }}
+      }
