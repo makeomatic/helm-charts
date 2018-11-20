@@ -21,6 +21,7 @@ metadata:
     component: microservice
 spec:
   type: {{ $svc.type }}
+  loadBalancerIP: {{ $svc.loadBalancerIP }}
   ports:
     - port: {{ $svc.port }}
       targetPort: {{ $svcName }}
