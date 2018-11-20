@@ -4,28 +4,17 @@
 fullnameOverride: test
 replicaCount: 1
 
-# image:
-#   repository: ""
+image:
+  repository: qwe
 
-# http:
-#   service:
-#     port: 3000
-
-# consul:
-#   templates:
-#     config.yml: |-
-#       amqp:
-#         host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
-#         password: {{ keyOrDefault "staging/amqpPassword" "password" }}
-#       redis:
-#         settings:
-#           host: {{ keyOrDefault "staging/redisHost" "redishost" }}
-
-jobs:
-  backup-api:
-    schedule: "@daily"
-    backoffLimit: 1
-    image: fulldive/mongobackup:aug2018
-    env:
-      - name: AUTH_DB
-        value: admin
+service:
+  http:
+    nameOverride: ""
+    type: LoadBalancer
+    port: 3000
+    ingress:
+      host: some.domain.tld
+      tls: true # create tls certificate for specified ingress
+      annotations:
+        kubernetes.io/ingress.class: nginx
+        kubernetes.io/tls-acme: "true"

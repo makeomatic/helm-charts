@@ -21,43 +21,28 @@ image:
   pullPolicy: IfNotPresent
 
 ### health checks using http routes
-# enabled if `health.path` is set
+# enabled if `health.path` is set and `service.http` exists
 health:
   path: ""
-  port: http
+  # delay in seconds before starting liveness check
   initialDelaySeconds: 5
 
-### http transport settings
-# enabled if `http.service.port` is set
-http:
-  service:
-    # ability to rewrite default service name
-    nameOverride: ""
-    type: ClusterIP
-    port: "" # 3000
-  ingress:
-    # do not create ingress if host is empty
-    host: ""
-    path: /
-    # create tls certificate for specified ingress
-    createTls: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      kubernetes.io/tls-acme: "true"
-
-### grpc transport settings (same as for .http)
-grpc:
-  service:
-    nameOverride: ""
-    type: ClusterIP
-    port: "" # 4000
-  ingress:
-    host: ""
-    path: /
-    createTls: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      kubernetes.io/tls-acme: "true"
+service: {}
+  # http:
+  #   # ability to set custom service name
+  #   nameOverride: ""
+  #   type: ClusterIP
+  #   # incoming connections port
+  #   port: 8080
+  #   ingress:
+  #     # do not create ingress if host is not specified
+  #     host: ""
+  #     path: /
+  #     # create tls certificate for the domain
+  #     tls: false # false - do not create, true - generate from name, string - use existing
+  #     annotations: {}
+  #       # kubernetes.io/ingress.class: nginx
+  #       # kubernetes.io/tls-acme: "true"
 
 ### amount of resources allowed for the service
 resources: {}

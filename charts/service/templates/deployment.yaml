@@ -72,27 +72,24 @@ spec:
           volumeMounts:
           - mountPath: {{ .Values.consul.path }}
             name: config
+          {{- if .Values.service }}
           ports:
-          {{ if .Values.http.service.port }}
-            - name: http
-              containerPort: {{ .Values.http.service.port }}
+            {{- range $name, $svc := .Values.service }}
+            - name: {{ $name }}
+              containerPort: {{ $svc.port }}
               protocol: TCP
           {{- end }}
-          {{ if .Values.grpc.service.port }}
-            - name: grpc
-              containerPort: {{ .Values.grpc.service.port }}
-              protocol: TCP
           {{- end }}
-          {{- if .Values.health.path }}
+          {{- if and .Values.health.path .Values.service.http }}
           livenessProbe:
             httpGet:
               path: {{ .Values.health.path }}
-              port: {{ .Values.health.port }}
+              port: http
               initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
           readinessProbe:
             httpGet:
               path: {{ .Values.health.path }}
-              port: {{ .Values.health.port }}
+              port: http
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

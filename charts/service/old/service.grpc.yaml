@@ -1,4 +1,5 @@
-{{ if .Values.grpc.service.port }}
+{{- range $jobName, $job := .Values.jobs }}
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,4 +19,4 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "ms.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-{{ end }}
+{{- end }}
