@@ -52,7 +52,7 @@ spec:
   tls:
     - hosts:
         - {{ $ing.host }}
-      secretName: {{ $svcName }}-tls
+      secretName: {{ $displayName }}-tls
 {{- end }}
   rules:
     - host: {{ $ing.host }}
