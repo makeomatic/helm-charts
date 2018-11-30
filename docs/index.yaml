@@ -1,0 +1,68 @@
+apiVersion: v1
+entries:
+  alerta:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-11-30T16:05:03.124783+03:00
+    description: Alerta monitoring system http://alerta.io
+    digest: da1104d045e56b7b38928599628878ba5ca9f73a6bdfe245da3f9f952eaef6a5
+    name: alerta
+    urls:
+    - https://makeomatic.github.io/helm-charts/alerta-0.1.0.tgz
+    version: 0.1.0
+  consul:
+  - apiVersion: v1
+    created: 2018-11-30T16:05:03.125774+03:00
+    description: Install and configure Consul on Kubernetes.
+    digest: 42a01e2bd26bea66c7e81242f74fcc07234a06ce0f78bab01da08808d9277b50
+    home: https://www.consul.io
+    name: consul
+    sources:
+    - https://github.com/hashicorp/consul
+    - https://github.com/hashicorp/consul-helm
+    - https://github.com/hashicorp/consul-k8s
+    urls:
+    - https://makeomatic.github.io/helm-charts/consul-0.3.0.tgz
+    version: 0.3.0
+  descheduler:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-11-30T16:05:03.126147+03:00
+    description: A Helm chart for Kubernetes Deschedyler
+    digest: e862946a5cf9fd8b6fef5dfcc68ece71ea4dd725b0f1b4daf48509dc351befc7
+    name: descheduler
+    urls:
+    - https://makeomatic.github.io/helm-charts/descheduler-0.1.0.tgz
+    version: 0.1.0
+  redis-cluster:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-11-30T16:05:03.126448+03:00
+    description: Redis cluster service
+    digest: 4a6d3a5f2b34e7a3d8163970980f5dac6ac1d2c9ec5149f9b1c1c89ed5350c7c
+    name: redis-cluster
+    urls:
+    - https://makeomatic.github.io/helm-charts/redis-cluster-0.1.0.tgz
+    version: 0.1.0
+  service:
+  - apiVersion: v1
+    created: 2018-11-30T16:05:03.126877+03:00
+    description: Default chat for creating distrubuted services with http and grpc
+      transports
+    digest: 0d4bebbb2b6f68a1f145c4b99b805cb42011124703d158618924d2cef4c2c831
+    name: service
+    urls:
+    - https://makeomatic.github.io/helm-charts/service-2.0.0.tgz
+    version: 2.0.0
+  umbrella:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-11-30T16:05:03.128504+03:00
+    description: Set of services for application bootstraping (ex. - launch services
+      for integration tests)
+    digest: a14b6b1471fa95936a32e7f42e31f07b2f2931e116a377b888c0284f0611dca7
+    name: umbrella
+    urls:
+    - https://makeomatic.github.io/helm-charts/umbrella-0.1.0.tgz
+    version: 0.1.0
+generated: 2018-11-30T16:05:03.123876+03:00
