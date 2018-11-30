@@ -91,10 +91,18 @@ spec:
               path: {{ .Values.health.path }}
               port: {{ .Values.health.port | default "http" }}
               initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
+              periodSeconds: {{ .Values.health.periodSeconds }}
+              timeoutSeconds: {{ .Values.health.timeoutSeconds }}
+              successThreshold: {{ .Values.health.successThreshold }}
+              failureThreshold: {{ .Values.health.failureThreshold }}
           readinessProbe:
             httpGet:
               path: {{ .Values.health.path }}
               port: {{ .Values.health.port | default "http" }}
+              periodSeconds: {{ .Values.health.periodSeconds }}
+              timeoutSeconds: {{ .Values.health.timeoutSeconds }}
+              successThreshold: {{ .Values.health.successThreshold }}
+              failureThreshold: {{ .Values.health.failureThreshold }}
           {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

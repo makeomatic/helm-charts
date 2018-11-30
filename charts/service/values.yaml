@@ -27,6 +27,10 @@ health:
   # port: 8080 # default - "http"
   # delay in seconds before starting liveness check
   initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
 
 service: {}
   # http:
