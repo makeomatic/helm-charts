@@ -1,0 +1,86 @@
+replicaCount: 1
+nameOverride: ""
+
+type: deployment # deployment, statefulset
+
+serviceAccountName: ""
+
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: Always
+
+env: {}
+
+### k8s service entity
+service:
+  grpc:
+    port: 50051
+
+certificate:
+  provider: cloudflare
+  issuer:
+    kind: ClusterIssuer
+    name: letsencrypt
+
+### isto gateway/virtualservice
+endpoint:
+  host: grpc.testing.streamlayer.io
+  tls: true
+  ports:
+    - name: grpc
+      port: 80
+      protocol: http
+    - name: grpc-tls
+      port: 443
+      protocol: https
+
+### both .path and .port shoud be specified for health check
+health:
+  path: ""
+  port: ""
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+pdb:
+  minAvailable: 1
+
+antiAffinity: soft
+
+resources: {}
+
+### service is able to get settings from consul using `consul-template`
+# enabled if `consul.templates` is set
+# https://github.com/hashicorp/consul-template
+#
+# How to debug templates:
+# 1) Proxy k8s consul instance to local port:
+# `kubectl port-forward service/consul-server 8500:8500`
+# 2) Store template to file `chart.yaml`
+# 3) Generate config:
+# `consul-template -template "chart.yaml:output.txt" -once -dry`
+consul:
+  # if `consul.host` is not set - will take IP of the node
+  # best practice is to launch consul clients on every node
+  host: ""
+  # default consul port
+  port: 8500
+  # place where to mount rendered configs
+  path: /config
+  # additional configuration for `consul-template`
+  config: |-
+    consul {
+    }
+  logLevel: debug
+  # object with templates
+  templates: {}
+    # config.yml: |-
+    #   amqp:
+    #     host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+    #     password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+    #   redis:
+    #     settings:
+    #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}

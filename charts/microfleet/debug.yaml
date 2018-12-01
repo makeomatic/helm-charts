@@ -1,0 +1,13 @@
+nameOverride: grpc-test
+image:
+  repository: gcr.io/peak-orbit-214114/sl-grpc-proxy
+  tag: grpc-debug
+
+# host: grpc.testing.streamlayer.io
+
+service:
+  grpc:
+    port: 80
+  grpc-tls:
+    port: 443
+

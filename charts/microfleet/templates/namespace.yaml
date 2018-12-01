@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    istio-injection: enabled
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}

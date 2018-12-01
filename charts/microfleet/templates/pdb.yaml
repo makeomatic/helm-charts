@@ -1,0 +1,18 @@
+{{ if .Values.pdb }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+{{ toYaml .Values.pdb | indent 2 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "microfleet.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}

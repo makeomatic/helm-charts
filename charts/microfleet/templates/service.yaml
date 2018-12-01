@@ -1,0 +1,24 @@
+{{- if .Values.service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+  {{- range $name, $service := .Values.service }}
+    - port: {{ $service.port }}
+      targetPort: {{ $name }}
+      protocol: TCP
+      name: {{ $name }}
+  {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
