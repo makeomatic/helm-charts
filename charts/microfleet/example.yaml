@@ -1,0 +1,24 @@
+###
+# debug example: helm template ./microfleet -f microfleet/example.yaml
+name: grpc-test
+
+image:
+  repository: gcr.io/peak-orbit-214114/sl-grpc-proxy
+  tag: grpc-debug
+
+service:
+  grpc:
+    port: 50051
+
+endpoint:
+  host: grpc.testing.streamlayer.io
+  tls: true
+  ports:
+  - name: grpc
+    port: 80
+    targetPort: 50051
+    protocol: http
+  - name: grpc-tls
+    port: 443
+    targetPort: 50051
+    protocol: https

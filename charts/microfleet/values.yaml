@@ -1,9 +1,15 @@
 replicaCount: 1
-nameOverride: ""
+name: ""
 
 type: deployment # deployment, statefulset
 
 serviceAccountName: ""
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
 
 image:
   repository: nginx
@@ -13,9 +19,9 @@ image:
 env: {}
 
 ### k8s service entity
-service:
-  grpc:
-    port: 50051
+service: {}
+# grpc:
+#   port: 50051
 
 certificate:
   provider: cloudflare
@@ -24,16 +30,18 @@ certificate:
     name: letsencrypt
 
 ### isto gateway/virtualservice
-endpoint:
-  host: grpc.testing.streamlayer.io
-  tls: true
-  ports:
-    - name: grpc
-      port: 80
-      protocol: http
-    - name: grpc-tls
-      port: 443
-      protocol: https
+endpoint: {}
+# host: grpc.testing.streamlayer.io
+# tls: true
+# ports:
+# - name: grpc
+#   port: 80
+#   targetPort: 50051
+#   protocol: http
+# - name: grpc-tls
+#   port: 443
+#   targetPort: 50051
+#   protocol: https
 
 ### both .path and .port shoud be specified for health check
 health:

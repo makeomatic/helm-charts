@@ -1,0 +1,58 @@
+{{- if .Values.endpoint.host }}
+{{- $host :=  .Values.endpoint.host -}}
+{{- $serviceName := include "microfleet.fullname" . }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  {{- range $port := .Values.endpoint.ports }}
+  - hosts:
+    - {{ $host }}
+    port:
+      number: {{ $port.port }}
+      name: {{ $port.name }}
+      protocol: {{ $port.protocol }}
+    {{- if eq $port.protocol "https" }}
+    tls:
+      mode: SIMPLE
+      serverCertificate: /etc/istio/ingressgateway-certs/{{ $host }}.crt
+      privateKey: /etc/istio/ingressgateway-certs/{{ $host }}.key
+    {{- end }}
+  {{- end }}
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  namespace: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  gateways:
+  - {{ include "microfleet.fullname" . }}
+  hosts:
+  - {{ .Values.endpoint.host }}
+  http:
+  {{- range $port := .Values.endpoint.ports }}
+  - match:
+    - port: {{ $port.port }}
+    route:
+    - destination:
+        host: {{ $serviceName }}
+        port:
+          number: {{ $port.targetPort }}
+    {{- end }}
+{{- end }}
