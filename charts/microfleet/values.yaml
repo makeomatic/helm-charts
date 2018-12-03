@@ -3,6 +3,7 @@ name: ""
 
 type: deployment # deployment, statefulset
 
+createNamespace: true
 serviceAccountName: ""
 
 updateStrategy:
@@ -92,3 +93,12 @@ consul:
     #   redis:
     #     settings:
     #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+
+redis:
+  enabled: false
+  ### quorum requirement: n/2+1
+  podDisruptionBudget:
+    minAvailable: 3
+  replicas: 5
+  sentinel:
+    quorum: 3

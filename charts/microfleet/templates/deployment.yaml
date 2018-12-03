@@ -89,7 +89,7 @@ spec:
           ports:
           {{- range $name, $service := .Values.service }}
             - name: {{ $name }}
-              containerPort: {{ $service.port }}
+              containerPort: {{ default $service.targetPort $service.port }}
               protocol: TCP
           {{- end }}
           {{- end }}
