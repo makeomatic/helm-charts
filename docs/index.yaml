@@ -3,18 +3,18 @@ entries:
   alerta:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-30T16:05:03.124783+03:00
+    created: 2018-12-03T22:23:32.985085+03:00
     description: Alerta monitoring system http://alerta.io
-    digest: da1104d045e56b7b38928599628878ba5ca9f73a6bdfe245da3f9f952eaef6a5
+    digest: b016cd59dc54feb5ff8be7e8c81cb982b2a195303ed108f560c90c0cb3ccec99
     name: alerta
     urls:
     - https://makeomatic.github.io/helm-charts/alerta-0.1.0.tgz
     version: 0.1.0
   consul:
   - apiVersion: v1
-    created: 2018-11-30T16:05:03.125774+03:00
+    created: 2018-12-03T22:23:32.985943+03:00
     description: Install and configure Consul on Kubernetes.
-    digest: 42a01e2bd26bea66c7e81242f74fcc07234a06ce0f78bab01da08808d9277b50
+    digest: a2a836c8d8ced3132bc3e1d7a4b77e79a67ebf138050f7d5e3bb3d7c4780b23f
     home: https://www.consul.io
     name: consul
     sources:
@@ -27,29 +27,39 @@ entries:
   descheduler:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-30T16:05:03.126147+03:00
+    created: 2018-12-03T22:23:32.986239+03:00
     description: A Helm chart for Kubernetes Deschedyler
-    digest: e862946a5cf9fd8b6fef5dfcc68ece71ea4dd725b0f1b4daf48509dc351befc7
+    digest: 69a0a5cf573f0aebc90a5a949c2782d2e22f13af6ba6cfbfef590364fc21ae33
     name: descheduler
     urls:
     - https://makeomatic.github.io/helm-charts/descheduler-0.1.0.tgz
     version: 0.1.0
+  microfleet:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-12-03T22:23:32.987032+03:00
+    description: A Helm chart for Kubernetes
+    digest: fa56ef8271905f284edd7c6a43333131e5c93c3b812525265a68902f1e0a4f71
+    name: microfleet
+    urls:
+    - https://makeomatic.github.io/helm-charts/microfleet-0.1.0.tgz
+    version: 0.1.0
   redis-cluster:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-30T16:05:03.126448+03:00
+    created: 2018-12-03T22:23:32.987314+03:00
     description: Redis cluster service
-    digest: 4a6d3a5f2b34e7a3d8163970980f5dac6ac1d2c9ec5149f9b1c1c89ed5350c7c
+    digest: 4480381753ca0543ebebc97ed21f6d50f07a55cc80663cbe1bb0fadb7e64bc0b
     name: redis-cluster
     urls:
     - https://makeomatic.github.io/helm-charts/redis-cluster-0.1.0.tgz
     version: 0.1.0
   service:
   - apiVersion: v1
-    created: 2018-11-30T16:05:03.126877+03:00
+    created: 2018-12-03T22:23:32.987763+03:00
     description: Default chat for creating distrubuted services with http and grpc
       transports
-    digest: 0d4bebbb2b6f68a1f145c4b99b805cb42011124703d158618924d2cef4c2c831
+    digest: d8c7e855eed3a08002dcbc874cf5afe73ae8c3995a2b421b02cc15a3f65a648d
     name: service
     urls:
     - https://makeomatic.github.io/helm-charts/service-2.0.0.tgz
@@ -57,12 +67,12 @@ entries:
   umbrella:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-11-30T16:05:03.128504+03:00
+    created: 2018-12-03T22:23:32.989325+03:00
     description: Set of services for application bootstraping (ex. - launch services
       for integration tests)
-    digest: a14b6b1471fa95936a32e7f42e31f07b2f2931e116a377b888c0284f0611dca7
+    digest: f641e41a0269a4379c910e5586b17354566a3cb971d3e2763ab97c45f9213275
     name: umbrella
     urls:
     - https://makeomatic.github.io/helm-charts/umbrella-0.1.0.tgz
     version: 0.1.0
-generated: 2018-11-30T16:05:03.123876+03:00
+generated: 2018-12-03T22:23:32.984187+03:00
