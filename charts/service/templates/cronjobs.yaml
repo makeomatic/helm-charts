@@ -55,6 +55,21 @@ spec:
             env:
 {{ toYaml $job.env | indent 12 }}
             {{- end }}
+            {{- with $job.mountSecret }}
+            volumeMounts:
+              {{- range $name, $path := $job.mountSecret }}
+              - name: {{ $name }}
+                mountPath: {{ $path }}
+              {{- end }}
+            {{- end }}
+          {{- with $job.mountSecret }}
+          volumes:
+            {{- range $name, $path := $job.mountSecret }}
+            - name: {{ $name }}
+              secret:
+                secretName: {{ $name }}
+            {{- end }}
+          {{- end }}
           restartPolicy: {{ $job.restartPolicy | default $default.restartPolicy }}
 {{- end }}
 

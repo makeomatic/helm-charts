@@ -78,6 +78,7 @@ jobs: {}
   #   command: []
   #   args: []
   #   env: []
+  #   mountSecret: {}
 
 ### prometheus operator entities
 # NOTE: namespace with tracked service should be labeled with according value
