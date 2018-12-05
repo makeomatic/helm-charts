@@ -3,7 +3,7 @@ name: ""
 
 type: deployment # deployment, statefulset
 
-createNamespace: true
+createNamespace: false
 serviceAccountName: ""
 
 updateStrategy:
@@ -94,11 +94,21 @@ consul:
     #     settings:
     #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}
 
-redis:
-  enabled: false
+# https://github.com/istio/istio/pull/7488
+redis-ha:
+  ebabled: false
+  nameOverride: redis
+  redis:
+    masterGroupName: master
   ### quorum requirement: n/2+1
   podDisruptionBudget:
-    minAvailable: 3
-  replicas: 5
-  sentinel:
-    quorum: 3
+    maxUnavailable: 2
+  replicas: 3
+
+  # https://github.com/istio/old_issues_repo/issues/316
+  # TODO: switch to istio CNI ?
+  # securityContext:
+  #   runAsUser: 0
+  #   fsGroup: 1000
+  #   runAsNonRoot: false
+  #   privileged: true
