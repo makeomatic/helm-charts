@@ -2,4 +2,4 @@ dependencies:
   - name: redis-ha
     version: ~3.0.2
     repository: https://kubernetes-charts.storage.googleapis.com/
-    condition: redis.enabled
+    condition: redis-ha.enabled
