@@ -96,7 +96,7 @@ consul:
 
 # https://github.com/istio/istio/pull/7488
 redis-ha:
-  ebabled: false
+  enabled: false
   nameOverride: redis
   redis:
     masterGroupName: master

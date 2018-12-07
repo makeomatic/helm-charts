@@ -3,18 +3,18 @@ entries:
   alerta:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.988049+03:00
+    created: 2018-12-07T21:10:04.96384+03:00
     description: Alerta monitoring system http://alerta.io
-    digest: f854c465afe1e820f8eca45ddffb62e20e0d80c63cf4199376385cfdd3e564d4
+    digest: e136dc7d27c0e6c4efc2f9559006219635d8e38ef2efb21f57c7374273c3dee7
     name: alerta
     urls:
     - https://makeomatic.github.io/helm-charts/alerta-0.1.0.tgz
     version: 0.1.0
   consul:
   - apiVersion: v1
-    created: 2018-12-06T09:12:50.989015+03:00
+    created: 2018-12-07T21:10:04.964784+03:00
     description: Install and configure Consul on Kubernetes.
-    digest: 9c011468dfe5c630803cbed7cbd56287a3a97dac13b514ff92ff15c58ab51d8d
+    digest: 86e734f5f8bc320bffec1a22a3525fe8ab5194837339d9f3282704f47f7d9d87
     home: https://www.consul.io
     name: consul
     sources:
@@ -27,9 +27,9 @@ entries:
   descheduler:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.989309+03:00
+    created: 2018-12-07T21:10:04.96507+03:00
     description: A Helm chart for Kubernetes Deschedyler
-    digest: b0e1e76aeadd090ed9001c73458dc5ae222215155dd5218d12c85d5907b9bd28
+    digest: 8ffafd55ab147871fedd0219133f916cfa02b5a69eba9436c64718feeacde406
     name: descheduler
     urls:
     - https://makeomatic.github.io/helm-charts/descheduler-0.1.0.tgz
@@ -37,16 +37,25 @@ entries:
   microfleet:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.990921+03:00
+    created: 2018-12-07T21:10:04.968918+03:00
     description: A Helm chart for Kubernetes
-    digest: 29f040f459ca8fbec189077dc2fd00be3cbb8885a7cd75cddceb9cd5d2c3056f
+    digest: 0b25a59ad2eb1a85ce79401209cd049128fad2c0c67ab6727b7c4ba75ba050d4
+    name: microfleet
+    urls:
+    - https://makeomatic.github.io/helm-charts/microfleet-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: 2018-12-07T21:10:04.968099+03:00
+    description: A Helm chart for Kubernetes
+    digest: 46b5d964cc8168d5cec75f2441dfc01f8cc757d39f9129476da3955bf23b73fa
     name: microfleet
     urls:
     - https://makeomatic.github.io/helm-charts/microfleet-0.1.1.tgz
     version: 0.1.1
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.990162+03:00
+    created: 2018-12-07T21:10:04.966829+03:00
     description: A Helm chart for Kubernetes
     digest: 748855848d160b0f4fdc1b08f7ff76bd4b13a245d72ef72b91bf09ff19ee54bf
     name: microfleet
@@ -56,19 +65,19 @@ entries:
   redis-cluster:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.991211+03:00
+    created: 2018-12-07T21:10:04.969256+03:00
     description: Redis cluster service
-    digest: 3c98e7f74637f5a7fba48415370096a3a0d257ebf3596822c9d57862d1e0eb27
+    digest: 52d3fad0cead5dd80d17b4d18db9b74b81ad8be8316d194b6ed910869d0cae99
     name: redis-cluster
     urls:
     - https://makeomatic.github.io/helm-charts/redis-cluster-0.1.0.tgz
     version: 0.1.0
   service:
   - apiVersion: v1
-    created: 2018-12-06T09:12:50.99167+03:00
+    created: 2018-12-07T21:10:04.969965+03:00
     description: Default chat for creating distrubuted services with http and grpc
       transports
-    digest: c7de03072b619aab60bbe580a25924e666ff20decc836bedfd8996f52adf635f
+    digest: 40b0da2e4a28eed1dd00e5274c7f3a463f95d0627f94ec5850fdfa269c0b7910
     name: service
     urls:
     - https://makeomatic.github.io/helm-charts/service-2.0.0.tgz
@@ -76,12 +85,12 @@ entries:
   umbrella:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2018-12-06T09:12:50.993343+03:00
+    created: 2018-12-07T21:10:04.971725+03:00
     description: Set of services for application bootstraping (ex. - launch services
       for integration tests)
-    digest: 630c48f8e0d0d9f5ec808ed971149702a7cb1815692fda75569e28191df7b3f1
+    digest: 5df6068d803a20110ebc5f27066215535bed65a48ccf427a501401f3d3fe4370
     name: umbrella
     urls:
     - https://makeomatic.github.io/helm-charts/umbrella-0.1.0.tgz
     version: 0.1.0
-generated: 2018-12-06T09:12:50.987172+03:00
+generated: 2018-12-07T21:10:04.962791+03:00
