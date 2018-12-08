@@ -1,5 +1,6 @@
 {{- if .Values.endpoint.host }}
 {{- $host :=  .Values.endpoint.host -}}
+{{- $httpRedirect :=  .Values.endpoint.httpRedirect -}}
 {{- $serviceName := include "microfleet.fullname" . }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -24,6 +25,9 @@ spec:
     {{- if eq $port.protocol "https" }}
     tls:
       mode: SIMPLE
+      {{- if $httpRedirect }}
+      httpsRedirect: true
+      {{- end }}
       serverCertificate: /etc/istio/ingressgateway-certs/{{ $host }}.crt
       privateKey: /etc/istio/ingressgateway-certs/{{ $host }}.key
     {{- end }}

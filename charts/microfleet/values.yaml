@@ -33,7 +33,8 @@ certificate:
 ### isto gateway/virtualservice
 endpoint: {}
 # host: grpc.testing.streamlayer.io
-# tls: true
+# httpRedirect: true
+# createCertificate: true
 # ports:
 # - name: grpc
 #   port: 80
