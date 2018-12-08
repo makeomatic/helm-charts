@@ -3,7 +3,6 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ include "microfleet.fullname" . }}
-  namespace: {{ .Release.Name }}
   labels:
     app.kubernetes.io/name: {{ include "microfleet.name" . }}
     helm.sh/chart: {{ include "microfleet.chart" . }}
