@@ -19,6 +19,10 @@ image:
 
 env: {}
 
+# https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
+command:
+args:
+
 ### k8s service entity
 service: {}
 # grpc:
