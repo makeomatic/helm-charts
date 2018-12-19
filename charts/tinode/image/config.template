@@ -1,0 +1,129 @@
+{
+	"listen": ":18080",
+	"cache_control": 39600,
+	"static_mount": "/",
+	"grpc_listen": ":16061",
+	"api_key_salt": "$API_KEY_SALT",
+	"max_message_size": 4194304,
+	"max_subscriber_count": 32,
+	"max_tag_count": 16,
+
+	"media": {
+		"use_handler": "$MEDIA_HANDLER",
+		"max_size": 33554432,
+		"gc_period": 60,
+		"gc_block_size": 100,
+		"handlers": {
+			"fs": {
+				"upload_dir": "uploads"
+			},
+			"s3":{
+				"access_key_id": "$AWS_ACCESS_KEY_ID",
+				"secret_access_key": "$AWS_SECRET_ACCESS_KEY",
+				"region": "$AWS_REGION",
+				"bucket": "$AWS_S3_BUCKET",
+				"cors_origin": $AWS_CORS_ORIGINS
+			}
+		}
+	},
+
+	"tls": {
+		"enabled": $TLS_ENABLED,
+		"http_redirect": ":80",
+		"strict_max_age": 604800,
+		"autocert": {
+			"cache": "/etc/letsencrypt/live/$TLS_DOMAIN_NAME",
+			"email": "$TLS_CONTACT_ADDRESS",
+			"domains": ["$TLS_DOMAIN_NAME"]
+		}
+	},
+
+	"auth_config": {
+		"logical_names": [],
+		"basic": {
+			"add_to_tags": true
+		},
+		"token": {
+			"expire_in": 1209600,
+			"serial_num": 1,
+			"key": "$AUTH_TOKEN_KEY"
+		}
+	},
+
+	"store_config": {
+		"uid_key": "$UID_ENCRYPTION_KEY",
+		"adapters": {
+			"mysql": {
+				"database": "tinode",
+				"dsn": "$MYSQL_DSN?parseTime=true&collation=utf8mb4_unicode_ci"
+			},
+			"rethinkdb": {
+				"database": "$RETHINKDB_DATABASE",
+				"addresses": "$RETHINKDB_ADDRESS",
+				"username": "$RETHINKDB_USERNAME",
+				"password": "$RETHINKDB_PASSWORD"
+			}
+		}
+	},
+
+	"acc_validation": {
+		"email": {
+			"add_to_tags": true,
+			"required": [$EMAIL_VERIFICATION_REQUIRED],
+			"config": {
+				"host_url": "$SMTP_HOST_URL",
+				"smtp_server": "$SMTP_SERVER",
+				"smtp_port": "$SMTP_PORT",
+				"sender": "$SMTP_SENDER",
+				"sender_password": "$SMTP_PASSWORD",
+				"validation_body_templ": "./templ/email-validation-body.templ",
+				"validation_subject": "Tinode registration: confirm email",
+				"reset_body_templ": "./templ/email-password-reset.templ",
+				"reset_subject": "Reset Tinode password",
+				"headers": [],
+				"max_retries": 4,
+				"debug_response": "$DEBUG_EMAIL_VERIFICATION_CODE"
+			}
+		},
+
+		"tel": {
+			"add_to_tags": true,
+			"config": {
+				"template": "./templ/sms-validation.templ",
+				"max_retries": 4,
+				"debug_response": "$DEBUG_TEL_VERIFICATION_CODE"
+			}
+		}
+	},
+
+	"push": [
+		{
+			"name":"fcm",
+			"config": {
+				"enabled": $FCM_PUSH_ENABLED,
+				"buffer": 1024,
+				"project_id": "$FCM_PROJECT_ID",
+				"credentials_file": "$FCM_CRED_FILE",
+				"time_to_live": 3600,
+				"include_android_notification": $FCM_INCLUDE_ANDROID_NOTIFICATION,
+				"icon": "ic_logo_push",
+				"icon_color": "#3949AB"
+			}
+		}
+	],
+
+	"plugins": [
+		{
+			"enabled": $PLUGIN_PYTHON_CHAT_BOT_ENABLED,
+			"name": "python_chat_bot",
+			"timeout": 20000,
+			"filters": {
+				"account": "C"
+			},
+			"failure_code": 0,
+			"failure_text": null,
+			"service_addr": "tcp://localhost:40051"
+		}
+	]
+
+}

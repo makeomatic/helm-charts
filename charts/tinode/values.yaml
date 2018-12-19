@@ -1,0 +1,47 @@
+replicaCount: 1
+
+image:
+  repository: vkfont/tinode
+  tag: 0.15.11-rc2
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port:
+    http: 18080
+    grpc: 16061
+
+env:
+  - name: RETHINKDB_USERNAME
+    value: admin
+  - name: RETHINKDB_PASSWORD
+    value: Cook7)Add)))
+  - name: RETHINKDB_ADDRESS
+    value: rethinkdb-rethinkdb-proxy
+
+# ingress:
+#   createTls: false
+#   host: chart-example.local
+#   http:
+#     enabled: false
+#     annotations:
+#       kubernetes.io/ingress.class: nginx
+#       kubernetes.io/tls-acme: "true"
+#     path: /
+#   grpc:
+#     enabled: false
+#     annotations:
+#       kubernetes.io/ingress.class: "nginx"
+#       nginx.ingress.kubernetes.io/ssl-redirect: "true"
+#       nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
