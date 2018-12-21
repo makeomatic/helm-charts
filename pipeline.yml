@@ -8,15 +8,15 @@ resource_types:
     repository: w32blaster/concourse-telegram-notifier
 
 resources:
-# - name: notify
-#   type: telegram-notification
-#   source:
-#     bot_token: ((tg-bot-token))
+- name: notify
+  type: telegram-notification
+  source:
+    bot_token: ((tg-bot-token))
 - name: sources
   type: git
   source:
     uri: https://github.com/makeomatic/helm-charts.git
-    paths: ["/charts/*"]
+    # paths: ["/charts/*"]
 
 jobs:
 - name: generate-charts
@@ -39,15 +39,14 @@ jobs:
           - -exc
           - |
             . configure-gcloud
-            ls
-            gcloud compute instances list
+            ./sources/scripts/upload.sh
       params:
         CLOUDSDK_API_KEY: ((gcp-deployer-key))
         CLOUDSDK_COMPUTE_ZONE: ((gcp-zone))
         CLOUDSDK_CORE_PROJECT: ((gcp-project))
         KUBERNETES_CLUSTER: ((gcp-cluster-name))
-      # on_failure:
-      #   put: notify
-      #   params:
-      #     chat_id: ((tg-chat-id))
-      #     text: Can't update helm charts ($ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME)
+      on_failure:
+        put: notify
+        params:
+          chat_id: ((tg-chat-id))
+          text: Can't update helm charts ($ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME)
