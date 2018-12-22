@@ -1,20 +1,24 @@
+#!/bin/bash
+set -e
+
 # helm repo add makeomatic https://helm-charts.streamlayer.io
-URL="helm-charts.streamlayer.io"
-alias helm="docker run alpine/helm"
+alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.helm:/root/.helm alpine/helm"
+repo_url="helm-charts.streamlayer.io"
+artifact_dir="./artifacts"
 
-### generate repo
-REPO_DIR=`mktemp -d`
+helm init -c
+mkdir -p $artifact_dir
 
-for chart in charts/*
+for chart in ./charts/*
 do
-    helm package $chart --destination $REPO_DIR
+    helm package $chart --destination $artifact_dir
 done
 
-gsutil cp gs://$URL/index.yaml $REPO_DIR/index.old
+# gsutil -m cp gs://$repo_url/index.yaml $artifact_dir/index.old
 
-helm repo index $REPO_DIR \
-    --merge $REPO_DIR/index.old \
-    --url $URL
+helm repo index $artifact_dir \
+    --url $repo_url
 
-gsutil rsync -dr $REPO_DIR gs://$URL
-rm -R $REPO_DIR
+# NOTE: for now we only sync latest charts without keeping previous ones
+gsutil rsync -dr $artifact_dir gs://$repo_url
+rm -R $artifact_dir
