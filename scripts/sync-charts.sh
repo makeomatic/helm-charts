@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
 
-# helm repo add makeomatic https://helm-charts.streamlayer.io
 alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+helm init -c
+
 repo_url="helm-charts.streamlayer.io"
 artifact_dir="./artifacts"
-
-helm init -c
 mkdir -p $artifact_dir
 
 for chart in ./charts/*
