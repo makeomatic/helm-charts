@@ -12,6 +12,7 @@ mkdir -p $artifact_dir
 
 for chart in ./charts/*
 do
+    echo helm package $chart --destination $artifact_dir
     helm package $chart --destination $artifact_dir
 done
 
