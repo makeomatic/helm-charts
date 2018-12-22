@@ -18,4 +18,5 @@ blocks:
       - name: Docker build
         commands:
           - ls -1
+          - cat ~/google-credentials.json
           - echo "done"
