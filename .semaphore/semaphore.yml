@@ -6,17 +6,15 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: Deploy
+  - name: Update charts
     task:
-      prologue:
-          commands:
-            # - gcloud auth activate-service-account --key-file=google-credentials.json
-            - checkout
       secrets:
         - name: google-credentials
+      prologue:
+          commands:
+            - gcloud auth activate-service-account --key-file=~/google-credentials.json
+            - checkout
       jobs:
-      - name: Docker build
+      - name: Upload charts
         commands:
-          - ls -1
-          - cat ~/google-credentials.json
-          - echo "done"
+          - ./scripts/sync-charts.sh

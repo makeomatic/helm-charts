@@ -1,5 +1,5 @@
 # helm repo add makeomatic https://helm-charts.streamlayer.io
-URL="helm-charts.streamlayer.io"
+    URL="helm-charts.streamlayer.io"
 
 ### generate repo
 REPO_DIR=`mktemp -d`
@@ -8,9 +8,10 @@ do
     helm package $chart --destination $REPO_DIR
 done
 
-# NOTE: is merge work with remote urls? dunno
+gsutil cp gs://$URL/index.yaml $REPO_DIR/index.old
+
 helm repo index $REPO_DIR \
-    --merge ${URL}/index.yaml \
+    --merge $REPO_DIR/index.old \
     --url $URL
 
 gsutil rsync -dr $REPO_DIR gs://$URL
