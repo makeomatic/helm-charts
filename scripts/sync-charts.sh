@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+shopt -s expand_aliases
 
 alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
 helm init -c
