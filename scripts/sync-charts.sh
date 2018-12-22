@@ -2,6 +2,9 @@
 set -e
 shopt -s expand_aliases
 
+alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+helm init -c
+
 repo_url="helm-charts.streamlayer.io"
 artifact_dir="./artifacts"
 mkdir -p $artifact_dir
