@@ -12,9 +12,11 @@ blocks:
         - name: google-credentials
       prologue:
           commands:
+            - alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+            - helm init -c
             - gcloud auth activate-service-account --key-file=$HOME/google-credentials.json
             - checkout
       jobs:
       - name: Upload charts
         commands:
-          - ./scripts/sync-charts.sh
+          - . ./scripts/sync-charts.sh
