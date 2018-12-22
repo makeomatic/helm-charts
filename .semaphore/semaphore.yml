@@ -17,4 +17,6 @@ blocks:
       jobs:
       - name: Upload charts
         commands:
-          - ./scripts/sync-charts.sh
+          - alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+          - helm init -c
+          # - ./scripts/sync-charts.sh
