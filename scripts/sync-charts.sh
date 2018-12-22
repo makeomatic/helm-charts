@@ -22,4 +22,4 @@ helm repo index $artifact_dir \
 
 # NOTE: for now we only sync latest charts without keeping previous ones
 gsutil rsync -dr $artifact_dir gs://$repo_url
-rm -R $artifact_dir
+rm -Rf $artifact_dir
