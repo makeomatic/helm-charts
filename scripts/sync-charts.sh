@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+shopt -s expand_aliases
 
 # helm repo add makeomatic https://helm-charts.streamlayer.io
 repo_url="helm-charts.streamlayer.io"
