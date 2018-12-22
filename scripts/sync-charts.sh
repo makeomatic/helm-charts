@@ -1,8 +1,10 @@
 # helm repo add makeomatic https://helm-charts.streamlayer.io
-    URL="helm-charts.streamlayer.io"
+URL="helm-charts.streamlayer.io"
+alias helm="docker run alpine/helm"
 
 ### generate repo
 REPO_DIR=`mktemp -d`
+
 for chart in charts/*
 do
     helm package $chart --destination $REPO_DIR
