@@ -19,4 +19,5 @@ blocks:
       jobs:
       - name: Upload charts
         commands:
+          - alias
           - ./scripts/sync-charts.sh
