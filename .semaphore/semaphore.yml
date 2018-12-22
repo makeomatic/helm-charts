@@ -12,7 +12,9 @@ blocks:
         - name: google-credentials
       prologue:
           commands:
-            - gcloud auth activate-service-account --key-file=~/google-credentials.json
+            - echo $HOME
+            - ls ~
+            - gcloud auth activate-service-account --key-file=/home/semaphore/google-credentials.json
             - checkout
       jobs:
       - name: Upload charts
