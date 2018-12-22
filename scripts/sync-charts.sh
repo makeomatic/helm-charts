@@ -1,9 +1,8 @@
 #!/bin/bash
 set -e
-shopt -s expand_aliases
 
 # helm repo add makeomatic https://helm-charts.streamlayer.io
-# alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
 repo_url="helm-charts.streamlayer.io"
 artifact_dir="./artifacts"
 
