@@ -16,6 +16,7 @@ blocks:
             - helm init -c
             - gcloud auth activate-service-account --key-file=$HOME/google-credentials.json
             - checkout
+            - git submodule update --recursive --remote
       jobs:
       - name: Upload charts
         commands:
