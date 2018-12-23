@@ -54,9 +54,9 @@ spec:
         volumeMounts:
 {{ toYaml .Values.volumeMounts | indent 10 }}
         {{- end }}
-          {{- if .Values.entrypoint.ports }}
+          {{- if .Values.service.ports }}
           ports:
-          {{- range .Values.entrypoint.ports }}
+          {{- range .Values.service.ports }}
             - name: {{ .name }}
               containerPort: {{ default .port .targetPort }}
               protocol: {{ default "TCP" .protocol }}

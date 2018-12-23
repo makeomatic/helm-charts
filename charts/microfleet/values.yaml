@@ -87,16 +87,26 @@ env:
   - name: test
     value: test
 
-### describe service einrypoint (entites: service, gateway, virtualservice)
-# TODO: create gateway if not specified
-# TODO: create virtualservice
-entrypoint:
-  serviceType: ClusterIP
+### ports which service exposes
+service:
+  type: ClusterIP
   ports:
     - name: http
       port: 8080
       # targetPort: 8081
       # protocol: TCP
+
+# describes gateway to be created so service able to get traffic from the internet
+# if .gateway.host is not set - gateway will not be created
+gateway:
+  host: www.yandex.ru
+  httpsRedirect: true
+  createCertificate: true
+  ports:
+    - name: http
+      port: 80
+      # targetPort: 8080 # will take firs port from .service.ports by default
+      # protocol: http # HTTP, HTTPS, MONGO, HTTP2
 
 
 ### default certificate settings if cert is required
@@ -106,20 +116,6 @@ certificate:
     kind: ClusterIssuer
     name: letsencrypt
 
-### isto gateway/virtualservice entities
-endpoint: {}
-# host: grpc.testing.streamlayer.io
-# httpRedirect: true
-# createCertificate: true
-# ports:
-# - name: grpc
-#   port: 80
-#   targetPort: 50051
-#   protocol: http
-# - name: grpc-tls
-#   port: 443
-#   targetPort: 50051
-#   protocol: https
 
 ### both .path and .port shoud be specified for health check
 health:

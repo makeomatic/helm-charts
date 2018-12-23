@@ -1,4 +1,4 @@
-{{- if .Values.entrypoint.ports }}
+{{- if .Values.service.ports }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,9 +9,9 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: {{ .Values.entrypoint.serviceType }}
+  type: {{ .Values.service.type }}
   ports:
-  {{- range .Values.entrypoint.ports }}
+  {{- range .Values.service.ports }}
     - name: {{ .name }}
       port: {{ .port }}
       targetPort: {{ default .port .targetPort }}
