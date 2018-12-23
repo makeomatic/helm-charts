@@ -1,4 +1,4 @@
-{{- if .Values.service.ports }}
+{{- if .Values.entrypoint.ports }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,9 +9,14 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.entrypoint.serviceType }}
   ports:
-{{ toYaml .Values.service.ports | indent 4 }}
+  {{- range .Values.entrypoint.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ default .port .targetPort }}
+      protocol: {{ default "TCP" .protocol }}
+  {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "microfleet.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

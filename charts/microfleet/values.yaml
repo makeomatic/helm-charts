@@ -87,14 +87,17 @@ env:
   - name: test
     value: test
 
-### kubernetes service entity (do not confuse with microservice itself)
-service:
-  type: ClusterIP
+### describe service einrypoint (entites: service, gateway, virtualservice)
+# TODO: create gateway if not specified
+# TODO: create virtualservice
+entrypoint:
+  serviceType: ClusterIP
   ports:
     - name: http
       port: 8080
-      targetPort: 8080
-      protocol: TCP
+      # targetPort: 8081
+      # protocol: TCP
+
 
 ### default certificate settings if cert is required
 certificate:
@@ -103,7 +106,7 @@ certificate:
     kind: ClusterIssuer
     name: letsencrypt
 
-### isto gateway/virtualservice
+### isto gateway/virtualservice entities
 endpoint: {}
 # host: grpc.testing.streamlayer.io
 # httpRedirect: true
