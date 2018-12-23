@@ -1,11 +1,13 @@
 ### rewrite service name with selected one
 name: ""
 
+### inject istio sidecar
+# if disabled - following entities will not be created:
+# certificate, statefulset, gateay
+meshEnabled: true
+
 ### amount of service instances
 replicaCount: 1
-
-### type of deployment: deployment, statefulset
-type: deployment
 
 ### launch service with specified permissions to access GKE and google API
 serviceAccountName: ""
@@ -24,90 +26,59 @@ image:
   pullPolicy: Always
 
 ### perform operations before starting main service
-initContainers:
-  # - name: consul-template
-  #   image: hashicorp/consul-template:alpine
+initContainers: []
+  # - name: sync
+  #   image: gcr.io/google_containers/git-sync:v3.0.1
   #   env:
-  #     - name: NODE_IP
-  #       valueFrom:
-  #         fieldRef:
-  #           fieldPath: status.hostIP
+  #     - name: GIT_SYNC_REPO
+  #       value: https://github.com/StreamLayer/sl-chat-auth.git
+  #     - name: GIT_SYNC_USERNAME
+  #       value: ???
+  #     - name: GIT_SYNC_PASSWORD
+  #       value: ???
+  #     - name: GIT_SYNC_ROOT
+  #       value: /repo
+  #     - name: GIT_SYNC_ONE_TIME
+  #       value: "true"
   #   volumeMounts:
-  #   - name: consul-template
-  #     mountPath: /template
-  #   - name: config
-  #     mountPath: /config
-  #   command:
-  #     - sh
-  #     - -ec
-  #     - |
-  #       USER_HOST="{{ .Values.consul.host }}"
-  #       CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
-  #       CONSUL_PORT="{{ .Values.consul.port }}"
-
-  #       consul-template \
-  #       -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
-  #       -consul-retry-attempts=3 \
-  #       -config=/template/config.hcl \
-  #       {{- range $filename, $content := .Values.consul.templates }}
-  #       -template "/template/{{ $filename }}:/config/{{ $filename }}" \
-  #       {{- end }}
-  #       -log-level={{ .Values.consul.logLevel }} \
-  #       -once
-
-  - name: sync
-    image: gcr.io/google_containers/git-sync:v3.0.1
-    env:
-      - name: GIT_SYNC_REPO
-        value: https://github.com/StreamLayer/sl-chat-auth.git
-      - name: GIT_SYNC_USERNAME
-        value: fulldive-devops
-      - name: GIT_SYNC_PASSWORD
-        value: VD5cQ8kzCrEd4hS76H
-      - name: GIT_SYNC_ROOT
-        value: /specs
-      - name: GIT_SYNC_ONE_TIME
-        value: "true"
-    volumeMounts:
-      - name: volumename
-        mountPath: /specs
+  #     - name: chat-auth
+  #       mountPath: /repo
 
 ### volumes accessible to service
-volumes:
-  - name: config
-    emptyDir: {}
+volumes: []
+  # - name: config
+  #   emptyDir: {}
 
 ### volumes to mount into service directly
-volumeMounts:
-  - name: volumename
-    mountPath: /specs
+volumeMounts: []
+  # - name: volumename
+  #   mountPath: /specs
 
 ### env variables for the service
-env:
-  - name: test
-    value: test
+env: []
+  # - name: test
+  #   value: test
 
 ### ports which service exposes
 service:
   type: ClusterIP
-  ports:
-    - name: http
-      port: 8080
+  ports: []
+    # - name: http
+    #   port: 8080
       # targetPort: 8081
       # protocol: TCP
 
 # describes gateway to be created so service able to get traffic from the internet
 # if .gateway.host is not set - gateway will not be created
-gateway:
-  host: www.yandex.ru
-  httpsRedirect: true
-  createCertificate: true
-  ports:
-    - name: http
-      port: 80
-      # targetPort: 8080 # will take firs port from .service.ports by default
-      # protocol: http # HTTP, HTTPS, MONGO, HTTP2
-
+gateway: {}
+  # host: www.yandex.ru
+  # httpsRedirect: true
+  # createCertificate: true
+  # ports:
+  #   - name: http
+  #     port: 80
+  #     # targetPort: 8080 # will take firs port from .service.ports by default
+  #     # protocol: http # HTTP, HTTPS, MONGO, HTTP2
 
 ### default certificate settings if cert is required
 certificate:
@@ -116,24 +87,31 @@ certificate:
     kind: ClusterIssuer
     name: letsencrypt
 
+### healthcheck settings for the service
+health: {}
+  # path: /health
+  # port: http
+  # initialDelaySeconds: 5
+  # periodSeconds: 5
+  # successThreshold: 1
+  # failureThreshold: 3
 
-### both .path and .port shoud be specified for health check
-health:
-  path: ""
-  port: ""
-  initialDelaySeconds: 5
-  periodSeconds: 5
-  timeoutSeconds: 5
-  successThreshold: 1
-  failureThreshold: 3
 
 ### pod distruption budget
-pdb:
+disruptionBudget:
   minAvailable: 1
 
 ### rules how to spread group of instances between nodes
-antiAffinity: soft
+affinity: |
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: "kubernetes.io/hostname"
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ include "microfleet.name" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}
 
+### amount of resources service will request or be able to consume
 resources: {}
 
 ### service is able to get settings from consul using `consul-template`
@@ -147,18 +125,9 @@ resources: {}
 # 3) Generate config:
 # `consul-template -template "chart.yaml:output.txt" -once -dry`
 consul:
-  # if `consul.host` is not set - will take IP of the node
-  # best practice is to launch consul clients on every node
-  host: ""
-  # default consul port
-  port: 8500
   # place where to mount rendered configs
   path: /config
   # additional configuration for `consul-template`
-  config: |-
-    consul {
-    }
-  logLevel: debug
   # object with templates
   templates: {}
     # config.yml: |-
@@ -179,11 +148,3 @@ redis-ha:
   podDisruptionBudget:
     maxUnavailable: 2
   replicas: 3
-
-  # https://github.com/istio/old_issues_repo/issues/316
-  # TODO: switch to istio CNI ?
-  # securityContext:
-  #   runAsUser: 0
-  #   fsGroup: 1000
-  #   runAsNonRoot: false
-  #   privileged: true

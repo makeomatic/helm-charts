@@ -1,14 +1,61 @@
 ###
 # debug example: helm template ./microfleet -f microfleet/example.yaml
 name: grpc-test
-type: statefulset
+replicaCount: 3
+meshEnabled: false
 image:
   repository: gcr.io/peak-orbit-214114/sl-grpc-proxy
   tag: grpc-debug
 
-# service:
-#   grpc:
-#     port: 50051
+initContainers:
+  - name: sync
+    image: gcr.io/google_containers/git-sync:v3.0.1
+    env:
+      - name: GIT_SYNC_REPO
+        value: https://github.com/StreamLayer/sl-chat-auth.git
+      - name: GIT_SYNC_USERNAME
+        value: ???
+      - name: GIT_SYNC_PASSWORD
+        value: ???
+      - name: GIT_SYNC_ROOT
+        value: /repo
+      - name: GIT_SYNC_ONE_TIME
+        value: "true"
+    volumeMounts:
+      - name: chat-auth
+        mountPath: /repo
+volumes:
+  - name: chat-auth
+    emptyDir: {}
+volumeMounts:
+  - name: chat-auth
+    mountPath: /chat-auth
+
+service:
+  ports:
+    - name: http
+      port: 8080
+    - name: grpc
+      port: 50051
+
+gateway:
+  host: helm-debug.staging.streamlayer.io
+  httpsRedirect: true
+  createCertificate: false
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: http
+    - name: grpc
+      port: 15011
+      targetPort: 50051
+      protocol: http2
+
+health:
+  path: /health
+  port: http
+
 
 # endpoint:
 #   host: grpc.testing.streamlayer.io

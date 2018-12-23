@@ -1,6 +1,6 @@
 {{ $host := .Values.gateway.host }}
 {{ $httpsRedirect := .Values.gateway.httpsRedirect }}
-{{- if $host }}
+{{- if and .Values.meshEnabled $host }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:

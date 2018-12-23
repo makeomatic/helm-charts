@@ -1,4 +1,4 @@
-{{ if .Values.pdb }}
+{{ if .Values.disruptionBudget }}
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-{{ toYaml .Values.pdb | indent 2 }}
+{{ toYaml .Values.disruptionBudget | indent 2 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "microfleet.name" . }}
