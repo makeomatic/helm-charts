@@ -1,34 +1,102 @@
-replicaCount: 1
+### rewrite service name with selected one
 name: ""
 
-type: deployment # deployment, statefulset
+### amount of service instances
+replicaCount: 1
 
-createNamespace: false
+### type of deployment: deployment, statefulset
+type: deployment
+
+### launch service with specified permissions to access GKE and google API
 serviceAccountName: ""
 
+### default update strategy
 updateStrategy:
   type: RollingUpdate
   rollingUpdate:
     maxSurge: 1
     maxUnavailable: 0
 
+### docker image settings
 image:
   repository: nginx
   tag: latest
   pullPolicy: Always
 
-env: {}
+### perform operations before starting main service
+initContainers:
+  # - name: consul-template
+  #   image: hashicorp/consul-template:alpine
+  #   env:
+  #     - name: NODE_IP
+  #       valueFrom:
+  #         fieldRef:
+  #           fieldPath: status.hostIP
+  #   volumeMounts:
+  #   - name: consul-template
+  #     mountPath: /template
+  #   - name: config
+  #     mountPath: /config
+  #   command:
+  #     - sh
+  #     - -ec
+  #     - |
+  #       USER_HOST="{{ .Values.consul.host }}"
+  #       CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
+  #       CONSUL_PORT="{{ .Values.consul.port }}"
 
-# https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/
-command:
+  #       consul-template \
+  #       -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
+  #       -consul-retry-attempts=3 \
+  #       -config=/template/config.hcl \
+  #       {{- range $filename, $content := .Values.consul.templates }}
+  #       -template "/template/{{ $filename }}:/config/{{ $filename }}" \
+  #       {{- end }}
+  #       -log-level={{ .Values.consul.logLevel }} \
+  #       -once
 
-args:
+  - name: sync
+    image: gcr.io/google_containers/git-sync:v3.0.1
+    env:
+      - name: GIT_SYNC_REPO
+        value: https://github.com/StreamLayer/sl-chat-auth.git
+      - name: GIT_SYNC_USERNAME
+        value: fulldive-devops
+      - name: GIT_SYNC_PASSWORD
+        value: VD5cQ8kzCrEd4hS76H
+      - name: GIT_SYNC_ROOT
+        value: /specs
+      - name: GIT_SYNC_ONE_TIME
+        value: "true"
+    volumeMounts:
+      - name: volumename
+        mountPath: /specs
 
-### k8s service entity
-service: {}
-# grpc:
-#   port: 50051
+### volumes accessible to service
+volumes:
+  - name: config
+    emptyDir: {}
 
+### volumes to mount into service directly
+volumeMounts:
+  - name: volumename
+    mountPath: /specs
+
+### env variables for the service
+env:
+  - name: test
+    value: test
+
+### kubernetes service entity (do not confuse with microservice itself)
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+
+### default certificate settings if cert is required
 certificate:
   provider: cloudflare
   issuer:
@@ -60,9 +128,11 @@ health:
   successThreshold: 1
   failureThreshold: 3
 
+### pod distruption budget
 pdb:
   minAvailable: 1
 
+### rules how to spread group of instances between nodes
 antiAffinity: soft
 
 resources: {}
