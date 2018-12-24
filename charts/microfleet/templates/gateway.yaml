@@ -23,11 +23,11 @@ spec:
         protocol: {{ $protocol }}
         number: {{ .port }}
     {{- if eq $protocol "https" }}
-    tls:
-      mode: SIMPLE
-      httpsRedirect: {{ $httpsRedirect }}
-      serverCertificate: /etc/istio/ingressgateway-certs/{{ $host }}.crt
-      privateKey: /etc/istio/ingressgateway-certs/{{ $host }}.key
+      tls:
+        mode: SIMPLE
+        httpsRedirect: {{ $httpsRedirect }}
+        serverCertificate: /etc/istio/ingressgateway-certs/{{ $host }}.crt
+        privateKey: /etc/istio/ingressgateway-certs/{{ $host }}.key
     {{- end }}
   {{- end }}
 {{- end }}

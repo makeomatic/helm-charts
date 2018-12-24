@@ -57,17 +57,12 @@ spec:
           - sh
           - -ec
           - |
-            CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
-            CONSUL_PORT="8500"
+            CONSUL_HOST=${"":-"$NODE_IP"}
 
-            consul-template \
-            -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
-            -consul-retry-attempts=3 \
+            consul-template -consul-addr="$CONSUL_HOST" -once \
             {{- range $filename, $content := .Values.consul.templates }}
-            -template "/template/{{ $filename }}:/config/{{ $filename }}" \
+              -template "/template/{{ $filename }}:/config/{{ $filename }}" \
             {{- end }}
-            -log-level=debug \
-            -once
             
             cat /config/*
       {{- end }}
@@ -76,7 +71,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "microfleet.fullname" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -87,8 +82,12 @@ spec:
         {{- if .Values.env }}
 {{ toYaml .Values.env | indent 10 }}
         {{- end }}
-        {{- if or .Values.volumeMounts .Values.consul.templates }}
+        {{- if or .Values.volumeMounts .Values.consul.templates .Values.config.files }}
           volumeMounts:
+          {{- if .Values.config.files }}
+          - name: config
+            mountPath: {{ .Values.config.path }}
+          {{- end }}
           {{- if .Values.consul.templates }}
           - name: consul-config
             mountPath: {{ .Values.consul.path }}
@@ -101,7 +100,6 @@ spec:
           command:
 {{ toYaml .Values.command | indent 10 }}
           {{- end }}
-          ports:
           {{- if .Values.service.ports }}
           ports:
           {{- range .Values.service.ports }}
@@ -129,7 +127,7 @@ spec:
       affinity:
         {{ tpl .Values.affinity . | indent 8 | trim }}
     {{- end }}
-      {{- if or .Values.volumes .Values.consul.templates }}
+      {{- if or .Values.volumes .Values.consul.templates .Values.config.files }}
       volumes:
       {{- if .Values.consul.templates }}
       - name: consul-template
@@ -137,6 +135,11 @@ spec:
           name: {{ include "microfleet.fullname" . }}-consul-templates
       - name: consul-config
         emptyDir: {}
+      {{- end }}
+      {{- if .Values.config.files }}
+      - name: config
+        configMap:
+          name: {{ include "microfleet.fullname" . }}-config
       {{- end }}
       {{- if .Values.volumes }}
 {{ toYaml .Values.volumes | indent 6 }}
