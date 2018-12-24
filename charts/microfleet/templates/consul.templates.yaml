@@ -1,0 +1,13 @@
+{{ if .Values.consul.templates }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "microfleet.fullname" . }}-consul-templates
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+{{ toYaml .Values.consul.templates | indent 2 }}
+{{ end }}

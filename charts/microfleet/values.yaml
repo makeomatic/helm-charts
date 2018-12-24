@@ -19,6 +19,9 @@ updateStrategy:
     maxSurge: 1
     maxUnavailable: 0
 
+### ability to rewrite launch command
+command: null
+
 ### docker image settings
 image:
   repository: nginx

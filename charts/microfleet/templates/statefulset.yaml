@@ -59,14 +59,17 @@ spec:
           - |
             CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
             CONSUL_PORT="8500"
+
             consul-template \
             -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
             -consul-retry-attempts=3 \
-            {{- range $filename, $content := .Values.customConfig }}
+            {{- range $filename, $content := .Values.consul.templates }}
             -template "/template/{{ $filename }}:/config/{{ $filename }}" \
             {{- end }}
             -log-level=debug \
             -once
+            
+            cat /config/*
       {{- end }}
       {{- if .Values.initContainers }}
 {{ toYaml .Values.initContainers | indent 6 }}
@@ -94,6 +97,11 @@ spec:
 {{ toYaml .Values.volumeMounts | indent 10 }}
           {{- end }}
           {{- end }}
+          {{- if .Values.command }}
+          command:
+{{ toYaml .Values.command | indent 10 }}
+          {{- end }}
+          ports:
           {{- if .Values.service.ports }}
           ports:
           {{- range .Values.service.ports }}
