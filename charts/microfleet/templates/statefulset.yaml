@@ -1,4 +1,3 @@
-{{ if eq .Values.type "statefulset" }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -26,6 +25,8 @@ spec:
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
       labels:
         app.kubernetes.io/name: {{ include "microfleet.name" . }}
         helm.sh/chart: {{ include "microfleet.chart" . }}
@@ -37,8 +38,9 @@ spec:
       {{- else }}
       serviceAccountName: "{{ .Values.serviceAccountName }}"
       {{- end }}
-      {{- if .Values.consul.templates }}
+      {{- if or .Values.initContainers .Values.consul.templates }}
       initContainers:
+      {{- if .Values.consul.templates }}
       - name: consul-template
         image: hashicorp/consul-template:alpine
         env:
@@ -49,113 +51,99 @@ spec:
         volumeMounts:
         - name: consul-template
           mountPath: /template
-        - name: config
+        - name: consul-config
           mountPath: /config
         command:
           - sh
           - -ec
           - |
-            USER_HOST="{{ .Values.consul.host }}"
-            CONSUL_HOST=${USER_HOST:-"$NODE_IP"}
-            CONSUL_PORT="{{ .Values.consul.port }}"
-
-            consul-template \
-            -consul-addr="$CONSUL_HOST:$CONSUL_PORT" \
-            -consul-retry-attempts=3 \
-            -config=/template/config.hcl \
+            consul-template -consul-addr="$NODE_IP:8500" -once \
             {{- range $filename, $content := .Values.consul.templates }}
-            -template "/template/{{ $filename }}:/config/{{ $filename }}" \
+              -template "/template/{{ $filename }}:/config/{{ $filename }}" \
             {{- end }}
-            -log-level={{ .Values.consul.logLevel }} \
-            -once
+            
+            cat /config/*
+      {{- end }}
+      {{- if .Values.initContainers }}
+{{ toYaml .Values.initContainers | indent 6 }}
+      {{- end }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "microfleet.fullname" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+        {{- if .Values.env }}
+{{ toYaml .Values.env | indent 10 }}
+        {{- end }}
+        {{- if or .Values.volumeMounts .Values.consul.templates .Values.config.files }}
+          volumeMounts:
+          {{- if .Values.config.files }}
+          - name: config
+            mountPath: {{ .Values.config.path }}
+          {{- end }}
+          {{- if .Values.consul.templates }}
+          - name: consul-config
+            mountPath: {{ .Values.consul.path }}
+          {{- end }}
+          {{- if .Values.volumeMounts }}
+{{ toYaml .Values.volumeMounts | indent 10 }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.command }}
           command:
-            {{- range .Values.command }}
-            - {{ . | quote }}
-            {{- end }}
+{{ toYaml .Values.command | indent 10 }}
           {{- end }}
           {{- if .Values.args }}
           args:
-            {{- range .Values.args }}
-            - {{ . | quote }}
-            {{- end }}
+{{ toYaml .Values.args | indent 10 }}
           {{- end }}
-          env:
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-        {{- if .Values.env }}
-{{ toYaml .Values.env | indent 12 }}
-        {{- end }}
-          volumeMounts:
-          - name: config
-            mountPath: {{ .Values.consul.path }}
-          
-          {{- if .Values.service }}
+          {{- if .Values.service.ports }}
           ports:
-          {{- range $name, $service := .Values.service }}
-            - name: {{ $name }}
-              containerPort: {{ default $service.targetPort $service.port }}
-              protocol: TCP
+          {{- range .Values.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ default .port .targetPort }}
+              protocol: {{ default "TCP" .protocol }}
           {{- end }}
           {{- end }}
 
-          {{- if and .Values.health.path .Values.health.port }}
+          {{- if .Values.health }}
           livenessProbe:
             httpGet:
-              path: {{ .Values.health.path }}
-              port: {{ .Values.health.port }}
-              initialDelaySeconds: {{ .Values.health.initialDelaySeconds }}
-              periodSeconds: {{ .Values.health.periodSeconds }}
-              timeoutSeconds: {{ .Values.health.timeoutSeconds }}
-              successThreshold: {{ .Values.health.successThreshold }}
-              failureThreshold: {{ .Values.health.failureThreshold }}
+{{ toYaml .Values.health | indent 14 }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.health.path }}
-              port: {{ .Values.health.port }}
-              periodSeconds: {{ .Values.health.periodSeconds }}
-              timeoutSeconds: {{ .Values.health.timeoutSeconds }}
-              successThreshold: {{ .Values.health.successThreshold }}
-              failureThreshold: {{ .Values.health.failureThreshold }}
+{{ toYaml .Values.health | indent 14 }}
           {{- end }}
-      {{- if .Values.resources }}
+          
+          {{- if .Values.resources }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-      {{- end }}
-      {{- if eq .Values.antiAffinity "hard" }}
+          {{- end }}
+
+    {{- if .Values.affinity }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - topologyKey: "kubernetes.io/hostname"
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: {{ include "microfleet.name" . }}
-                  app.kubernetes.io/instance: {{ .Release.Name }}
-      {{- else if eq .Values.antiAffinity "soft" }}
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 1
-            podAffinityTerm:
-              topologyKey: kubernetes.io/hostname
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: {{ include "microfleet.name" . }}
-                  app.kubernetes.io/instance: {{ .Release.Name }}
-      {{- end }}
+        {{ tpl .Values.affinity . | indent 8 | trim }}
+    {{- end }}
+      {{- if or .Values.volumes .Values.consul.templates .Values.config.files }}
       volumes:
-      - name: config
-        emptyDir: {}
       {{- if .Values.consul.templates }}
       - name: consul-template
         configMap:
           name: {{ include "microfleet.fullname" . }}-consul-templates
+      - name: consul-config
+        emptyDir: {}
       {{- end }}
-{{ end }}
+      {{- if .Values.config.files }}
+      - name: config
+        configMap:
+          name: {{ include "microfleet.fullname" . }}-config
+      {{- end }}
+      {{- if .Values.volumes }}
+{{ toYaml .Values.volumes | indent 6 }}
+      {{- end }}
+      {{- end }}

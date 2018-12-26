@@ -1,4 +1,4 @@
-{{- if .Values.service }}
+{{- if .Values.service.ports }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,13 +9,13 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.service.type }}
   ports:
-  {{- range $name, $service := .Values.service }}
-    - port: {{ $service.port }}
-      targetPort: {{ $name }}
-      protocol: TCP
-      name: {{ $name }}
+  {{- range .Values.service.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ default .port .targetPort }}
+      protocol: {{ default "TCP" .protocol }}
   {{- end }}
   selector:
     app.kubernetes.io/name: {{ include "microfleet.name" . }}

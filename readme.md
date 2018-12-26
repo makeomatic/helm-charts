@@ -1,0 +1,1 @@
+helm repo add makeomatic https://cdn.matic.ninja/helm-charts
