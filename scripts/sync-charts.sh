@@ -5,7 +5,7 @@ shopt -s expand_aliases
 alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
 helm init -c
 
-repo_url="helm-charts.streamlayer.io"
+repo_url="cdn.matic.ninja/helm-charts"
 artifact_dir="./artifacts"
 mkdir -p $artifact_dir
 
@@ -21,5 +21,13 @@ helm repo index $artifact_dir \
     --url $repo_url
 
 # NOTE: for now we only sync latest charts without keeping previous ones
-gsutil rsync -dr $artifact_dir gs://$repo_url
+gsutil rsync \
+    -a public-read \
+    -dr $artifact_dir gs://$repo_url
+
+# do not cache index.yaml in cdn
+gsutil setmeta \
+    -h "Cache-Control:public, no-cache" \
+    gs://$repo_url/index.yaml
+
 rm -Rf $artifact_dir

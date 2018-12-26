@@ -19,8 +19,9 @@ updateStrategy:
     maxSurge: 1
     maxUnavailable: 0
 
-### ability to rewrite launch command
+### ability to rewrite launch command and arguments
 command: null
+args: null
 
 ### docker image settings
 image:

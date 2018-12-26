@@ -57,9 +57,7 @@ spec:
           - sh
           - -ec
           - |
-            CONSUL_HOST=${"":-"$NODE_IP"}
-
-            consul-template -consul-addr="$CONSUL_HOST" -once \
+            consul-template -consul-addr="$NODE_IP:8500" -once \
             {{- range $filename, $content := .Values.consul.templates }}
               -template "/template/{{ $filename }}:/config/{{ $filename }}" \
             {{- end }}
@@ -99,6 +97,10 @@ spec:
           {{- if .Values.command }}
           command:
 {{ toYaml .Values.command | indent 10 }}
+          {{- end }}
+          {{- if .Values.args }}
+          args:
+{{ toYaml .Values.args | indent 10 }}
           {{- end }}
           {{- if .Values.service.ports }}
           ports:
