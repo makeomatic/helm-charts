@@ -18,7 +18,7 @@ done
 # gsutil -m cp gs://$repo_url/index.yaml $artifact_dir/index.old
 
 helm repo index $artifact_dir \
-    --url $repo_url
+    --url https://$repo_url
 
 # NOTE: for now we only sync latest charts without keeping previous ones
 gsutil rsync \
