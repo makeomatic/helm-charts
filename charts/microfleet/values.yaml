@@ -78,6 +78,7 @@ gateway: {}
   # host: www.yandex.ru
   # httpsRedirect: true
   # createCertificate: true
+  # customCrtName: www-yandex-ry
   # ports:
   #   - name: http
   #     port: 80

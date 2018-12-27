@@ -1,6 +1,5 @@
-{{ $host := .Values.gateway.host }}
-{{ $httpsRedirect := .Values.gateway.httpsRedirect }}
-{{- if and .Values.meshEnabled $host }}
+{{ $gateway := .Values.gateway }}
+{{- if and .Values.meshEnabled $gateway.host }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -17,7 +16,7 @@ spec:
   {{- range .Values.gateway.ports }}
   {{ $protocol := default "http" .protocol }}
     - hosts:
-      - {{ $host }}
+      - {{ $gateway.host }}
       port:
         name: {{ .name }}
         protocol: {{ $protocol }}
@@ -25,9 +24,9 @@ spec:
     {{- if eq $protocol "https" }}
       tls:
         mode: SIMPLE
-        httpsRedirect: {{ $httpsRedirect }}
-        serverCertificate: /etc/istio/ingressgateway-certs/{{ $host }}.crt
-        privateKey: /etc/istio/ingressgateway-certs/{{ $host }}.key
+        httpsRedirect: {{ $gateway.httpsRedirect }}
+        serverCertificate: /etc/istio/ingressgateway-certs/{{ default "tls" $gateway.customCrtName }}.crt
+        privateKey: /etc/istio/ingressgateway-certs/{{ default "tls" $gateway.customCrtName }}.key
     {{- end }}
   {{- end }}
 {{- end }}
