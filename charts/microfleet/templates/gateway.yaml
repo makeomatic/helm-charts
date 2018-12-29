@@ -21,10 +21,13 @@ spec:
         name: {{ .name }}
         protocol: {{ $protocol }}
         number: {{ .port }}
+    {{- if and (eq $protocol "http") $gateway.httpsRedirect }}
+      tls:
+        httpsRedirect: true
+    {{- end }}
     {{- if eq $protocol "https" }}
       tls:
         mode: SIMPLE
-        httpsRedirect: {{ $gateway.httpsRedirect }}
         serverCertificate: /etc/istio/ingressgateway-certs/{{ default "tls" $gateway.customCrtName }}.crt
         privateKey: /etc/istio/ingressgateway-certs/{{ default "tls" $gateway.customCrtName }}.key
     {{- end }}
