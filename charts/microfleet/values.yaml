@@ -72,25 +72,17 @@ service:
       # targetPort: 8081
       # protocol: TCP
 
-# describes gateway to be created so service able to get traffic from the internet
-# if .gateway.host is not set - gateway will not be created
-gateway: {}
-  # host: www.yandex.ru
-  # httpsRedirect: true
-  # createCertificate: true
-  # customCrtName: www-yandex-ry
-  # ports:
-  #   - name: http
-  #     port: 80
-  #     # targetPort: 8080 # will take firs port from .service.ports by default
-  #     # protocol: http # HTTP, HTTPS, MONGO, HTTP2
-
-### default certificate settings if cert is required
-certificate:
-  provider: cloudflare
-  issuer:
-    kind: ClusterIssuer
-    name: letsencrypt
+virtualService: {}
+  # gateways:
+  # - staging-wild
+  # hosts:
+  # - grpc.staging.streamlayer.io
+  # http:
+  # - route:
+  #   - destination:
+  #       host: grpc
+  #       port:
+  #         number: 50051
 
 ### healthcheck settings for the service
 health: {}

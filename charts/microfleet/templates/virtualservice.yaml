@@ -1,7 +1,5 @@
 # NOTE: short host name is taken from _rule_ namespace, not from _service_ namespace
-{{- if and .Values.meshEnabled .Values.service.ports }}
-{{ $serviceName := include "microfleet.fullname" . }}
-{{ $defaultServicePort := (index .Values.service.ports 0).port }}
+{{- if and .Values.meshEnabled .Values.virtualService }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -12,18 +10,5 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  gateways:
-  - {{ default (include "microfleet.fullname" .) .Values.gateway.name }}
-  hosts:
-  - {{ .Values.gateway.host }}
-  http:
-  {{- range .Values.gateway.ports }}
-  - match:
-    - port: {{ .port }}
-    route:
-    - destination:
-        host: {{ $serviceName }}
-        port:
-          number: {{ default $defaultServicePort .targetPort }}
-  {{- end }}
+{{ toYaml .Values.virtualService | indent 2 }}
 {{- end }}
