@@ -24,9 +24,10 @@ command: null
 args: null
 
 ### docker image settings
+# tag should be set manually to avoid accidental upgrades
 image:
   repository: nginx
-  tag: latest
+  tag: non-existin
   pullPolicy: Always
 
 ### perform operations before starting main service
@@ -98,6 +99,17 @@ health: {}
 disruptionBudget:
   minAvailable: 1
 
+### pod network policy
+# https://github.com/ahmetb/kubernetes-network-policy-recipes
+networkPolicy:
+  ingress:
+  - {}
+  egress:
+  - {}
+  policyTypes:
+  - Ingress
+  - Egress
+
 ### rules how to spread group of instances between nodes
 affinity: |
   podAntiAffinity:
@@ -109,7 +121,13 @@ affinity: |
             app.kubernetes.io/instance: {{ .Release.Name }}
 
 ### amount of resources service will request or be able to consume
-resources: {}
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 10m
+  limits:
+    memory: 512Mi
+    cpu: 500m
 
 ### additional configs which will be renedered and mounted
 config:

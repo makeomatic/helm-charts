@@ -1,0 +1,17 @@
+{{ if .Values.networkPolicy }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "microfleet.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{ toYaml .Values.networkPolicy | indent 2 }}
+{{ end }}
