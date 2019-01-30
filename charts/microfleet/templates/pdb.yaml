@@ -4,6 +4,7 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
+    release: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "microfleet.name" . }}
     helm.sh/chart: {{ include "microfleet.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
