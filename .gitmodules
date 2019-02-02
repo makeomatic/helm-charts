@@ -1,0 +1,3 @@
+[submodule "charts/consul"]
+	path = charts/consul
+	url = git@github.com:hashicorp/consul-helm.git
