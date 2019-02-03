@@ -4,10 +4,12 @@ metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
     release: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    version: {{ .Values.image.tag }}
+
     helm.sh/chart: {{ include "microfleet.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podManagementPolicy: Parallel
   {{- if eq .Values.serviceAccountName "" }}
@@ -30,6 +32,7 @@ spec:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
       labels:
         release: {{ .Release.Name }}
+        version: {{ .Values.image.tag }}
         app.kubernetes.io/name: {{ include "microfleet.name" . }}
         helm.sh/chart: {{ include "microfleet.chart" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
@@ -71,7 +74,7 @@ spec:
       {{- end }}
       {{- end }}
       containers:
-        - name: {{ include "microfleet.fullname" . }}
+        - name: microservice
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
