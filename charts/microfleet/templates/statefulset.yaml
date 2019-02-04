@@ -5,18 +5,13 @@ metadata:
   labels:
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag }}
-
     helm.sh/chart: {{ include "microfleet.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ include "microfleet.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   podManagementPolicy: Parallel
-  {{- if eq .Values.serviceAccountName "" }}
-  automountServiceAccountToken: false
-  {{- else }}
-  serviceAccountName: "{{ .Values.serviceAccountName }}"
-  {{- end }}
+  serviceName: ""
   replicas: {{ .Values.replicaCount }}
 {{- if .Values.updateStrategy }}
   updateStrategy:
