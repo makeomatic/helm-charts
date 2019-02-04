@@ -96,17 +96,6 @@ health: {}
 disruptionBudget:
   minAvailable: 1
 
-### pod network policy
-# https://github.com/ahmetb/kubernetes-network-policy-recipes
-networkPolicy:
-  ingress:
-  - {}
-  egress:
-  - {}
-  policyTypes:
-  - Ingress
-  - Egress
-
 ### rules how to spread group of instances between nodes
 affinity: |
   podAntiAffinity:
