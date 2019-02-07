@@ -3,12 +3,16 @@ kind: StatefulSet
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
+    ### human-readable labels for queries and discovery (ex.: prometheus-operator)
+    app: {{ include "microfleet.name" . }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
-    helm.sh/chart: {{ include "microfleet.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    
+    ### labels recommended by documentation (backward compatibility mostly)
     app.kubernetes.io/name: {{ include "microfleet.name" . }}
+    helm.sh/chart: {{ include "microfleet.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   podManagementPolicy: Parallel
   serviceName: ""
@@ -19,15 +23,19 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "microfleet.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: {{ include "microfleet.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
       labels:
+        ### human-readable labels for queries and discovery (ex.: prometheus-operator)
+        app: {{ include "microfleet.name" . }}
         release: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}
+        
+        ### labels recommended by documentation (backward compatibility mostly)
         app.kubernetes.io/name: {{ include "microfleet.name" . }}
         helm.sh/chart: {{ include "microfleet.chart" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
