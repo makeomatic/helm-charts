@@ -1,4 +1,4 @@
-{{- if .Values.service.ports }}
+{{- if or .Values.service.ports .Values.monitoring.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,6 +22,12 @@ spec:
       port: {{ .port }}
       targetPort: {{ default .port .targetPort }}
       protocol: {{ default "TCP" .protocol }}
+  {{- end }}
+  {{- if .Values.monitoring.enabled }}
+    - name: metrics
+      port: {{ .Values.monitoring.port }}
+      targetPort: {{ .Values.monitoring.port }}
+      protocol: TCP
   {{- end }}
   selector:
     app: {{ include "microfleet.name" . }}

@@ -11,7 +11,7 @@ metadata:
 spec:
   endpoints:
   - interval: {{ .Values.monitoring.scrapeInterval }}
-    targetPort: {{ .Values.monitoring.targetPort }}
+    port: metrics
     path: {{ .Values.monitoring.path }}
   namespaceSelector:
     matchNames:

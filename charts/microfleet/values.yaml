@@ -32,7 +32,7 @@ monitoring:
   enabled: true
   namespace: monitoring
   scrapeInterval: 10s
-  targetPort: 9102
+  port: 9102
   path: /metrics
   rules: []
 
