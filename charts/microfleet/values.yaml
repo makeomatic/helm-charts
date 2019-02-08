@@ -102,8 +102,8 @@ health: {}
 
 
 ### pod distruption budget
-disruptionBudget:
-  minAvailable: 1
+disruptionBudget: {}
+  # minAvailable: 1
 
 ### rules how to spread group of instances between nodes
 affinity: |
