@@ -1,0 +1,23 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: {{ include "microfleet.name" . }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+spec:
+  endpoints:
+  - interval: {{ .Values.monitoring.scrapeInterval }}
+    targetPort: {{ .Values.monitoring.targetPort }}
+    path: {{ .Values.monitoring.path }}
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      app: {{ include "microfleet.name" . }}
+      release: {{ .Release.Name }}
+{{- end }}

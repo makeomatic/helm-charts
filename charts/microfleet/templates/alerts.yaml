@@ -1,0 +1,16 @@
+{{- if and .Values.monitoring.enabled (ne (len .Values.monitoring.rules) 0) }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: {{ include "microfleet.name" . }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+spec:
+  groups:
+  - name: postgresql.rules
+    rules:
+{{ toYaml .Values.monitoring.rules | indent 4 }}
+{{- end }}

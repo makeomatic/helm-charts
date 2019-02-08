@@ -27,6 +27,15 @@ image:
   tag: non-existin
   pullPolicy: Always
 
+### generate rules for prometheus-operator
+monitoring:
+  enabled: true
+  namespace: monitoring
+  scrapeInterval: 10s
+  targetPort: 9187
+  path: /metrics
+  rules: []
+
 ### perform operations before starting main service
 initContainers: []
   # - name: sync
