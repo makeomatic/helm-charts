@@ -5,16 +5,9 @@ kind: ConfigMap
 metadata:
   name: {{ include "microfleet.fullname" . }}-config
   labels:
-    ### human-readable labels for queries and discovery (ex.: prometheus-operator)
     app: {{ include "microfleet.name" . }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
-    
-    ### labels recommended by documentation (backward compatibility mostly)
-    app.kubernetes.io/name: {{ include "microfleet.name" . }}
-    helm.sh/chart: {{ include "microfleet.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
 {{- range $filename, $content := .Values.config.files }}
   {{ $filename }}: |
