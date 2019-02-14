@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
-    app: {{ include "microfleet.name" . }}
+    app: {{ .Release.Name }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
@@ -16,7 +16,7 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      app: {{ include "microfleet.name" . }}
+      app: {{ .Release.Name }}
       release: {{ .Release.Name }}
   template:
     metadata:
@@ -24,15 +24,9 @@ spec:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
       labels:
         ### human-readable labels for queries and discovery (ex.: prometheus-operator)
-        app: {{ include "microfleet.name" . }}
+        app: {{ .Release.Name }}
         release: {{ .Release.Name }}
-        version: {{ .Values.image.tag | quote }}
-        
-        ### labels recommended by documentation (backward compatibility mostly)
-        app.kubernetes.io/name: {{ include "microfleet.name" . }}
-        helm.sh/chart: {{ include "microfleet.chart" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        version: {{ .Values.image.tag | quote }}        
     spec:
       {{- if eq .Values.serviceAccountName "" }}
       automountServiceAccountToken: false

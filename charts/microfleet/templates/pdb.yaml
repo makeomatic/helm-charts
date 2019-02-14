@@ -4,13 +4,13 @@ kind: PodDisruptionBudget
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
-    app: {{ include "microfleet.name" . }}
+    app: {{ .Release.Name }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
 {{ toYaml .Values.disruptionBudget | indent 2 }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "microfleet.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      app: {{ .Release.Name }}
+      release: {{ .Release.Name }}
 {{ end }}

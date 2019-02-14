@@ -4,7 +4,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "microfleet.fullname" . }}-consul-templates
   labels:
-    app: {{ include "microfleet.name" . }}
+    app: {{ .Release.Name }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 data:

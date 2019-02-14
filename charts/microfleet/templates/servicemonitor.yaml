@@ -5,8 +5,7 @@ metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Values.monitoring.namespace }}
   labels:
-    app: {{ include "microfleet.name" . }}
-    release: {{ .Release.Name }}
+    app: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
   endpoints:
@@ -18,6 +17,6 @@ spec:
     - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      app: {{ include "microfleet.name" . }}
+      app: {{ .Release.Name }}
       release: {{ .Release.Name }}
 {{- end }}

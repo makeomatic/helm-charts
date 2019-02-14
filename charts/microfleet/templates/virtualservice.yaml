@@ -5,7 +5,7 @@ kind: VirtualService
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
-    app: {{ include "microfleet.name" . }}
+    app: {{ .Release.Name }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
