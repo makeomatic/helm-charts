@@ -27,6 +27,7 @@ spec:
         app: {{ .Release.Name }}
         release: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}        
+        fluentbit: enabled
     spec:
       {{- if eq .Values.serviceAccountName "" }}
       automountServiceAccountToken: false
