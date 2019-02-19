@@ -22,12 +22,12 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
+        fluentbit.io/enabled: "true"
       labels:
         ### human-readable labels for queries and discovery (ex.: prometheus-operator)
         app: {{ .Release.Name }}
         release: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}        
-        fluentbit: enabled
     spec:
       {{- if eq .Values.serviceAccountName "" }}
       automountServiceAccountToken: false
