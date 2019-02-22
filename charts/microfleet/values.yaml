@@ -91,14 +91,29 @@ virtualService: {}
   #       port:
   #         number: 50051
 
-### healthcheck settings for the service
-health: {}
-  # path: /health
-  # port: http
-  # initialDelaySeconds: 5
-  # periodSeconds: 5
-  # successThreshold: 1
-  # failureThreshold: 3
+### default liveness: should fail 6 times in 1 minute
+liveness:
+  probe: {}
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 6
+### default readiness: should fail 6 times in 1 minute
+readiness:
+  probe: {}
+    # exec:
+    #   command:
+    #   - cat
+    #   - /tmp/healthy
+    # httpGet:
+    #   path: /healthz
+    #   port: http
+    # tcpSocket:
+    #   port: 8080
+  initialDelaySeconds: 0
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 6
 
 
 ### pod distruption budget

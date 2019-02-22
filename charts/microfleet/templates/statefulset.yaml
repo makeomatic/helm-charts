@@ -107,15 +107,23 @@ spec:
           {{- end }}
           {{- end }}
 
-          {{- if .Values.health }}
+          {{- if .Values.liveness.probe }}
           livenessProbe:
-            httpGet:
-{{ toYaml .Values.health | indent 14 }}
-          readinessProbe:
-            httpGet:
-{{ toYaml .Values.health | indent 14 }}
+{{ toYaml .Values.liveness.probe | indent 12 -}}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+            successThreshold: {{ .Values.liveness.successThreshold }}
+            failureThreshold: {{ .Values.liveness.failureThreshold }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
           {{- end }}
-          
+          {{- if .Values.readiness.probe }}
+          livenessProbe:
+{{ toYaml .Values.readiness.probe | indent 12 -}}
+            periodSeconds: {{ .Values.readiness.periodSeconds }}
+            successThreshold: {{ .Values.readiness.successThreshold }}
+            failureThreshold: {{ .Values.readiness.failureThreshold }}
+            initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+          {{- end }}
+
           {{- if .Values.resources }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
