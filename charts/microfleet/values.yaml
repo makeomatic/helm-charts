@@ -91,14 +91,14 @@ virtualService: {}
   #       port:
   #         number: 50051
 
-### default liveness: should fail 6 times in 1 minute
+### default liveness: should fail 6 times in 1 minute to trigger
 liveness:
   probe: {}
   initialDelaySeconds: 10
   periodSeconds: 10
   successThreshold: 1
   failureThreshold: 6
-### default readiness: should fail 6 times in 1 minute
+### default readiness: should fail 3 times in 15 seconds
 readiness:
   probe: {}
     # exec:
@@ -111,9 +111,9 @@ readiness:
     # tcpSocket:
     #   port: 8080
   initialDelaySeconds: 0
-  periodSeconds: 10
+  periodSeconds: 5
   successThreshold: 1
-  failureThreshold: 6
+  failureThreshold: 3
 
 
 ### pod distruption budget
