@@ -107,12 +107,12 @@ spec:
           {{- end }}
           {{- end }}
 
-          {{- if and .Values.liveness .Values.liveness.probe }}
+          {{- if and .Values.liveness .Values.liveness.enabled }}
           livenessProbe:
 {{ toYaml .Values.liveness | indent 12 -}}
           {{- end }}
-          {{- if and .Values.readiness .Values.readiness.probe }}
-          livenessProbe:
+          {{- if and .Values.readiness .Values.readiness.enabled }}
+          readinessProbe:
 {{ toYaml .Values.readiness | indent 12 -}}
           {{- end }}
 
