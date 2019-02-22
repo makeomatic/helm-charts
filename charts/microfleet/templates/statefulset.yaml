@@ -107,7 +107,7 @@ spec:
           {{- end }}
           {{- end }}
 
-          {{- if .Values.liveness.probe }}
+          {{- if and .Values.liveness .Values.liveness.probe }}
           livenessProbe:
 {{ toYaml .Values.liveness.probe | indent 12 -}}
             periodSeconds: {{ .Values.liveness.periodSeconds }}
@@ -115,7 +115,7 @@ spec:
             failureThreshold: {{ .Values.liveness.failureThreshold }}
             initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
           {{- end }}
-          {{- if .Values.readiness.probe }}
+          {{- if and .Values.readiness .Values.readiness.probe }}
           livenessProbe:
 {{ toYaml .Values.readiness.probe | indent 12 -}}
             periodSeconds: {{ .Values.readiness.periodSeconds }}
