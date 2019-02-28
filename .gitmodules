@@ -1,6 +1,3 @@
 [submodule "submodules/consul"]
 	path = submodules/consul
 	url = git@github.com:hashicorp/consul-helm.git
-[submodule "submodules/clickhouse"]
-	path = submodules/clickhouse
-	url = git@github.com:plutov/clickhouse-helm.git

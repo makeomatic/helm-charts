@@ -1,0 +1,89 @@
+# TODO: https://ruhighload.com/doc/clickhouse/operations/tips/
+# - reasearch ability to tune linux stack
+# - tune zookeeper
+
+replicaCount: 1
+
+image:
+  repository: yandex/clickhouse-server
+  tag: 19.3.3
+  pullPolicy: IfNotPresent
+
+disruptionBudget:
+  minAvailable: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+updateStrategy:
+  type: RollingUpdate
+
+service:
+  type: ClusterIP
+  httpPort: 8123
+  tcpPort: 9000
+
+storage:
+  className: standard
+  size: 10Gi
+
+config:
+  docker.xml: |
+    <yandex>
+        <!-- Listen wildcard address to allow accepting connections from other containers and host network. -->
+        <listen_host>0.0.0.0</listen_host>
+        <listen_try>1</listen_try>
+        <http_port>8123</http_port>
+        <tcp_port>9000</tcp_port>
+
+        <!-- output logs to console -->
+        <logger>
+            <level>information</level>
+            <console>1</console>
+            <log>/dev/null</log>
+            <errorlog>/dev/null</errorlog>
+        </logger>
+    </yandex>
+  shards.xml: |
+    <yandex>
+      <macros>
+          <!--  unique shard id in zookeeper path -->
+          <!--  HOSTNAME -->
+          <shard>01</shard>
+          <!-- replica name in zookeeper -->
+          <replica>localhost</replica>
+      </macros>
+    </yandex>
+
+  # zookeeper.xml: |
+  #   <yandex>
+  #       <zookeeper>
+  #           <node index="1">
+  #               <host>zookeeper-zookeeper-0.zookeeper-zookeeper-headless.default.svc.cluster.local</host>
+  #               <port>2181</port>
+  #           </node>
+  #           <node index="2">
+  #               <host>zookeeper-zookeeper1-1.zookeeper-zookeeper-headless.default.svc.cluster.local</host>
+  #               <port>2181</port>
+  #           </node>
+  #           <node index="3">
+  #               <host>zookeeper-zookeeper-2.zookeeper-zookeeper-headless.default.svc.cluster.local</host>
+  #               <port>2181</port>
+  #           </node>
+  #       </zookeeper>
+  #   </yandex>
+
+resources: {}
+
+affinity: |
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: "kubernetes.io/hostname"
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: {{ include "clickhouse.name" . }}
+            app.kubernetes.io/instance: {{ .Release.Name }}
+
+nodeSelector: {}
+
+tolerations: []

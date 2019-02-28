@@ -125,8 +125,8 @@ affinity: |
       - topologyKey: "kubernetes.io/hostname"
         labelSelector:
           matchLabels:
-            app.kubernetes.io/name: {{ include "microfleet.name" . }}
-            app.kubernetes.io/instance: {{ .Release.Name }}
+            app: {{ .Release.Name }}
+            release: {{ .Release.Name }}
 
 ### amount of resources service will request or be able to consume
 resources:

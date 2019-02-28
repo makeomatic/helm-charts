@@ -1,0 +1,17 @@
+{{ if .Values.disruptionBudget }}
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "clickhouse.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "clickhouse.name" . }}
+    helm.sh/chart: {{ include "clickhouse.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+{{ toYaml .Values.disruptionBudget | indent 2 }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "clickhouse.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+{{ end }}
