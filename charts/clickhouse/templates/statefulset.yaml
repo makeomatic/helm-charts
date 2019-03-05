@@ -26,6 +26,7 @@ spec:
     spec:
       automountServiceAccountToken: false
       initContainers:
+      ### copy configuration files replacing env variables in them
       - name: envsubst
         image: bhgedigital/envsubst
         volumeMounts:
@@ -41,9 +42,6 @@ spec:
           for file in `ls /config-template`; do
             envsubst < /config-template/$file > /config/$file
           done
-          cat /config/shards.xml
-          ls /config
-          exit 1
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
