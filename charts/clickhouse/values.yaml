@@ -47,11 +47,8 @@ config:
   shards.xml: |
     <yandex>
       <macros>
-          <!--  unique shard id in zookeeper path -->
-          <!--  HOSTNAME -->
-          <shard>01</shard>
-          <!-- replica name in zookeeper -->
-          <replica>localhost</replica>
+          <shard>$ID</shard>
+          <replica>$HOSTNAME</replica>
       </macros>
     </yandex>
 

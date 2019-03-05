@@ -25,6 +25,25 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       automountServiceAccountToken: false
+      initContainers:
+      - name: envsubst
+        image: bhgedigital/envsubst
+        volumeMounts:
+        - name: config-template
+          mountPath: /config-template
+        - name: config
+          mountPath: /config
+        command:
+        - sh
+        - -ec
+        - |
+          export ID=`echo $HOSTNAME | tr -dc '0-9'`
+          for file in `ls /config-template`; do
+            envsubst < /config-template/$file > /config/$file
+          done
+          cat /config/shards.xml
+          ls /config
+          exit 1
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -38,11 +57,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /?query=SELECT%201
+              path: /
               port: http
           readinessProbe:
             httpGet:
-              path: /?query=SELECT%201
+              path: /
               port: http
           volumeMounts:
           - name: config
@@ -63,6 +82,8 @@ spec:
     {{- end }}
       volumes:
       - name: config
+        emptyDir: {}
+      - name: config-template
         configMap:
           name: {{ include "clickhouse.fullname" . }}-config
   volumeClaimTemplates:
