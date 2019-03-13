@@ -30,6 +30,7 @@ image:
 ### generate rules for prometheus-operator
 monitoring:
   enabled: true
+  operator: true
   namespace: monitoring
   scrapeInterval: 10s
   port: 9102
