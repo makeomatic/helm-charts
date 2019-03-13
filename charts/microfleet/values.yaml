@@ -36,6 +36,10 @@ monitoring:
   path: /metrics
   rules: []
 
+### tell kiali which runtime we use so it will be able to display corresponding dashboard
+kiali:
+  runtime: nodejs # go, nodejs, ...
+
 ### perform operations before starting main service
 initContainers: []
   # - name: sync

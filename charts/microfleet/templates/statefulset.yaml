@@ -23,11 +23,18 @@ spec:
       annotations:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
         fluentbit.io/enabled: "true"
+        {{- if .Values.monitoring.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.monitoring.port }}"
+        prometheus.io/scheme: "http"
+        prometheus.io/port: "{{ .Values.monitoring.path }}"
+        {{- end }}
+        kiali.io/runtimes: "{{ .Values.kiali.runtime }}"
       labels:
         ### human-readable labels for queries and discovery (ex.: prometheus-operator)
         app: {{ .Release.Name }}
         release: {{ .Release.Name }}
-        version: {{ .Values.image.tag | quote }}        
+        version: {{ .Values.image.tag | quote }}
     spec:
       {{- if eq .Values.serviceAccountName "" }}
       automountServiceAccountToken: false
@@ -57,7 +64,7 @@ spec:
             {{- range $filename, $content := .Values.consul.templates }}
               -template "/template/{{ $filename }}:/config/{{ $filename }}" \
             {{- end }}
-            
+
             cat /config/*
       {{- end }}
       {{- if .Values.initContainers }}
