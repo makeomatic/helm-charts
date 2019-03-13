@@ -27,7 +27,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.monitoring.port }}"
         prometheus.io/scheme: "http"
-        prometheus.io/port: "{{ .Values.monitoring.path }}"
+        prometheus.io/path: "{{ .Values.monitoring.path }}"
         {{- end }}
         kiali.io/runtimes: "{{ .Values.kiali.runtime }}"
       labels:
