@@ -17,7 +17,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ include "clickhouse.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  serviceName: ""
+  serviceName: {{ include "clickhouse.fullname" . }}-direct
   template:
     metadata:
       labels:
