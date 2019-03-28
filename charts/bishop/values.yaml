@@ -131,7 +131,7 @@ toolchain:
 
   # enable istio support
   istio:
-    enabled: true
+    enabled: false
     kiali:
       runtime: nodejs
     virtualService: {}
@@ -148,8 +148,8 @@ toolchain:
 
   # generate rules for prometheus or prometheus-operator
   monitoring:
-    enabled: true
-    operator: true
+    enabled: false
+    operator: false
     namespace: monitoring
     scrapeInterval: 10s
     port: 9102
@@ -158,7 +158,7 @@ toolchain:
 
   # collect logs using fluent-bit
   fluentbit:
-    enabled: true
+    enabled: false
 
   # generate configs
   config:

@@ -1,3 +1,4 @@
+{{ required "A valid image is required" (or .Values.image.tag .Values.image.repository) }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -21,6 +22,12 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if .Values.toolchain.config.files }}
+        checksum/config-files: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if .Values.toolchain.consul.templates }}
+        checksum/config-consul: {{ include (print $.Template.BasePath "/consul.templates.yaml") . | sha256sum }}
+        {{- end }}
         sidecar.istio.io/inject: "{{ .Values.toolchain.istio.enabled }}"
         {{- if .Values.toolchain.fluentbit.enabled }}
         fluentbit.io/enabled: "true"
