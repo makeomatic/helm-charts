@@ -53,6 +53,9 @@ resources:
     cpu: 500m
 
 toolchain:
+  monitoring:
+    enabled: true
+    operator: true
   istio:
     enabled: true
     virtualService:
