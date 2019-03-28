@@ -1,0 +1,13 @@
+# NOTE: short host name is taken from _rule_ namespace, not from _service_ namespace
+{{- if and .Values.toolchain.istio.enabled .Values.virtualService }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  labels:
+    app: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+spec:
+{{ toYaml .Values.virtualService | indent 2 }}
+{{- end }}

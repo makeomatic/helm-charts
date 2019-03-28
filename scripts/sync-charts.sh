@@ -9,6 +9,10 @@ repo_url="cdn.matic.ninja/helm-charts"
 artifact_dir="./artifacts"
 mkdir -p $artifact_dir
 
+### perform tests
+./charts/bishop/test.sh
+
+### generate arcchives
 for chart in ./charts/*
 do
     echo helm package $chart --destination $artifact_dir

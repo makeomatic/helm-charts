@@ -1,0 +1,26 @@
+{{- if or .Values.service.ports .Values.toolchain.monitoring.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  labels:
+    app: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  {{- range .Values.service.ports }}
+    - name: {{ .name }}
+      port: {{ .port }}
+      targetPort: {{ default .port .targetPort }}
+      protocol: {{ default "TCP" .protocol }}
+  {{- end }}
+  {{- if .Values.toolchain.monitoring.enabled }}
+    - name: metrics
+      port: {{ .Values.toolchain.monitoring.port }}
+      targetPort: {{ .Values.toolchain.monitoring.port }}
+      protocol: TCP
+  {{- end }}
+  selector:
+    app: {{ .Release.Name }}
+{{- end }}

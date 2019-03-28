@@ -1,0 +1,84 @@
+name: simple
+replicaCount: 1
+serviceAccountName: sa
+updateStrategy: {}
+command: test-command
+args: ["few", "args"]
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+initContainers:
+  - name: sync
+    image: gcr.io/google_containers/git-sync
+    env:
+      - name: GIT_SYNC_REPO
+        value: https://github.com/StreamLayer/sl-chat-auth.git
+      - name: GIT_SYNC_USERNAME
+        value: user
+      - name: GIT_SYNC_PASSWORD
+        value: password
+      - name: GIT_SYNC_ROOT
+        value: /repo
+      - name: GIT_SYNC_ONE_TIME
+        value: "true"
+    volumeMounts:
+      - name: chat-auth
+        mountPath: /repo
+volumes:
+  - name: chat-auth
+    emptyDir: {}
+volumeMounts:
+  - name: chat-auth
+    mountPath: /some
+env:
+  - name: TEST
+    value: test
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+health:
+  checkLiveness: true
+  checkReadiness: true
+disruptionBudget:
+  minAvailable: 1
+resources:
+  requests:
+    memory: 100Mi
+    cpu: 10m
+  limits:
+    memory: 512Mi
+    cpu: 500m
+
+toolchain:
+  istio:
+    enabled: true
+    virtualService:
+      gateways:
+      - staging-wild
+      hosts:
+      - grpc.staging.streamlayer.io
+      http:
+      - route:
+        - destination:
+            host: grpc
+            port:
+              number: 50051
+  config:
+    path: /config
+    files:
+      qwe.txt: |-
+        some: test
+        test: {{ .Values.toolchain.consul.path }}
+  consul:
+    path: /config
+    templates:
+      config.yml: |-
+        amqp:
+          host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+          password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+        redis:
+          settings:
+            host: {{ keyOrDefault "staging/redisHost" "redishost" }}

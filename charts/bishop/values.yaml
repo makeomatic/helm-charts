@@ -1,0 +1,193 @@
+### rewrite entities names with selected one
+### default: .Release.Name
+name: ""
+
+### amount of service instances
+replicaCount: 3
+
+### launch service with specified service accont
+### default: do not mount API access tokens
+serviceAccountName: ""
+
+### default update strategy
+updateStrategy:
+  type: RollingUpdate
+
+### ability to rewrite launch command and arguments
+command: ""
+args: ""
+
+### docker image settings
+### required to set manually
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: Always
+
+### launch init containers before starting main service
+initContainers: []
+  # - name: sync
+  #   image: gcr.io/google_containers/git-sync:v3.0.1
+  #   env:
+  #     - name: GIT_SYNC_REPO
+  #       value: https://github.com/StreamLayer/sl-chat-auth.git
+  #     - name: GIT_SYNC_USERNAME
+  #       value: ???
+  #     - name: GIT_SYNC_PASSWORD
+  #       value: ???
+  #     - name: GIT_SYNC_ROOT
+  #       value: /repo
+  #     - name: GIT_SYNC_ONE_TIME
+  #       value: "true"
+  #   volumeMounts:
+  #     - name: chat-auth
+  #       mountPath: /repo
+
+### volumes accessible to service
+volumes: []
+  # - name: config
+  #   emptyDir: {}
+
+### volumes to mount into service directly
+volumeMounts: []
+  # - name: volumename
+  #   mountPath: /specs
+
+### env variables for the service
+env: []
+  # - name: test
+  #   value: test
+
+### ports which service will expose
+service:
+  type: ClusterIP
+  ports: []
+    # - name: http
+    #   port: 8080
+      # targetPort: 8081
+      # protocol: TCP
+
+
+### health probes (disabled by default)
+### default liveness: fail 6 times in 1 minute to trigger
+### default readiness: fail 3 times in 1 minute to trigger
+health:
+  checkLiveness: false
+  checkReadiness: false
+
+  liveness:
+    # httpGet:
+    #   path: /healthz
+    #   port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    failureThreshold: 6
+
+  readiness:
+    # exec:
+    #   command:
+    #   - cat
+    #   - /tmp/healthy
+    # httpGet:
+    #   path: /healthz
+    #   port: http
+    # tcpSocket:
+    #   port: 8080
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+
+
+### pod distruption budget
+### default: none
+disruptionBudget: {}
+  # minAvailable: 1
+
+### rules how to spread group of instances between nodes
+### default: spread instances between nodes
+affinity: |
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: "kubernetes.io/hostname"
+        labelSelector:
+          matchLabels:
+            app: {{ .Release.Name }}
+            release: {{ .Release.Name }}
+
+### amount of resources service will request or be able to consume
+### default: unlimited
+resources: {}
+  # requests:
+  #   memory: 100Mi
+  #   cpu: 10m
+  # limits:
+  #   memory: 512Mi
+  #   cpu: 500m
+
+### enable support of following internal services in current deployment
+toolchain:
+
+  # enable istio support
+  istio:
+    enabled: true
+    kiali:
+      runtime: nodejs
+    virtualService: {}
+      # gateways:
+      # - staging-wild
+      # hosts:
+      # - grpc.staging.streamlayer.io
+      # http:
+      # - route:
+      #   - destination:
+      #       host: grpc
+      #       port:
+      #         number: 50051
+
+  # generate rules for prometheus or prometheus-operator
+  monitoring:
+    enabled: true
+    operator: true
+    namespace: monitoring
+    scrapeInterval: 10s
+    port: 9102
+    path: /metrics
+    rules: []
+
+  # collect logs using fluent-bit
+  fluentbit:
+    enabled: true
+
+  # generate configs
+  config:
+    path: /config
+    files: {}
+      # qwe.txt: |-
+      #   someshit
+      #   test: {{ .Values.consul.path }}
+
+  ### service is able to get settings from consul using `consul-template`
+  # enabled if `consul.templates` is set
+  # https://github.com/hashicorp/consul-template
+  #
+  # How to debug templates:
+  # 1) Proxy k8s consul instance to local port:
+  # `kubectl port-forward service/consul-server 8500:8500`
+  # 2) Store template to file `chart.yaml`
+  # 3) Generate config:
+  # `consul-template -template "chart.yaml:output.txt" -once -dry`
+  consul:
+    # place where to mount rendered configs
+    path: /config
+    # additional configuration for `consul-template`
+    # object with templates
+    templates: {}
+      # config.yml: |-
+      #   amqp:
+      #     host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+      #     password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+      #   redis:
+      #     settings:
+      #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}
