@@ -17,7 +17,6 @@ spec:
   selector:
     matchLabels:
       app: {{ .Release.Name }}
-      release: {{ .Release.Name }}
   template:
     metadata:
       annotations:

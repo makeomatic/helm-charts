@@ -3,4 +3,4 @@ appVersion: "1.0"
 description: Deploys custom service based on values
 icon: https://www.svgrepo.com/download/211446/settings-gear.svg
 name: bishop
-version: 1.0.1
+version: 1.0.3
