@@ -42,9 +42,7 @@ spec:
         kiali.io/runtimes: "{{ .Values.toolchain.istio.kiali.runtime }}"
         {{- end }}
       labels:
-        ### human-readable labels for queries and discovery (ex.: prometheus-operator)
         app: {{ .Release.Name }}
-        release: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}
     spec:
       {{- if eq .Values.serviceAccountName "" }}

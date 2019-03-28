@@ -6,7 +6,6 @@ metadata:
   name: {{ include "microfleet.fullname" . }}-config
   labels:
     app: {{ .Release.Name }}
-    release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 data:
 {{- range $filename, $content := .Values.toolchain.config.files }}

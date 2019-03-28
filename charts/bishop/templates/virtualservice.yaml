@@ -6,7 +6,6 @@ metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
     app: {{ .Release.Name }}
-    release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
 {{ toYaml .Values.virtualService | indent 2 }}

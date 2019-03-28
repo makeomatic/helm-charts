@@ -5,7 +5,6 @@ metadata:
   name: {{ include "microfleet.fullname" . }}-consul-templates
   labels:
     app: {{ .Release.Name }}
-    release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 data:
 {{ toYaml .Values.toolchain.consul.templates | indent 2 }}
