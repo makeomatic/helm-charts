@@ -13,6 +13,8 @@ serviceAccountName: ""
 updateStrategy:
   type: RollingUpdate
 
+podManagementPolicy: OrderedReady
+
 ### ability to rewrite launch command and arguments
 command: ""
 args: ""
