@@ -121,14 +121,16 @@ spec:
           {{- end }}
           {{- end }}
 
-          {{- if .Values.health.checkLiveness }}
+          {{- if include "health" .Values.liveness }}
           livenessProbe:
-{{ toYaml .Values.health.liveness | indent 12 -}}
+{{ toYaml .Values.liveness | indent 12 -}}
           {{- end }}
-          {{- if .Values.health.checkReadiness }}
+
+          {{- if include "health" .Values.readiness }}
           readinessProbe:
-{{ toYaml .Values.health.readiness | indent 12 -}}
+{{ toYaml .Values.readiness | indent 12 -}}
           {{- end }}
+
 
           {{- if .Values.resources }}
           resources:

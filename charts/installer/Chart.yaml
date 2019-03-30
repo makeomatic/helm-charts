@@ -1,6 +1,6 @@
 apiVersion: v1
 appVersion: "1.0"
-description: Deploys custom service based on values
+description: Custom service installer
 icon: https://www.svgrepo.com/download/211446/settings-gear.svg
-name: bishop
+name: installer
 version: 1.0.4

@@ -73,33 +73,29 @@ service:
 ### health probes (disabled by default)
 ### default liveness: fail 6 times in 1 minute to trigger
 ### default readiness: fail 3 times in 1 minute to trigger
-health:
-  checkLiveness: false
-  checkReadiness: false
+liveness:
+  # httpGet:
+  #   path: /healthz
+  #   port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 6
 
-  liveness:
-    # httpGet:
-    #   path: /healthz
-    #   port: http
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    failureThreshold: 6
-
-  readiness:
-    # exec:
-    #   command:
-    #   - cat
-    #   - /tmp/healthy
-    # httpGet:
-    #   path: /healthz
-    #   port: http
-    # tcpSocket:
-    #   port: 8080
-    initialDelaySeconds: 0
-    periodSeconds: 5
-    successThreshold: 1
-    failureThreshold: 3
+readiness:
+  # exec:
+  #   command:
+  #   - cat
+  #   - /tmp/healthy
+  # httpGet:
+  #   path: /healthz
+  #   port: http
+  # tcpSocket:
+  #   port: 8080
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
 
 
 ### pod distruption budget
