@@ -2,6 +2,8 @@
 ### default: .Release.Name
 name: ""
 
+kind: deployment # deployment, statefulset
+
 ### amount of service instances
 replicaCount: 3
 
@@ -13,7 +15,11 @@ serviceAccountName: ""
 updateStrategy:
   type: RollingUpdate
 
+# statefulset-specific features
 podManagementPolicy: OrderedReady
+
+# deployment-specific features
+revisionHistoryLimit: 5
 
 ### ability to rewrite launch command and arguments
 command: ""

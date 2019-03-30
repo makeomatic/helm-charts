@@ -39,9 +39,6 @@ service:
   ports:
     - name: http
       port: 8080
-health:
-  checkLiveness: true
-  checkReadiness: true
 disruptionBudget:
   minAvailable: 1
 resources:

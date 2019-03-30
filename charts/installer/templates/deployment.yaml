@@ -1,6 +1,6 @@
-{{ if eq .Values.kind "statefulset" }}
-apiVersion: apps/v1
-kind: StatefulSet
+{{ if eq .Values.kind "deployment" }}
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
@@ -8,14 +8,13 @@ metadata:
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
-  podManagementPolicy: {{ .Values.podManagementPolicy }}
-  serviceName: ""
   replicas: {{ .Values.replicaCount }}
-  updateStrategy:
-{{ toYaml .Values.updateStrategy | indent 4 }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}
+  strategy:
+{{ toYaml .Values.updateStrategy | indent 4 }}
   template:
     metadata:
       annotations:
