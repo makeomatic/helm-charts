@@ -2,6 +2,13 @@
 set -e
 shopt -s expand_aliases
 
+### update submodules till actual version
+git submodule update
+
+### test testable charts
+./charts/installer/test.sh
+
+### generate archives with the charts
 alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
 helm init -c
 
@@ -9,10 +16,7 @@ repo_url="cdn.matic.ninja/helm-charts"
 artifact_dir="./artifacts"
 mkdir -p $artifact_dir
 
-### perform tests
-./charts/bishop/test.sh
 
-### generate arcchives
 for chart in ./charts/*
 do
     echo helm package $chart --destination $artifact_dir
