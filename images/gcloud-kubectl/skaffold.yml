@@ -1,0 +1,9 @@
+apiVersion: skaffold/v1beta7
+kind: Config
+build:
+  artifacts:
+  - image: vkfont/gcloud-kubectl
+  tagPolicy:
+    envTemplate:
+      template: '{{.IMAGE_NAME}}:{{.TAG}}'
+deploy: {}
