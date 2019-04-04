@@ -33,3 +33,22 @@ certmanager:
         - internal.streamlayer.io
       dnsNames:
         - internal.streamlayer.io
+
+ingresses:
+  enabled: true
+  items:
+    - name: concourse-ci-web
+      namespace: default
+      host: concourse.internal.streamlayer.io
+      serviceName: concourse-ci-web
+      servicePort: 8080
+      secretName: internal-wild-crt
+      auth: true
+
+basic:
+  enabled: true
+  host: basic.internal.streamlayer.io
+  # htpasswd -c auth foo
+  auth:
+  - user:$apr1$ZARIExzP$11iNQWtBgxfcPZcNUwSkx0
+    user2:$apr1$1rF3nmAj$FxXI8VMUF2O1MK6op1rsk/

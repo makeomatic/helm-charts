@@ -1,0 +1,28 @@
+{{- if .Values.ingresses.enabled }}
+{{ $this := .Values }}
+{{- range $this.ingresses.items }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    {{- if .auth }}
+    nginx.ingress.kubernetes.io/auth-url: {{ $this.basic.host }}
+    {{- end }}
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  rules:
+  - host: {{ .host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .serviceName }}
+          servicePort: {{ .servicePort }}
+  tls:
+  - hosts:
+    - {{ .host }}
+    secretName: {{ .secretName }}
+---
+{{- end }}
+{{- end }}
