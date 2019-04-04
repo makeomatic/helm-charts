@@ -1,0 +1,23 @@
+{{- if .Values.startup.enabled }}
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: bootstraper
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      hostPID: true
+      containers:
+      - name: startup-script
+        image: {{ .Values.startup.image.repository }}:{{ .Values.startup.image.tag }}
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+        env:
+        - name: STARTUP_SCRIPT
+          value: |
+            #! /bin/bash
+            echo 1 > /proc/sys/net/ipv4/netfilter/ip_conntrack_tcp_be_liberal
+            echo done
+{{- end }}

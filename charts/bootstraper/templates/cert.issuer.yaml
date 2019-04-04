@@ -1,0 +1,30 @@
+{{- if .Values.certmanager.enabled }}
+apiVersion: v1
+data:
+  token: {{ .Values.certmanager.cloudflare.token | b64enc }}
+kind: Secret
+metadata:
+  name: {{ .Values.certmanager.cloudflare.secretName }}
+  namespace: {{ .Values.certmanager.namespace }}
+type: Opaque
+---
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.certmanager.issuer.name }}
+  namespace: {{ .Values.certmanager.namespace }}
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .Values.certmanager.issuer.email }}
+    privateKeySecretRef:
+      name: {{ .Values.certmanager.issuer.name }}
+    dns01:
+      providers:
+      - name: cloudflare
+        cloudflare:
+          email: {{ .Values.certmanager.cloudflare.email }}
+          apiKeySecretRef:
+            name: {{ .Values.certmanager.cloudflare.secretName }}
+            key: token
+{{- end }}

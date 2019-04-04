@@ -1,0 +1,27 @@
+### execute script on every node during startup
+startup:
+  enabled: true
+  image:
+    repository: gcr.io/google-containers/startup-script
+    tag: v1
+
+### add ssd GKE storage
+storages:
+  enabled: true
+
+### add helm roles
+tiller:
+  enabled: true
+
+### install letsencrypt issuer, certificates and CRDs for certmanager helm chart
+# NOTE: cert manager chart does not install own CRDs (Apr 2019) so we have to prepare owns
+certmanager:
+  enabled: true
+  namespace: default
+  issuer:
+    name: letsencrypt
+    email: v@makeomatic.ca
+  cloudflare:
+    secretName: cloudflare-token
+    email: tim@streamlayer.io
+    token: f0f5c9616aaaf23fe5d4326e55480868d291b
