@@ -1,22 +1,22 @@
 ### execute script on every node during startup
 startup:
-  enabled: true
+  enabled: false
   image:
     repository: gcr.io/google-containers/startup-script
     tag: v1
 
 ### add ssd GKE storage
 storages:
-  enabled: true
+  enabled: false
 
 ### add helm roles
 tiller:
-  enabled: true
+  enabled: false
 
 ### install letsencrypt issuer, certificates and CRDs for certmanager helm chart
 # NOTE: cert manager chart does not install own CRDs (Apr 2019) so we have to prepare owns
 certmanager:
-  enabled: true
+  enabled: false
   namespace: default
   issuer:
     name: letsencrypt
@@ -24,7 +24,7 @@ certmanager:
   cloudflare:
     secretName: cloudflare-token
     email: tim@streamlayer.io
-    token: f0f5c9616aaaf23fe5d4326e55480868d291b
+    token: {insertme}
   certificates:
     - name: internal-wild-crt
       namespace: default
@@ -33,22 +33,30 @@ certmanager:
         - internal.streamlayer.io
       dnsNames:
         - internal.streamlayer.io
+    - name: istio-gateway
+      secret: istio-ingressgateway-certs
+      namespace: istio-system
+      domains:
+        - "*.staging.streamlayer.io"
+        - staging.streamlayer.io
+      dnsNames:
+        - staging.streamlayer.io
 
 ingresses:
-  enabled: true
-  items:
-    - name: concourse-ci-web
-      namespace: default
-      host: concourse.internal.streamlayer.io
-      serviceName: concourse-ci-web
-      servicePort: 8080
-      secretName: internal-wild-crt
-      auth: true
+  enabled: false
+  items: []
+    # - namespace: default
+    #   host: concourse.internal.streamlayer.io
+    #   serviceName: concourse-ci-web
+    #   servicePort: 8080
+    #   secretName: internal-wild-crt
+    #   basicAuth: true
 
-basic:
-  enabled: true
+basicAuth:
+  enabled: false
   host: basic.internal.streamlayer.io
-  # htpasswd -c auth foo
-  auth:
-  - user:$apr1$ZARIExzP$11iNQWtBgxfcPZcNUwSkx0
-    user2:$apr1$1rF3nmAj$FxXI8VMUF2O1MK6op1rsk/
+  path: http://basic.internal.streamlayer.io/healthz
+  # htpasswd -n admin
+  # TODO: only one user is supported for now, should generate valid auth with newlines first
+  auth: []
+  # - admin:...

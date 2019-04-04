@@ -19,7 +19,7 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: {{ $name }}
-  secretName: {{ .name }}
+  secretName: {{ default .name .secret }}
 ---
 {{- end }}
 {{- end }}

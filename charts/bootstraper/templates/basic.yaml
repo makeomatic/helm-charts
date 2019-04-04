@@ -1,7 +1,7 @@
 {{- if .Values.ingresses.enabled }}
 apiVersion: v1
 data:
-  auth: {{ print (join "\n" .Values.basic.auth) "\n" | b64enc }}
+  auth: {{ print (join "\n" .Values.basicAuth.auth) "\n" | b64enc }}
 kind: Secret
 metadata:
   name: basic-auth
@@ -20,7 +20,7 @@ metadata:
   namespace: kube-system
 spec:
   rules:
-  - host: {{ .Values.basic.host }}
+  - host: {{ .Values.basicAuth.host }}
     http:
       paths:
       - backend:

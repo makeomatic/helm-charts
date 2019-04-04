@@ -6,6 +6,9 @@ metadata:
   namespace: kube-system
 spec:
   template:
+    metadata:
+      labels:
+        app: bootstraper
     spec:
       hostPID: true
       containers:

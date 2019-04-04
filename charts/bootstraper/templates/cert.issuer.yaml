@@ -16,7 +16,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: {{ .Values.certmanager.issuer.email }}
+    email: {{ default .Values.certmanager.cloudflare.email .Values.certmanager.issuer.email }}
     privateKeySecretRef:
       name: {{ .Values.certmanager.issuer.name }}
     dns01:
