@@ -25,3 +25,11 @@ certmanager:
     secretName: cloudflare-token
     email: tim@streamlayer.io
     token: f0f5c9616aaaf23fe5d4326e55480868d291b
+  certificates:
+    - name: internal-wild-crt
+      namespace: default
+      domains:
+        - "*.internal.streamlayer.io"
+        - internal.streamlayer.io
+      dnsNames:
+        - internal.streamlayer.io
