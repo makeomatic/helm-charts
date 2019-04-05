@@ -24,7 +24,7 @@ certmanager:
   cloudflare:
     secretName: cloudflare-token
     email: tim@streamlayer.io
-    token: {insertme}
+    token: "{insertme}"
   certificates:
     - name: internal-wild-crt
       namespace: default
