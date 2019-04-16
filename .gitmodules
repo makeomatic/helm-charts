@@ -1,9 +1,6 @@
 [submodule "submodules/consul"]
 	path = submodules/consul
 	url = git@github.com:hashicorp/consul-helm.git
-[submodule "submodules/loki"]
-	path = submodules/loki
-	url = https://github.com/grafana/loki
 [submodule "submodules/istio"]
 	path = submodules/istio
 	url = https://github.com/istio/istio
