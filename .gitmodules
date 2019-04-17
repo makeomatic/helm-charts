@@ -1,9 +1,6 @@
 [submodule "submodules/consul"]
 	path = submodules/consul
 	url = git@github.com:hashicorp/consul-helm.git
-[submodule "submodules/istio"]
-	path = submodules/istio
-	url = https://github.com/istio/istio
 [submodule "submodules/iris"]
 	path = submodules/iris
 	url = git@github.com:olegsu/iris.git
