@@ -4,3 +4,6 @@
 [submodule "submodules/iris"]
 	path = submodules/iris
 	url = git@github.com:olegsu/iris.git
+[submodule "submodules/preemptible-killer"]
+	path = submodules/preemptible-killer
+	url = https://github.com/estafette/estafette-gke-preemptible-killer
