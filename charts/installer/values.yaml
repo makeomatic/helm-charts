@@ -151,6 +151,13 @@ toolchain:
       #       port:
       #         number: 50051
 
+  # this service can be a victim of kube-monkey
+  monkey:
+    enabled: false
+    mtbf: 1
+    mode: fixed-percent
+    value: 49
+
   # generate rules for prometheus or prometheus-operator
   monitoring:
     enabled: false

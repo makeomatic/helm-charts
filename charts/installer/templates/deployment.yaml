@@ -7,6 +7,13 @@ metadata:
     app: {{ .Release.Name }}
     release: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
+    {{- if .Values.toolchain.monkey.enabled }}
+    kube-monkey/enabled: enabled
+    kube-monkey/mtbf: {{ .Values.toolchain.monkey.mtbf | quote }}
+    kube-monkey/identifier: {{ .Release.Name }}
+    kube-monkey/kill-mode: {{ .Values.toolchain.monkey.mode }}
+    kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
@@ -36,6 +43,13 @@ spec:
         {{- end }}
         {{- if .Values.toolchain.istio.enabled }}
         kiali.io/runtimes: "{{ .Values.toolchain.istio.kiali.runtime }}"
+        {{- end }}
+        {{- if .Values.toolchain.monkey.enabled }}
+        kube-monkey/enabled: enabled
+        kube-monkey/mtbf: {{ .Values.toolchain.monkey.mtbf | quote }}
+        kube-monkey/identifier: {{ .Release.Name }}
+        kube-monkey/kill-mode: {{ .Values.toolchain.monkey.mode }}
+        kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
         {{- end }}
       labels:
         app: {{ .Release.Name }}
