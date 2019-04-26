@@ -1,0 +1,11 @@
+{{- if .Values.toolchain.consul.templates }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "microfleet.fullname" . }}-consul-templates
+  labels:
+    app: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+data:
+{{ toYaml .Values.toolchain.consul.templates | indent 2 }}
+{{- end }}

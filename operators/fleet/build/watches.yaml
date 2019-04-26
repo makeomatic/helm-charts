@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: makeomatic.ca
+  kind: Micro
+  chart: /opt/helm/helm-charts/installer

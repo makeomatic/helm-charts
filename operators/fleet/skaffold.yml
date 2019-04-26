@@ -1,0 +1,14 @@
+apiVersion: skaffold/v1beta8
+kind: Config
+build:
+  artifacts:
+  - image: vkfont/fleet-operator
+    docker:
+      dockerfile: build/Dockerfile
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:{{.TAG}}"
+deploy:
+  kubectl:
+    manifests:
+    - deploy/*.yaml
