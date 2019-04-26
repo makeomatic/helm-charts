@@ -1,9 +1,9 @@
 [submodule "submodules/consul"]
 	path = submodules/consul
 	url = git@github.com:hashicorp/consul-helm.git
-[submodule "submodules/iris"]
-	path = submodules/iris
-	url = git@github.com:olegsu/iris.git
 [submodule "submodules/preemptible-killer"]
 	path = submodules/preemptible-killer
 	url = https://github.com/estafette/estafette-gke-preemptible-killer
+[submodule "submodules/kube-monkey"]
+	path = submodules/kube-monkey
+	url = https://github.com/asobti/kube-monkey
