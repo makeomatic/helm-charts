@@ -142,7 +142,7 @@ spec:
           {{- if .Values.toolchain.monitoring.enabled }}
             - name: metrics
               port: {{ .Values.toolchain.monitoring.port }}
-              targetPort: {{ .Values.toolchain.monitoring.port }}
+              containerPort: {{ .Values.toolchain.monitoring.port }}
               protocol: TCP
           {{- end }}
           {{- end }}
