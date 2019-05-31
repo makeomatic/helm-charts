@@ -65,6 +65,13 @@ spec:
       {{- if .Values.toolchain.consul.templates }}
       - name: consul-template
         image: hashicorp/consul-template:alpine
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 10m
+          limits:
+            memory: 32Mi
+            cpu: 10m
         env:
           - name: NODE_IP
             valueFrom:
@@ -124,12 +131,18 @@ spec:
           args:
 {{ toYaml .Values.args | indent 10 }}
           {{- end }}
-          {{- if .Values.service.ports }}
+          {{- if or .Values.service.ports .Values.toolchain.monitoring.enabled }}
           ports:
           {{- range .Values.service.ports }}
-            - name: {{ .name }}
+            - name: {{ default "http" .name }}
               containerPort: {{ default .port .targetPort }}
               protocol: {{ default "TCP" .protocol }}
+          {{- end }}
+          {{- if .Values.toolchain.monitoring.enabled }}
+            - name: metrics
+              port: {{ .Values.toolchain.monitoring.port }}
+              targetPort: {{ .Values.toolchain.monitoring.port }}
+              protocol: TCP
           {{- end }}
           {{- end }}
 

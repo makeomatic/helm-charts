@@ -10,7 +10,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
   {{- range .Values.service.ports }}
-    - name: {{ .name }}
+    - name: {{ default "http" .name }}
       port: {{ .port }}
       targetPort: {{ default .port .targetPort }}
       protocol: {{ default "TCP" .protocol }}
