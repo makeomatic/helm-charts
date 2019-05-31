@@ -12,13 +12,13 @@ spec:
   {{- range .Values.service.ports }}
     - name: {{ default "http" .name }}
       port: {{ .port }}
-      targetPort: {{ default .port .targetPort }}
+      targetPort: {{ default "http" .name }}
       protocol: {{ default "TCP" .protocol }}
   {{- end }}
   {{- if .Values.toolchain.monitoring.enabled }}
     - name: metrics
       port: {{ .Values.toolchain.monitoring.port }}
-      targetPort: {{ .Values.toolchain.monitoring.port }}
+      targetPort: metrics
       protocol: TCP
   {{- end }}
   selector:
