@@ -130,6 +130,11 @@ resources:
     memory: 2048Mi
     cpu: 500m
 
+tolerations: null
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "tinode"
+
 ### enable support of following internal services in current deployment
 toolchain:
 

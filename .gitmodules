@@ -7,3 +7,6 @@
 [submodule "submodules/kube-monkey"]
 	path = submodules/kube-monkey
 	url = https://github.com/asobti/kube-monkey
+[submodule "submodules/polaris"]
+	path = submodules/polaris
+	url = https://github.com/reactiveops/polaris
