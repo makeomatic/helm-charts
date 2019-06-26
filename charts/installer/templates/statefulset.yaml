@@ -56,6 +56,10 @@ spec:
         app: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}
     spec:
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 6 }}
+      {{- end }}
       {{- if eq .Values.serviceAccountName "" }}
       automountServiceAccountToken: false
       {{- else }}
