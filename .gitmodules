@@ -10,3 +10,6 @@
 [submodule "submodules/polaris"]
 	path = submodules/polaris
 	url = https://github.com/reactiveops/polaris
+[submodule "submodules/kourier"]
+	path = submodules/kourier
+	url = https://github.com/afoninsky/kourier
