@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: yandex/clickhouse-server
-  tag: 19.3.3
+  tag: 19.7.3.9
   pullPolicy: IfNotPresent
 
 disruptionBudget:
