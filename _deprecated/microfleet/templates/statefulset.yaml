@@ -22,7 +22,6 @@ spec:
     metadata:
       annotations:
         sidecar.istio.io/inject: "{{ .Values.meshEnabled }}"
-        fluentbit.io/enabled: "true"
         {{- if .Values.monitoring.enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.monitoring.port }}"

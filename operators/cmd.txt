@@ -1,1 +1,0 @@
-operator-sdk new fleet --api-version=makeomatic.ca/v1alpha1 --kind=Fleet --type=helm --helm-chart=makeomatic/installer --skip-git-init --cluster-scoped=true

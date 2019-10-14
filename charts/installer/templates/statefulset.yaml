@@ -33,9 +33,6 @@ spec:
         checksum/config-consul: {{ include (print $.Template.BasePath "/consul.templates.yaml") . | sha256sum }}
         {{- end }}
         sidecar.istio.io/inject: "{{ .Values.toolchain.istio.enabled }}"
-        {{- if .Values.toolchain.fluentbit.enabled }}
-        fluentbit.io/enabled: "true"
-        {{- end }}
         {{- if .Values.toolchain.monitoring.enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.toolchain.monitoring.port }}"
