@@ -15,6 +15,7 @@ metadata:
     kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
     {{- end }}
 spec:
+  progressDeadlineSeconds: {{ .Values.progressDeadlineSeconds }}
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:

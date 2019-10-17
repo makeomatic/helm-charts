@@ -15,6 +15,7 @@ metadata:
     kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
     {{- end }}
 spec:
+  progressDeadlineSeconds: {{ .Values.progressDeadlineSeconds }}
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   serviceName: ""
   replicas: {{ .Values.replicaCount }}

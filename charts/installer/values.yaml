@@ -11,9 +11,14 @@ replicaCount: 3
 ### default: do not mount API access tokens
 serviceAccountName: ""
 
+progressDeadlineSeconds: 600
+
 ### default update strategy
 updateStrategy:
   type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
 
 # statefulset-specific features
 podManagementPolicy: OrderedReady
