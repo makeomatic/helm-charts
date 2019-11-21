@@ -35,14 +35,6 @@ config:
         <listen_try>1</listen_try>
         <http_port>8123</http_port>
         <tcp_port>9000</tcp_port>
-
-        <!-- output logs to console -->
-        <logger>
-            <level>information</level>
-            <console>1</console>
-            <log>/dev/null</log>
-            <errorlog>/dev/null</errorlog>
-        </logger>
     </yandex>
   shards.xml: |
     <yandex>
@@ -50,6 +42,17 @@ config:
           <shard>$ID</shard>
           <replica>$HOSTNAME</replica>
       </macros>
+    </yandex>
+
+  logger.xml: |
+    <yandex>
+        <!-- output logs to console -->
+        <logger>
+            <level>information</level>
+            <console>1</console>
+            <log>/dev/null</log>
+            <errorlog>/dev/null</errorlog>
+        </logger>
     </yandex>
 
   # zookeeper.xml: |
