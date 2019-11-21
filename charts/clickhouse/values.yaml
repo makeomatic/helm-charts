@@ -43,7 +43,6 @@ config:
           <replica>$HOSTNAME</replica>
       </macros>
     </yandex>
-
   logger.xml: |
     <yandex>
         <!-- output logs to console -->
@@ -54,7 +53,6 @@ config:
             <errorlog>/dev/null</errorlog>
         </logger>
     </yandex>
-
   # zookeeper.xml: |
   #   <yandex>
   #       <zookeeper>
