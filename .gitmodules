@@ -10,9 +10,6 @@
 [submodule "submodules/polaris"]
 	path = submodules/polaris
 	url = https://github.com/reactiveops/polaris
-[submodule "submodules/kourier"]
-	path = submodules/kourier
-	url = https://github.com/afoninsky/kourier
 [submodule "submodules/vault"]
 	path = submodules/vault
 	url = https://github.com/hashicorp/vault-helm
