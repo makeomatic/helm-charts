@@ -9,7 +9,7 @@ git submodule update
 ./charts/installer/test.sh
 
 ### generate archives with the charts
-alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm"
+alias helm="docker run -ti --rm -v $(pwd):/apps -v $HOME/.helm:/root/.helm alpine/helm:2.15.1"
 helm init -c
 
 repo_url="cdn.matic.ninja/helm-charts"
