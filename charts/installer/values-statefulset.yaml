@@ -1,0 +1,216 @@
+### rewrite entities names with selected one
+### default: .Release.Name
+name: ""
+
+kind: statefulset # deployment, statefulset
+
+### amount of service instances
+replicaCount: 3
+
+### launch service with specified service accont
+### default: do not mount API access tokens
+serviceAccountName: ""
+
+### default update strategy
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    partition: 0
+
+# statefulset-specific features
+podManagementPolicy: OrderedReady
+
+# deployment-specific features
+revisionHistoryLimit: 5
+
+### ability to rewrite launch command and arguments
+command: ""
+args: ""
+
+### docker image settings
+### required to set manually
+image:
+  repository: ""
+  tag: ""
+  pullPolicy: Always
+
+### launch init containers before starting main service
+initContainers:
+  []
+  # - name: sync
+  #   image: gcr.io/google_containers/git-sync:v3.0.1
+  #   env:
+  #     - name: GIT_SYNC_REPO
+  #       value: https://github.com/StreamLayer/sl-chat-auth.git
+  #     - name: GIT_SYNC_USERNAME
+  #       value: ???
+  #     - name: GIT_SYNC_PASSWORD
+  #       value: ???
+  #     - name: GIT_SYNC_ROOT
+  #       value: /repo
+  #     - name: GIT_SYNC_ONE_TIME
+  #       value: "true"
+  #   volumeMounts:
+  #     - name: chat-auth
+#       mountPath: /repo
+
+### volumes accessible to service
+volumes:
+  []
+  # - name: config
+#   emptyDir: {}
+
+### volumes to mount into service directly
+volumeMounts:
+  []
+  # - name: volumename
+#   mountPath: /specs
+
+### env variables for the service
+env:
+  []
+  # - name: test
+#   value: test
+
+### ports which service will expose
+service:
+  type: ClusterIP
+  ports:
+    []
+    # - name: http
+    #   port: 8080
+  # protocol: TCP
+
+### health probes (disabled by default)
+### default liveness: fail 6 times in 1 minute to trigger
+### default readiness: fail 3 times in 1 minute to trigger
+liveness:
+  # httpGet:
+  #   path: /healthz
+  #   port: http
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  failureThreshold: 6
+
+readiness:
+  # exec:
+  #   command:
+  #   - cat
+  #   - /tmp/healthy
+  # httpGet:
+  #   path: /healthz
+  #   port: http
+  # tcpSocket:
+  #   port: 8080
+  initialDelaySeconds: 0
+  periodSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+### pod distruption budget
+### default: none
+disruptionBudget:
+  {}
+# minAvailable: 1
+
+### rules how to spread group of instances between nodes
+### default: spread instances between nodes
+affinity: |
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - topologyKey: "kubernetes.io/hostname"
+        labelSelector:
+          matchLabels:
+            app: {{ .Release.Name }}
+
+### amount of resources service will request or be able to consume
+# defaults:
+# - memory: requests = limits
+#     it helps to plan cluster cappasity and avoid OOM on entire node
+# - cpu: request = set, limits = unset
+#     it helps to plan cluster cappasity and avoud CPU throttling (https://stackoverflow.com/questions/54099425/pod-cpu-throttling)
+#     in case when service consumes more CPU than committed we should receive event based on kube-eagle metrics or similar
+#     https://github.com/makeomatic/devops-manifests/blob/master/alerts/kube-eagle.libsonnet
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 50m
+  limits:
+    memory: 256Mi
+
+tolerations: null
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "tinode"
+
+### enable support of following internal services in current deployment
+toolchain:
+  # enable istio support
+  istio:
+    enabled: false
+    kiali:
+      runtime: nodejs
+    virtualService:
+      {}
+      # gateways:
+      # - staging-wild
+      # hosts:
+      # - grpc.staging.streamlayer.io
+      # http:
+      # - route:
+      #   - destination:
+      #       host: grpc
+      #       port:
+    #         number: 50051
+
+  # this service can be a victim of kube-monkey
+  monkey:
+    enabled: false
+    mtbf: 1
+    mode: fixed-percent
+    value: 49
+
+  # generate rules for prometheus or prometheus-operator
+  monitoring:
+    enabled: false
+    operator: false
+    namespace: monitoring
+    scrapeInterval: 10s
+    port: 9102
+    path: /metrics
+    rules: []
+
+  # generate configs
+  config:
+    path: /config
+    files:
+      {}
+      # qwe.txt: |-
+      #   someshit
+    #   test: {{ .Values.consul.path }}
+
+  ### service is able to get settings from consul using `consul-template`
+  # enabled if `consul.templates` is set
+  # https://github.com/hashicorp/consul-template
+  #
+  # How to debug templates:
+  # 1) Proxy k8s consul instance to local port:
+  # `kubectl port-forward service/consul-server 8500:8500`
+  # 2) Store template to file `chart.yaml`
+  # 3) Generate config:
+  # `consul-template -template "chart.yaml:output.txt" -once -dry`
+  consul:
+    # place where to mount rendered configs
+    path: /config
+    # additional configuration for `consul-template`
+    # object with templates
+    templates:
+      {}
+      # config.yml: |-
+      #   amqp:
+      #     host: {{ keyOrDefault "staging/amqpHost" "localhost" }}
+      #     password: {{ keyOrDefault "staging/amqpPassword" "password" }}
+      #   redis:
+      #     settings:
+    #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}
