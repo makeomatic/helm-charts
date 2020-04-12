@@ -7,5 +7,12 @@
 {{- end -}}
 
 {{- define "health" -}}
-{{- if or .exec (or .httpGet .tcpSocket) -}}true{{- end -}}
+{{- if or .exec .useGeneric (or .httpGet .tcpSocket) -}}true{{- end -}}
+{{- end -}}
+
+{{- define "microfleet.genericHealthProbe" -}}
+httpGet:
+  path: /{{ include "microfleet.fullname" . }}/generic/health
+  port: http
+  scheme: HTTP
 {{- end -}}

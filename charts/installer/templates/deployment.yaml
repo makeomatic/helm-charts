@@ -142,20 +142,27 @@ spec:
           {{- end }}
           {{- if .Values.toolchain.monitoring.enabled }}
             - name: metrics
-              port: {{ .Values.toolchain.monitoring.port }}
-              containerPort: {{ .Values.toolchain.monitoring.port }}
+              containerPort: {{ default .Values.toolchain.monitoring.port 9102 }}
               protocol: TCP
           {{- end }}
           {{- end }}
 
           {{- if include "health" .Values.liveness }}
           livenessProbe:
+          {{- if .Values.liveness.useGeneric }}
+{{ include "microfleet.genericHealthProbe" . | indent 12 -}}
+          {{- else }}
 {{ toYaml .Values.liveness | indent 12 -}}
+          {{- end }}
           {{- end }}
 
           {{- if include "health" .Values.readiness }}
           readinessProbe:
+          {{- if .Values.readiness.useGeneric }}
+{{ include "microfleet.genericHealthProbe" . | indent 12 -}}
+          {{- else }}
 {{ toYaml .Values.readiness | indent 12 -}}
+          {{- end }}
           {{- end }}
 
 

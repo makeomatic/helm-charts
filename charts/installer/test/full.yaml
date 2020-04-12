@@ -2,7 +2,8 @@ name: simple
 replicaCount: 1
 serviceAccountName: sa
 updateStrategy: {}
-command: test-command
+command:
+  - test-command
 args: ["few", "args"]
 image:
   repository: nginx
