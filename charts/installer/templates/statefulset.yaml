@@ -142,7 +142,8 @@ spec:
           {{- end }}
           {{- if .Values.toolchain.monitoring.enabled }}
             - name: metrics
-              hostPort: {{ default .Values.toolchain.monitoring.port 9102 }}
+              ## TODO Check port availability
+              ## hostPort: {{ default .Values.toolchain.monitoring.port 9102 }}
               containerPort: {{ default .Values.toolchain.monitoring.port 9102 }}
               protocol: TCP
           {{- end }}
