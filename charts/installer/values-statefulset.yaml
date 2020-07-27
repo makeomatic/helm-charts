@@ -54,6 +54,10 @@ initContainers:
   #     - name: chat-auth
 #       mountPath: /repo
 
+### launch other containers in the same pod
+additionalContainers:
+  []
+
 ### volumes accessible to service
 volumes:
   []
