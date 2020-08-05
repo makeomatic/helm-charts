@@ -69,6 +69,7 @@ cluster:
 
 # RethinkDB Proxy Config
 proxy:
+  kind: Deployment
   replicas: 1
   resources: {}
     # limits:
@@ -100,6 +101,15 @@ proxy:
     #   << RSA PRIVATE KEY >>
     # cert: |-
     #   << CERTIFICATE >>
+  ## Additional env variables
+  env: []
+
+  ## statefulset-specific values
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  podManagementPolicy: OrderedReady
 
 # RethinkDB Ports
 ports:

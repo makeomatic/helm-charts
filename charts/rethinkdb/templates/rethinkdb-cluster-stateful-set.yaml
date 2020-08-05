@@ -30,6 +30,20 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ template "rethinkdb.serviceAccountName" . }}
+      initContainers:
+        - name: "{{ template "rethinkdb.name" . }}-init"
+          image: "alpine:3.7"
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+            - name: "entrypoint"
+              mountPath: "/entrypoint"
+          command:
+            - sh
+            - -c
+            - >
+              cp /config/entrypoint.sh /entrypoint && chmod +x /entrypoint/entrypoint.sh && ls -alF /entrypoint
       containers:
         - name: {{ template "rethinkdb.name" . }}-cluster
           image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
@@ -37,7 +51,15 @@ spec:
           ports:
             - name: cluster
               containerPort: {{ .Values.ports.cluster }}
+          volumeMounts:
+            - name: "datadir"
+              mountPath: "/data"
+            - name: "entrypoint"
+              mountPath: "/entrypoint"
+          command:
+            - "/usr/local/bin/dumb-init"
           args:
+            - "/entrypoint/entrypoint.sh"
             - "--directory"
             - "/data/db"
             - "--bind"
@@ -45,9 +67,6 @@ spec:
             - "--no-http-admin"
             - "--cache-size"
             - {{ .Values.cluster.rethinkCacheSize | quote }}
-          volumeMounts:
-            - name: "datadir"
-              mountPath: "/data"
           env:
             - name: RETHINK_CLUSTER_SERVICE
               value: "{{ template "rethinkdb.fullname" . }}-cluster"
@@ -73,14 +92,6 @@ spec:
 {{ toYaml .Values.cluster.livenessProbe | indent 12 }}
           readinessProbe:
 {{ toYaml .Values.cluster.readinessProbe | indent 12 }}
-            exec:
-              command:
-                - /rethinkdb-probe
-            failureThreshold: 3
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 5
           resources:
 {{ toYaml .Values.cluster.resources | indent 12 }}
 
@@ -93,6 +104,13 @@ spec:
       tolerations:
 {{ toYaml .Values.cluster.tolerations | indent 6 }}
       {{- end }}
+
+      volumes:
+        - name: entrypoint
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: {{ include "rethinkdb.fullname" . }}-config
 
 {{- if .Values.cluster.persistentVolume.enabled }}
   volumeClaimTemplates:
@@ -121,7 +139,6 @@ spec:
         requests:
           storage: {{ .Values.cluster.persistentVolume.size | quote }}
 {{- else }}
-      volumes:
         - name: datadir
           emptyDir: {}
 {{- end }}

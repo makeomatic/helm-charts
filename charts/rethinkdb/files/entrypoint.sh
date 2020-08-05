@@ -24,25 +24,28 @@ RETHINKDB_PASSWORD=${RETHINKDB_PASSWORD:-"auto"}
 
 # Transform - to _ to comply with requirements
 SERVER_NAME=$(echo ${POD_NAME} | sed 's/-/_/g')
+POD_ENDPOINT="${SERVER_NAME}.${SERVICE_NAME}.${POD_NAMESPACE}.svc.cluster.local"
 
 echo "Using additional CLI flags: ${@}"
-echo "Pod IP: ${POD_IP}"
+echo "Pod name: ${POD_NAME}"
 echo "Pod namespace: ${POD_NAMESPACE}"
 echo "Using service name: ${RETHINK_CLUSTER_SERVICE}"
 echo "Using server name: ${SERVER_NAME}"
+echo "Pod endpoint: ${POD_SERVICE_ENDPOINT}"
 
 echo "Checking for other nodes..."
 if [[ -n "${KUBERNETES_SERVICE_HOST}" ]]; then
   echo "Using endpoints to lookup other nodes..."
   URL="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/${POD_NAMESPACE}/endpoints/${RETHINK_CLUSTER_SERVICE}"
   echo "Endpoint url: ${URL}"
-  echo "Looking for IPs..."
+  echo "Looking for other pods in cluster..."
   token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
   # try to pick up first different ip from endpoints
-  IP=$(curl -s ${URL} --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --header "Authorization: Bearer ${token}" \
-    | jq -s -r --arg h "${POD_IP}" '.[0].subsets | .[].addresses | [ .[].ip ] | map(select(. != $h)) | .[0]') || exit 1
-  [[ "${IP}" == null ]] && IP=""
-  JOIN_ENDPOINTS="${IP}"
+
+  HN=$(curl -s ${URL} --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --header "Authorization: Bearer ${token}")
+  HN=$(echo $HN | jq -s -r --arg h "${POD_NAME}" '.[0].subsets | .[].addresses | sort_by(.targetRef.resourceVersion|tonumber) | [.[].hostname] | map(select(. != $h)) | .[0]') || exit 1
+  [[ "${HN}" == null ]] && HN=""
+  JOIN_ENDPOINTS="${HN}"
 fi
 
 # xargs echo removes extra spaces before/after
@@ -50,12 +53,8 @@ fi
 JOIN_ENDPOINTS=$(echo ${JOIN_ENDPOINTS} | xargs echo | tr -s ' ')
 
 if [ -n "${JOIN_ENDPOINTS}" ]; then
-  echo "Found other nodes: ${JOIN_ENDPOINTS}"
-
-  # Now, transform join endpoints into --join ENDPOINT:29015
-  # Put port after each
-  JOIN_ENDPOINTS=$(echo ${JOIN_ENDPOINTS} | sed -r 's/([0-9.])+/&:29015/g')
-
+  echo "Found another node: ${JOIN_ENDPOINTS}"
+  JOIN_ENDPOINTS="${JOIN_ENDPOINTS}.${RETHINK_CLUSTER_SERVICE}.${POD_NAMESPACE}.svc.cluster.local:29015"
   # Put --join before each
   JOIN_ENDPOINTS=$(echo ${JOIN_ENDPOINTS} | sed -e 's/^\|[ ]/&--join /g')
 else
@@ -65,8 +64,6 @@ else
     exit 1
   fi
 fi
-
-
 
 if [[ -n "${PROXY}" ]]; then
   echo "Starting in proxy mode"

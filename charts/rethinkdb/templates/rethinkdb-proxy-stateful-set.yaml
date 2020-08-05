@@ -1,45 +1,63 @@
-{{ if ne .Values.proxy.kind "StatefulSet" }}
+{{ if eq .Values.proxy.kind "StatefulSet" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: "{{ template "rethinkdb.fullname" . }}-proxy"
   labels:
     app: "{{ template "rethinkdb.name" . }}-proxy"
-    chart: {{ template "rethinkdb.chart" . }}
+    chart: {{ include "rethinkdb.chart" . }}
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
 spec:
   replicas: {{ .Values.proxy.replicas }}
+  serviceName: "{{ template "rethinkdb.fullname" . }}-proxy"
+  updateStrategy:
+{{ toYaml .Values.proxy.updateStrategy | indent 4 }}
+  podManagementPolicy: {{ .Values.proxy.podManagementPolicy }}
   selector:
     matchLabels:
-      app: {{ template "rethinkdb.name" . }}-proxy
+      app: "{{ template "rethinkdb.name" . }}-proxy"
+      chart: {{ include "rethinkdb.chart" . }}
       heritage: {{ .Release.Service | quote }}
       release: {{ .Release.Name | quote }}
-      chart: {{ template "rethinkdb.chart" . }}
   template:
     metadata:
-      name: {{ template "rethinkdb.fullname" . }}-proxy
+      name: "{{ template "rethinkdb.fullname" . }}-proxy"
       labels:
-        app: {{ template "rethinkdb.name" . }}-proxy
+        app: "{{ template "rethinkdb.name" . }}-proxy"
         heritage: {{ .Release.Service | quote }}
         release: {{ .Release.Name | quote }}
-        chart: {{ template "rethinkdb.chart" . }}
+        chart: "{{ template "rethinkdb.chart" . }}"
       annotations:
       {{- if .Values.proxy.podAnnotations }}
 {{ toYaml .Values.proxy.podAnnotations | indent 8 }}
       {{- end }}
     spec:
-      serviceAccountName: {{ template "rethinkdb.serviceAccountName" . }}
       {{- if .Values.proxy.affinity }}
       affinity:
-        {{ tpl .Values.proxy.affinity . | indent 8 | trim }}
+{{ tpl .Values.proxy.affinity . | indent 8 | trim }}
       {{- end }}
       {{- if .Values.proxy.tolerations }}
       tolerations:
 {{ toYaml .Values.proxy.tolerations | indent 6 }}
       {{- end }}
+      serviceAccountName: {{ include "rethinkdb.serviceAccountName" . }}
+      initContainers:
+        - name: "{{ template "rethinkdb.name" . }}-init"
+          image: "alpine:3.7"
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+            - name: "entrypoint"
+              mountPath: "/entrypoint"
+          command:
+            - sh
+            - -c
+            - >
+              cp /config/entrypoint.sh /entrypoint && chmod +x /entrypoint/entrypoint.sh && ls -alF /entrypoint
       containers:
-        - name: {{ template "rethinkdb.name" . }}-proxy
+        - name: "{{ template "rethinkdb.name" . }}-proxy"
           image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           ports:
@@ -49,7 +67,10 @@ spec:
               containerPort: {{ .Values.ports.driver }}
             - name: admin
               containerPort: {{ .Values.ports.admin }}
+          command:
+            - "/usr/local/bin/dumb-init"
           args:
+            - "/entrypoint/entrypoint.sh"
             - "--bind"
             - "all"
             {{- if .Values.proxy.driverTLS.enabled }}
@@ -61,15 +82,17 @@ spec:
           volumeMounts:
             - name: "secrets"
               mountPath: "/secrets"
+            - name: "entrypoint"
+              mountPath: "/entrypoint"
           env:
             - name: PROXY
               value: "true"
             - name: RETHINK_CLUSTER_SERVICE
-              value: "{{ template "rethinkdb.fullname" . }}-cluster"
+              value: "{{ include "rethinkdb.fullname" . }}-cluster"
             - name: RETHINKDB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "rethinkdb.fullname" . }}
+                  name: {{ include "rethinkdb.fullname" . }}
                   key: rethinkdb-password
             - name: POD_IP
               valueFrom:
@@ -88,9 +111,14 @@ spec:
 {{ toYaml .Values.proxy.resources | indent 12 }}
 
       volumes:
+        - name: entrypoint
+          emptyDir: {}
+        - name: config
+          configMap:
+            name: {{ include "rethinkdb.fullname" . }}-config
         - name: secrets
           projected:
             sources:
-            - secret:
-                name: {{ template "rethinkdb.fullname" . }}
+              - secret:
+                  name: {{ template "rethinkdb.fullname" . }}
 {{ end }}

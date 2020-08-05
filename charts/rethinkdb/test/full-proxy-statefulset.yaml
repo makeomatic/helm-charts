@@ -1,0 +1,56 @@
+image:
+  tag: 2.4.0
+
+cluster:
+  replicas: 5
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 20m
+      memory: 512Mi
+
+  persistentVolume:
+    enabled: true
+    storageClass: standard
+    size: 20Gi
+
+  tolerations:
+    - key: "dedicated_to"
+      value: "chat"
+      operator: "Equal"
+      effect: "NoSchedule"
+
+  affinity: |
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:
+              app: {{ .Release.Name }}
+
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        preference:
+          matchExpressions:
+          - key: "dedicated_to"
+            operator: "In"
+            values:
+              - "chat"
+
+proxy:
+  kind: StatefulSet
+  replicas: 2
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      memory: 128Mi
+
+  tolerations:
+    - key: "dedicated_to"
+      value: "chat"
+      operator: "Equal"
+      effect: "NoSchedule"
