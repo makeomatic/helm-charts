@@ -13,7 +13,7 @@ metadata:
   {{- end }}
 spec:
 {{- if eq .Values.proxy.kind "StatefulSet" }}
-  clusterIP: null
+  clusterIP: None
 {{- else if .Values.proxy.service.clusterIP }}
   type: {{ .Values.proxy.service.type }}
   clusterIP: {{ .Values.proxy.service.clusterIP | quote }}
