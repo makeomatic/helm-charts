@@ -73,8 +73,8 @@ spec:
             - name: RETHINKDB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "rethinkdb.fullname" . }}
-                  key: rethinkdb-password
+                  key: RETHINKDB_PASSWORD
+                  name: "{{ template "rethinkdb.passwordSecret" . }}"
             - name: POD_IP
               valueFrom:
                 fieldRef:

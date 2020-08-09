@@ -32,3 +32,11 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{- define "rethinkdb.passwordSecret" -}}
+  {{- if .Values.rethinkdbPassword -}}
+    {{- template "rethinkdb.fullname" . -}}
+  {{- else if .Values.rethinkdbPasswordSecret -}}
+    {{- .Values.rethinkdbPasswordSecret -}}
+  {{- end -}}
+{{- end -}}

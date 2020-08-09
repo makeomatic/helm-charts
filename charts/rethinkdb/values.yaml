@@ -119,6 +119,8 @@ ports:
 
 # RethinkDB Admin Password
 rethinkdbPassword: rethinkdb
+rethinkdbPasswordSecret: null
+#   rethinkdbPasswordSecret: rethinkdb-credentials
 
 rbac:
   # Specifies whether RBAC resources should be created

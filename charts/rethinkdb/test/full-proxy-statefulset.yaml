@@ -1,6 +1,9 @@
 image:
   tag: 2.4.0
 
+rethinkdbPassword: null
+rethinkdbPasswordSecret: "custom-password-secret"
+
 cluster:
   replicas: 5
   resources:
