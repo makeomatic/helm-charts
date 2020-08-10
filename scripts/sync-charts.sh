@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 shopt -s expand_aliases
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

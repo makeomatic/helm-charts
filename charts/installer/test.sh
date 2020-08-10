@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 BASEDIR=$(dirname "$0")
 
