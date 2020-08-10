@@ -118,9 +118,8 @@ ports:
   admin: 8080
 
 # RethinkDB Admin Password
-rethinkdbPassword: rethinkdb
-rethinkdbPasswordSecret: null
-#   rethinkdbPasswordSecret: rethinkdb-credentials
+rethinkdbPassword: null
+rethinkdbPasswordSecret: rethinkdb-credentials
 
 rbac:
   # Specifies whether RBAC resources should be created
