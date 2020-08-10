@@ -7,4 +7,6 @@ BASEDIR=$(dirname "$0")
 helm=${helm:-helm}
 
 $helm lint $BASEDIR
-$helm template $BASEDIR -f $BASEDIR/test/full.yaml
+for i in $BASEDIR/test/*.yaml ; do
+  $helm template $BASEDIR -f $i
+done
