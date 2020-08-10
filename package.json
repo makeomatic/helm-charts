@@ -10,7 +10,10 @@
     "semantic-release": "^17.1.1"
   },
   "scripts": {
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "test": "yarn helm:2 && yarn helm:3",
+    "helm:2": "HELM_TEST=yes HELM_VERSION=2.16.9 ./scripts/sync-charts.sh",
+    "helm:3": "HELM_TEST=yes HELM_VERSION=3.2.4 ./scripts/sync-charts.sh"
   },
   "husky": {
     "hooks": {

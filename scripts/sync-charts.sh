@@ -8,6 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 h_ver=${HELM_VERSION?:"must be set"}
 h_major=`"${DIR}/semver.sh" get major $h_ver`
 h_repo=${HELM_REPO:-"cdn.matic.ninja/helm-charts"}
+h_test=${HELM_TEST:-no}
 docker_root="/apps"
 
 ### update submodules till actual version
@@ -23,6 +24,10 @@ fi
 
 ### test testable charts
 ./charts/installer/test.sh
+
+if [ x"${h_test}" = x"yes" ]; then
+  exit 0
+fi
 
 repo_url="${h_repo}/${h_major}"
 artifact_dir="./artifacts/${h_major}"
