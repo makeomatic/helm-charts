@@ -1,5 +1,12 @@
 #!/bin/bash
+
+set -e
+
 BASEDIR=$(dirname "$0")
 
-helm lint
-helm template $BASEDIR -f $BASEDIR/test/full.yaml
+helm=${helm:-helm}
+
+$helm lint $BASEDIR
+for i in $BASEDIR/test/*.yaml ; do
+  $helm template $BASEDIR -f $i
+done

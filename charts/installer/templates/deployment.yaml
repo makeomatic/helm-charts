@@ -57,10 +57,10 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 6 }}
       {{- end }}
-      {{- if eq .Values.serviceAccountName "" }}
+      {{- if eq (include "microfleet.serviceAccountName" .) "" }}
       automountServiceAccountToken: false
       {{- else }}
-      serviceAccountName: "{{ .Values.serviceAccountName }}"
+      serviceAccountName: "{{- include "microfleet.serviceAccountName" . -}}"
       {{- end }}
       {{- if or .Values.initContainers .Values.toolchain.consul.templates }}
       initContainers:
@@ -100,6 +100,9 @@ spec:
       {{- end }}
       {{- end }}
       containers:
+        {{- if .Values.additionalContainers }}
+{{ toYaml .Values.additionalContainers | indent 8}}
+        {{- end }}
         - name: {{ .Release.Name }}
           image: "{{ required "A valid image repository is required" .Values.image.repository }}:{{ required "A valid image tag is required" .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -142,20 +145,28 @@ spec:
           {{- end }}
           {{- if .Values.toolchain.monitoring.enabled }}
             - name: metrics
-              port: {{ .Values.toolchain.monitoring.port }}
-              containerPort: {{ .Values.toolchain.monitoring.port }}
+              hostPort: {{ default .Values.toolchain.monitoring.port 9102 }}
+              containerPort: {{ default .Values.toolchain.monitoring.port 9102 }}
               protocol: TCP
           {{- end }}
           {{- end }}
 
           {{- if include "health" .Values.liveness }}
           livenessProbe:
+          {{- if .Values.liveness.useGeneric }}
+{{ include "microfleet.genericHealthProbe" . | indent 12 -}}
+          {{- else }}
 {{ toYaml .Values.liveness | indent 12 -}}
+          {{- end }}
           {{- end }}
 
           {{- if include "health" .Values.readiness }}
           readinessProbe:
+          {{- if .Values.readiness.useGeneric }}
+{{ include "microfleet.genericHealthProbe" . | indent 12 -}}
+          {{- else }}
 {{ toYaml .Values.readiness | indent 12 -}}
+          {{- end }}
           {{- end }}
 
 

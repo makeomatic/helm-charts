@@ -2,7 +2,7 @@
 ### default: .Release.Name
 name: ""
 
-kind: deployment # deployment, statefulset
+kind: statefulset # deployment, statefulset
 
 ### amount of service instances
 replicaCount: 3
@@ -18,14 +18,11 @@ rbac:
   create: false
   rules: []
 
-progressDeadlineSeconds: 600
-
 ### default update strategy
 updateStrategy:
   type: RollingUpdate
   rollingUpdate:
-    maxSurge: 1
-    maxUnavailable: 0
+    partition: 0
 
 # statefulset-specific features
 podManagementPolicy: OrderedReady
@@ -62,7 +59,7 @@ initContainers:
   #       value: "true"
   #   volumeMounts:
   #     - name: chat-auth
-  #       mountPath: /repo
+#       mountPath: /repo
 
 ### launch other containers in the same pod
 additionalContainers:
@@ -72,19 +69,19 @@ additionalContainers:
 volumes:
   []
   # - name: config
-  #   emptyDir: {}
+#   emptyDir: {}
 
 ### volumes to mount into service directly
 volumeMounts:
   []
   # - name: volumename
-  #   mountPath: /specs
+#   mountPath: /specs
 
 ### env variables for the service
 env:
   []
   # - name: test
-  #   value: test
+#   value: test
 
 ### ports which service will expose
 service:
@@ -93,7 +90,7 @@ service:
     []
     # - name: http
     #   port: 8080
-    # protocol: TCP
+  # protocol: TCP
 
 ### health probes (disabled by default)
 ### default liveness: fail 6 times in 1 minute to trigger
@@ -126,7 +123,7 @@ readiness:
 ### default: none
 disruptionBudget:
   {}
-  # minAvailable: 1
+# minAvailable: 1
 
 ### rules how to spread group of instances between nodes
 ### default: spread instances between nodes
@@ -176,7 +173,7 @@ toolchain:
       #   - destination:
       #       host: grpc
       #       port:
-      #         number: 50051
+    #         number: 50051
 
   # this service can be a victim of kube-monkey
   monkey:
@@ -202,7 +199,7 @@ toolchain:
       {}
       # qwe.txt: |-
       #   someshit
-      #   test: {{ .Values.consul.path }}
+    #   test: {{ .Values.consul.path }}
 
   ### service is able to get settings from consul using `consul-template`
   # enabled if `consul.templates` is set
@@ -227,4 +224,4 @@ toolchain:
       #     password: {{ keyOrDefault "staging/amqpPassword" "password" }}
       #   redis:
       #     settings:
-      #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+    #       host: {{ keyOrDefault "staging/redisHost" "redishost" }}

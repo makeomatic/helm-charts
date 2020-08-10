@@ -1,0 +1,9 @@
+image:
+  repository: nginx
+  tag: latest
+
+liveness:
+  useGeneric: true
+
+readiness:
+  useGeneric: true

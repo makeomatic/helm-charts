@@ -1,2 +1,3 @@
 *.secret.*
 artifacts/
+node_modules
