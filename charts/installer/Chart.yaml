@@ -3,4 +3,4 @@ appVersion: "1.0"
 description: Custom service installer
 icon: https://www.svgrepo.com/download/211446/settings-gear.svg
 name: installer
-version: 1.2.0
+version: 1.3.0

@@ -12,12 +12,8 @@ metadata:
 {{ toYaml .Values.proxy.service.annotations | indent 4 }}
   {{- end }}
 spec:
-{{- if eq .Values.proxy.kind "StatefulSet" }}
-  clusterIP: None
-{{- else if .Values.proxy.service.clusterIP }}
   type: {{ .Values.proxy.service.type }}
   clusterIP: {{ .Values.proxy.service.clusterIP | quote }}
-{{- end }}
 {{- if .Values.proxy.service.externalIPs }}
   externalIPs:
 {{ toYaml .Values.proxy.service.externalIPs | indent 4 }}

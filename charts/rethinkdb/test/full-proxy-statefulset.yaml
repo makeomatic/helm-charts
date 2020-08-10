@@ -52,6 +52,9 @@ proxy:
     limits:
       memory: 128Mi
 
+  service:
+    clusterIP: None
+
   tolerations:
     - key: "dedicated_to"
       value: "chat"

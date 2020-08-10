@@ -9,7 +9,14 @@ replicaCount: 3
 
 ### launch service with specified service accont
 ### default: do not mount API access tokens
-serviceAccountName: ""
+serviceAccount:
+  create: false
+  name: ""
+
+### https://kubernetes.io/docs/reference/access-authn-authz/rbac/#api-overview
+rbac:
+  create: false
+  rules: []
 
 progressDeadlineSeconds: 600
 

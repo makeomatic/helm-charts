@@ -57,10 +57,10 @@ spec:
       tolerations:
 {{ toYaml .Values.tolerations | indent 6 }}
       {{- end }}
-      {{- if eq .Values.serviceAccountName "" }}
+      {{- if eq (include "microfleet.serviceAccountName" .) "" }}
       automountServiceAccountToken: false
       {{- else }}
-      serviceAccountName: "{{ .Values.serviceAccountName }}"
+      serviceAccountName: "{{- include "microfleet.serviceAccountName" . -}}"
       {{- end }}
       {{- if or .Values.initContainers .Values.toolchain.consul.templates }}
       initContainers:
