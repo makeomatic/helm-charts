@@ -13,7 +13,7 @@ Create the name of the service account to use
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "microfleet.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
+    {{ default "" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
 
