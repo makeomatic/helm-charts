@@ -16,7 +16,7 @@ git submodule init
 git submodule update
 
 ### generate archives with the charts
-export helm="docker run -ti --rm -v $(pwd):${docker_root} -v $HOME/.helm:/root/.helm alpine/helm:${h_ver}"
+export helm="docker run --rm -v $(pwd):${docker_root} -v $HOME/.helm:/root/.helm alpine/helm:${h_ver}"
 
 if [ x"${h_major}" = x"2" ]; then
   $helm init -c
