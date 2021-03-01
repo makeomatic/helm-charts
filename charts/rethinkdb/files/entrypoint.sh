@@ -21,6 +21,7 @@ POD_IP=${POD_IP:-127.0.0.1}
 RETHINK_CLUSTER_SERVICE=${RETHINK_CLUSTER_SERVICE:-"rethinkdb"}
 POD_NAME=${POD_NAME:-"NO_POD_NAME"}
 RETHINKDB_PASSWORD=${RETHINKDB_PASSWORD:-"auto"}
+RETHINKDB_CLUSTER_LOOKUP_RETRY=${RETHINKDB_CLUSTER_LOOKUP_RETRY:-10}
 
 # Transform - to _ to comply with requirements
 SERVER_NAME=$(echo ${POD_NAME} | sed 's/-/_/g')
@@ -41,8 +42,7 @@ if [[ -n "${KUBERNETES_SERVICE_HOST}" ]]; then
   echo "Looking for other pods in cluster..."
   token=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
   # try to pick up first different ip from endpoints
-
-  HN=$(curl -s ${URL} --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --header "Authorization: Bearer ${token}")
+  HN=$(curl -v --retry ${RETHINKDB_CLUSTER_LOOKUP_RETRY} --retry-connrefused -s ${URL} --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt --header "Authorization: Bearer ${token}")
   HN=$(echo $HN | jq -s -r --arg h "${POD_NAME}" '.[0].subsets | .[].addresses | sort_by(.targetRef.resourceVersion|tonumber) | [.[].hostname] | map(select(. != $h)) | .[0]') || exit 1
   [[ "${HN}" == null ]] && HN=""
   JOIN_ENDPOINTS="${HN}"
