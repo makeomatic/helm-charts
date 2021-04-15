@@ -111,6 +111,25 @@ proxy:
       partition: 0
   podManagementPolicy: OrderedReady
 
+# RethinkDB Exporter Config
+exporter:
+  enabled: false
+
+  image:
+    name: terzom/rethinkdb-exporter
+    tag: v1.0.1
+    pullPolicy: Always
+
+  replicaCount: 1
+
+  resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
 # RethinkDB Ports
 ports:
   cluster: 29015

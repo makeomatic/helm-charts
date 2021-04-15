@@ -1,0 +1,23 @@
+{{if .Values.exporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "rethinkdb.fullname" . }}-exporter"
+  labels:
+    app: "{{ template "rethinkdb.name" . }}-exporter"
+    chart: {{ template "rethinkdb.chart" . }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusteIP
+  ports:
+    - port: 9055
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app: "{{ template "rethinkdb.name" . }}-exporter"
+    release: {{ .Release.Name | quote }}
+{{- end }}
