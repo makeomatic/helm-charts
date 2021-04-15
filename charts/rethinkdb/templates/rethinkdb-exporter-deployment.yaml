@@ -9,7 +9,7 @@ metadata:
     heritage: {{ .Release.Service | quote }}
     release: {{ .Release.Name | quote }}
 spec:
-  replicas: {{ .Values.exporter.replicaCount }}
+  replicas: {{ .Values.exporter.replicas }}
   selector:
     matchLabels:
       app: "{{ template "rethinkdb.name" . }}-exporter"
@@ -20,6 +20,14 @@ spec:
         app: "{{ template "rethinkdb.name" . }}-exporter"
         release: {{ .Release.Name | quote }}
     spec:
+      {{- if .Values.exporter.affinity }}
+      affinity:
+        {{ tpl .Values.exporter.affinity . | indent 8 | trim }}
+      {{- end }}
+      {{- if .Values.exporter.tolerations }}
+      tolerations:
+{{ toYaml .Values.exporter.tolerations | indent 6 }}
+      {{- end }}
       containers:
         - name: "{{ template "rethinkdb.fullname" . }}-exporter"
           image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
@@ -42,7 +50,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "rethinkdb.fullname" . }}
+                  name: "{{ template "rethinkdb.passwordSecret" . }}"
                   key: RETHINKDB_PASSWORD
           resources:
 {{ toYaml .Values.exporter.resources | indent 12 }}
