@@ -1,0 +1,20 @@
+{{if .Values.exporter.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "rethinkdb.name" . }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+        app: "{{ template "rethinkdb.name" . }}-exporter"
+        chart: {{ template "rethinkdb.chart" . }}
+        heritage: {{ .Release.Service | quote }}
+        release: {{ .Release.Name | quote }}
+  endpoints:
+    - interval: 30s
+      scrapeTimeout: 30s
+      targetPort: metrics
+{{- end }}

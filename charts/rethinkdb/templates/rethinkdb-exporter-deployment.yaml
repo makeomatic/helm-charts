@@ -1,0 +1,49 @@
+{{if .Values.exporter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ template "rethinkdb.fullname" . }}-exporter"
+  labels:
+    app: "{{ template "rethinkdb.name" . }}-exporter"
+    chart: {{ template "rethinkdb.chart" . }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+spec:
+  replicas: {{ .Values.exporter.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ template "rethinkdb.name" . }}-exporter"
+      release: {{ .Release.Name | quote }}
+  template:
+    metadata:
+      labels:
+        app: "{{ template "rethinkdb.name" . }}-exporter"
+        release: {{ .Release.Name | quote }}
+    spec:
+      containers:
+        - name: "{{ template "rethinkdb.fullname" . }}-exporter"
+          image: "{{ .Values.exporter.image.name }}:{{ .Values.exporter.image.tag }}"
+          imagePullPolicy: {{ .Values.exporter.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: 9055
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /
+              port: metrics
+          env:
+            - name: DB_ADDRESSES
+              value: "{{ template "rethinkdb.fullname" . }}-proxy:{{ .Values.ports.driver }}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "rethinkdb.fullname" . }}
+                  key: RETHINKDB_PASSWORD
+          resources:
+{{ toYaml .Values.exporter.resources | indent 12 }}
+{{- end }}
