@@ -114,14 +114,11 @@ proxy:
 # RethinkDB Exporter Config
 exporter:
   enabled: false
-
+  replicas: 1
   image:
     name: terzom/rethinkdb-exporter
     tag: v1.0.1
     pullPolicy: Always
-
-  replicaCount: 1
-
   resources: {}
   # limits:
   #  cpu: 100m
@@ -129,6 +126,8 @@ exporter:
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
+  affinity: ""
+  tolerations: null
 
 # RethinkDB Ports
 ports:
