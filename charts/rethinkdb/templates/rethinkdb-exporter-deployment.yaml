@@ -50,7 +50,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ template "rethinkdb.passwordSecret" . }}"
+                  name: "{{ .Values.rethinkdbPasswordSecret }}"
                   key: RETHINKDB_PASSWORD
           resources:
 {{ toYaml .Values.exporter.resources | indent 12 }}
