@@ -128,6 +128,17 @@ disruptionBudget:
   {}
   # minAvailable: 1
 
+### horizontal pod autoscaler
+### NOTE: cpu utilization should be in %
+
+#hpa:
+#  maxReplicas: 5
+#  cpu: 75
+#  memory: 256Mi
+#  customMetrics:
+#    metricName: requests-per-second
+#    targetAverageValue: 1k
+
 ### rules how to spread group of instances between nodes
 ### default: spread instances between nodes
 affinity: |
