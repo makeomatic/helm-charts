@@ -129,12 +129,15 @@ disruptionBudget:
   # minAvailable: 1
 
 ### horizontal pod autoscaler
-### NOTE: cpu & mem utilization should be in %
+### You can also specify resource metrics in terms of direct values, instead of as percentages of the requested value.
+### To do so, use the targetAverageValue field insted of the targetAverageUtilization field.
 
 #hpa:
 #  maxReplicas: 5
-#  cpu: 75
-#  memory: 75
+#  cpu:
+#    targetAverageValue: 500m
+#  memory: 
+#    targetAverageUtilization: 75
 #  customMetrics:
 #    metricName: requests-per-second # some custom metric
 #    targetAverageValue: 1k
