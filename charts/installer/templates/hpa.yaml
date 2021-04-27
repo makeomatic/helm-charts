@@ -34,9 +34,6 @@ spec:
       {{- end }}
   {{- end }}
   {{- if .Values.hpa.customMetrics }}
-  - type: Pods
-    pods:
-      metricName: {{ .Values.hpa.customMetrics.metricName }}
-      targetAverageValue: {{ .Values.hpa.customMetrics.targetAverageValue }}
+{{ toYaml .Values.hpa.customMetrics | indent 2 }}
   {{- end }}
 {{- end }}

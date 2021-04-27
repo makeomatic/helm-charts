@@ -138,10 +138,25 @@ disruptionBudget:
 #    targetAverageValue: 500m
 #  memory: 
 #    targetAverageUtilization: 75
-#  customMetrics:
-#    metricName: requests-per-second # some custom metric
-#    targetAverageValue: 1k
+#  customMetrics: {}
+#    - type: Object
+#      object:
+#        metric:
+#          name: istio_requests_per_second
+#        describedObject:
+#          apiVersion: v1
+#          kind: Service
+#          name: productpage
+#        target:
+#          type: Value
+#          value: 10000m
+#
+#    - type: Pods
+#      pods:
+#        metricName: istio_requests_per_second
+#        targetAverageValue: 200
 
+#    {}
 ### rules how to spread group of instances between nodes
 ### default: spread instances between nodes
 affinity: |
