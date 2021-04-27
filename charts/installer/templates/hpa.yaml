@@ -1,5 +1,5 @@
 {{- if .Values.hpa -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "microfleet.fullname" . }}
@@ -15,23 +15,29 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      {{- if .Values.hpa.cpu.targetAverageUtilization }}
-      targetAverageUtilization: {{ .Values.hpa.cpu.targetAverageUtilization }}
-      {{- end }}
-      {{- if .Values.hpa.cpu.targetAverageValue }}
-      targetAverageValue: {{ .Values.hpa.cpu.targetAverageValue }}
-      {{- end }}
+      target:
+        {{- if .Values.hpa.cpu.averageUtilization }}
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.cpu.averageUtilization }}
+        {{- end }}
+        {{- if .Values.hpa.cpu.averageValue }}
+        type: AverageValue
+        averageValue: {{ .Values.hpa.cpu.averageValue }}
+        {{- end }}
   {{- end }}
   {{- if .Values.hpa.memory }}
   - type: Resource
     resource:
       name: memory
-      {{- if .Values.hpa.memory.targetAverageUtilization }}
-      targetAverageUtilization: {{ .Values.hpa.memory.targetAverageUtilization }}
-      {{- end }}
-      {{- if .Values.hpa.memory.targetAverageValue }}
-      targetAverageValue: {{ .Values.hpa.memory.targetAverageValue }}
-      {{- end }}
+      target:
+        {{- if .Values.hpa.memory.averageUtilization }}
+        type: Utilization
+        averageUtilization: {{ .Values.hpa.memory.averageUtilization }}
+        {{- end }}
+        {{- if .Values.hpa.memory.averageValue }}
+        type: AverageValue
+        averageValue: {{ .Values.hpa.memory.averageValue }}
+        {{- end }}
   {{- end }}
   {{- if .Values.hpa.customMetrics }}
 {{ toYaml .Values.hpa.customMetrics | indent 2 }}
