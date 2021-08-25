@@ -5,7 +5,7 @@ name: ""
 kind: statefulset # deployment, statefulset
 
 ### amount of service instances
-replicaCount: 3
+replicaCount: 1
 
 ### launch service with specified service accont
 ### default: do not mount API access tokens
@@ -124,6 +124,38 @@ readiness:
 disruptionBudget:
   {}
 # minAvailable: 1
+
+### horizontal pod autoscaler
+### You can also specify resource metrics in terms of direct values, instead of as percentages of the requested value.
+### To do so, use the averageValue field insted of the averageUtilization field.
+
+#hpa:
+#  maxReplicas: 5
+#  minReplicas: 1
+#  cpu:
+#    averageValue: 500m
+#  memory: 
+#    averageUtilization: 75
+#  customMetrics:
+#    - type: Object
+#      object:
+#        metric:
+#          name: istio_requests_per_second
+#        describedObject:
+#          apiVersion: v1
+#          kind: Service
+#          name: productpage
+#        target:
+#          type: Value
+#          value: 10000m
+#
+#    - type: Pods
+#      pods:
+#        metric:
+#          name: istio_requests_per_second
+#        target:
+#          type: AverageValue
+#          averageValue: 1k
 
 ### rules how to spread group of instances between nodes
 ### default: spread instances between nodes

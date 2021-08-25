@@ -17,7 +17,7 @@ metadata:
 spec:
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   serviceName: ""
-  replicas: {{ .Values.replicaCount | default 1 }}
+  replicas: {{ .Values.replicaCount }}
   updateStrategy:
 {{ toYaml .Values.updateStrategy | indent 4 }}
   selector:

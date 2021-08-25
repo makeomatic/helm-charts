@@ -9,9 +9,9 @@ spec:
     kind: {{ .Values.kind }}
     name: {{ include "microfleet.fullname" . }}
   {{- if .Values.replicaCount }}
-  minReplicas: {{ .Values.replicaCount | default 1 }}
+  minReplicas: {{ .Values.replicaCount }}
   {{- else if .Values.hpa.minReplicas }}
-  minReplicas: {{ .Values.hpa.minReplicas | default 1 }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
   {{- else }}
   minReplicas: 1
   {{- end }}
