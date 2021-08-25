@@ -16,7 +16,7 @@ metadata:
     {{- end }}
 spec:
   progressDeadlineSeconds: {{ .Values.progressDeadlineSeconds }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   selector:
     matchLabels:

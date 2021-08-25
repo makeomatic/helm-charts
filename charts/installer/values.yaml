@@ -5,7 +5,7 @@ name: ""
 kind: deployment # deployment, statefulset
 
 ### amount of service instances
-replicaCount: 3
+#replicaCount: 3
 
 ### launch service with specified service accont
 ### default: do not mount API access tokens
@@ -134,6 +134,7 @@ disruptionBudget:
 
 #hpa:
 #  maxReplicas: 5
+#  minReplicas: 1
 #  cpu:
 #    averageValue: 500m
 #  memory: 

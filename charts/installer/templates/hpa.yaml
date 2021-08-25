@@ -8,7 +8,13 @@ spec:
     apiVersion: apps/v1
     kind: {{ .Values.kind }}
     name: {{ include "microfleet.fullname" . }}
-  minReplicas: {{ .Values.replicaCount }}
+  {{- if .Values.replicaCount }}
+  minReplicas: {{ .Values.replicaCount | default 1 }}
+  {{- else if .Values.hpa.minReplicas }}
+  minReplicas: {{ .Values.hpa.minReplicas | default 1 }}
+  {{- else }}
+  minReplicas: 1
+  {{- end }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
   {{- if .Values.hpa.cpu }}
