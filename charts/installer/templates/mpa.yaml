@@ -1,0 +1,56 @@
+{{- if .Values.mpa -}}
+apiVersion: autoscaling.gke.io/v1beta1
+kind: MultidimPodAutoscaler
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: {{ .Values.kind }}
+    name: {{ include "microfleet.fullname" . }}
+  goals:
+    metrics:
+    {{- if .Values.mpa.cpu }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          {{- if .Values.mpa.cpu.averageUtilization }}
+          type: Utilization
+          averageUtilization: {{ .Values.mpa.cpu.averageUtilization }}
+          {{- end }}
+          {{- if .Values.mpa.cpu.averageValue }}
+          type: AverageValue
+          averageValue: {{ .Values.mpa.cpu.averageValue }}
+          {{- end }}
+    {{- end }}
+    {{- if .Values.mpa.customMetrics }}
+{{ toYaml .Values.mpa.customMetrics | indent 4 }}
+    {{- end }}
+  constraints:
+    global:
+      {{- if .Values.mpa.minReplicas }}
+      minReplicas: {{ .Values.mpa.minReplicas }}
+      {{- else if .Values.replicaCount }}
+      minReplicas: {{ .Values.replicaCount }}
+      {{- else }}
+      minReplicas: 1
+      {{- end }}
+      maxReplicas: {{ .Values.mpa.maxReplicas }}
+    {{- /* 
+    # Container Resources that should be controlled by the autoscaler. memory is the only supported value.
+    */}}
+    containerControlledResources: [ memory ]
+    container:
+    - name: '*'
+    {{- /* 
+    # Define boundaries for the memory request here
+    */}}
+      requests:
+        minAllowed:
+          memory: {{ .Values.mpa.memory.minAllowed | default "512Mi" }}
+        maxAllowed:
+          memory: {{ .Values.mpa.memory.maxAllowed | default "512Mi"}}
+  policy:
+    updateMode: {{ .Values.mpa.policy.updateMode | default "off" }}
+{{- end }}
