@@ -49,11 +49,11 @@ spec:
       requests:
         {{- if .Values.mpa.memory.minAllowed }}
         minAllowed:
-          memory: {{ .Values.mpa.memory.minAllowed | default "512Mi" }}
+          memory: {{ .Values.mpa.memory.minAllowed }}
         {{- end }}
         {{- if .Values.mpa.memory.maxAllowed }}
         maxAllowed:
-          memory: {{ .Values.mpa.memory.maxAllowed | default "512Mi"}}
+          memory: {{ .Values.mpa.memory.maxAllowed }}
         {{- end }}
   policy:
     updateMode: {{ .Values.mpa.policy.updateMode | default "off" }}
