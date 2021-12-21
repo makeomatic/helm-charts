@@ -1,6 +1,6 @@
 {
   "name": "@makeomatic/helm-charts",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@semantic-release/changelog": "^5.0.1",
