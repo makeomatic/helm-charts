@@ -18,6 +18,12 @@ rbac:
   create: false
   rules: []
 
+### Additional annotations for Kind: StatefulSel resource
+# statefulsetExtraAnnotations:
+#  one: "one"
+#  two: "two"
+
+
 ### default update strategy
 updateStrategy:
   type: RollingUpdate

@@ -26,6 +26,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if .Values.statefulsetExtraAnnotations }}
+{{ toYaml .Values.statefulsetExtraAnnotations | indent 8 }}
+        {{- end }}
         {{- if .Values.toolchain.config.files }}
         checksum/config-files: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- end }}
