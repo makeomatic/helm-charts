@@ -20,8 +20,8 @@ rbac:
 
 ### Additional annotations for Kind: StatefulSel resource
 # statefulsetExtraAnnotations:
-#  one: "one"
-#  two: "two"
+#  foo: "foo"
+#  bar: "bar"
 
 
 ### default update strategy
