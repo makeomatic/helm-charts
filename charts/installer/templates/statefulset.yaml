@@ -3,6 +3,10 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "microfleet.fullname" . }}
+  {{- if .Values.statefulsetExtraAnnotations }}
+  annotations:
+{{ toYaml .Values.statefulsetExtraAnnotations | indent 4 }}
+  {{- end }}
   labels:
     app: {{ .Release.Name }}
     release: {{ .Release.Name }}
@@ -26,9 +30,6 @@ spec:
   template:
     metadata:
       annotations:
-        {{- if .Values.statefulsetExtraAnnotations }}
-{{ toYaml .Values.statefulsetExtraAnnotations | indent 8 }}
-        {{- end }}
         {{- if .Values.toolchain.config.files }}
         checksum/config-files: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
         {{- end }}
