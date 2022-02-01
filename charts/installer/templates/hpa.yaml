@@ -6,7 +6,11 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: {{ .Values.kind }}
+    {{- if eq .Values.kind "statefulset" }}
+    kind: StatefulSet
+    {{- else -}}
+    kind: Deployment
+    {{- end }}
     name: {{ include "microfleet.fullname" . }}
   minReplicas: {{ .Values.replicaCount }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}

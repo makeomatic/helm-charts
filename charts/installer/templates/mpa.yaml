@@ -6,7 +6,11 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: {{ .Values.kind }}
+    {{- if eq .Values.kind "statefulset" }}
+    kind: StatefulSet
+    {{- else -}}
+    kind: Deployment
+    {{- end }}
     name: {{ include "microfleet.fullname" . }}
   goals:
     metrics:
@@ -56,5 +60,5 @@ spec:
           memory: {{ .Values.mpa.memory.maxAllowed }}
         {{- end }}
   policy:
-    updateMode: {{ .Values.mpa.policy.updateMode | default "off" }}
+    updateMode: {{ .Values.mpa.policy.updateMode | default "Off" }}
 {{- end }}
