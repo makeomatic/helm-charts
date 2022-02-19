@@ -1,14 +1,6 @@
 {
   "name": "@makeomatic/helm-charts",
   "version": "1.6.0",
-  "dependencies": {
-    "@commitlint/cli": "^16.2.1",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/exec": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "husky": "^7.0.4",
-    "semantic-release": "^19.0.2"
-  },
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "yarn helm:3",
@@ -16,7 +8,13 @@
     "helm:3": "HELM_TEST=yes HELM_VERSION=3.8.0 ./scripts/sync-charts.sh",
     "prepare": "husky install"
   },
+  "license": "MIT",
   "devDependencies": {
-    "husky": "^7.0.0"
+    "@commitlint/cli": "^16.2.1",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "husky": "^7.0.4",
+    "semantic-release": "^19.0.2"
   }
 }
