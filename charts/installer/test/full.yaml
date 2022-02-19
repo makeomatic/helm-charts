@@ -67,6 +67,16 @@ resources:
     memory: 512Mi
     cpu: 500m
 
+podAnnotations:
+  sidecar.istio.io/proxyCPU: "600m"
+  sidecar.istio.io/proxyMemory: "512Mi"
+
+deploymentAnnotations:
+  oops.makeomatic.co/oops: "YEAH"
+
+statefulsetExtraAnnotations:
+  idid.it.again/nope: "noooah"
+
 toolchain:
   monitoring:
     enabled: true

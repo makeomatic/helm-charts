@@ -53,6 +53,9 @@ spec:
         kube-monkey/kill-mode: {{ .Values.toolchain.monkey.mode }}
         kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
         {{- end }}
+        {{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+        {{- end }}
       labels:
         app: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}

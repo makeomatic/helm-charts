@@ -18,6 +18,16 @@ rbac:
   create: false
   rules: []
 
+### Additional annotations for Kind: StatefulSel resource
+# deploymentAnnotations:
+#  oops.makeomatic.co/oops: "YEAH"
+#  oops.makeomatic.co/com: "NOOOES"
+
+### Pod Annotations
+# podAnnotations:
+#   sidecar.istio.io/proxyCPU: "600m"
+#   sidecar.istio.io/proxyMemory: "512Mi"
+
 progressDeadlineSeconds: 600
 
 ### default update strategy
@@ -136,7 +146,7 @@ disruptionBudget:
 #  maxReplicas: 5
 #  cpu:
 #    averageValue: 500m
-#  memory: 
+#  memory:
 #    averageUtilization: 75
 #  customMetrics:
 #    - type: Object
@@ -186,7 +196,7 @@ disruptionBudget:
 #        target:
 #          type: AverageValue
 #          averageValue: 1k
-#  memory: 
+#  memory:
 #    minAllowed: 1Gi
 #    maxAllowed: 2Gi
 

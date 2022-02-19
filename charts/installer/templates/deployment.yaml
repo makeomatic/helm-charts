@@ -14,6 +14,10 @@ metadata:
     kube-monkey/kill-mode: {{ .Values.toolchain.monkey.mode }}
     kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
     {{- end }}
+  {{- if .Values.deploymentAnnotations }}
+  annotations:
+{{ toYaml .Values.deploymentAnnotations | indent 4 }}
+  {{- end }}
 spec:
   progressDeadlineSeconds: {{ .Values.progressDeadlineSeconds }}
   replicas: {{ .Values.replicaCount }}
@@ -48,6 +52,9 @@ spec:
         kube-monkey/identifier: {{ .Release.Name }}
         kube-monkey/kill-mode: {{ .Values.toolchain.monkey.mode }}
         kube-monkey/kill-value: {{ .Values.toolchain.monkey.value | quote }}
+        {{- end }}
+        {{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
         {{- end }}
       labels:
         app: {{ .Release.Name }}

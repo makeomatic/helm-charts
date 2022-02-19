@@ -23,6 +23,10 @@ rbac:
 #  foo: "foo"
 #  bar: "bar"
 
+### Pod Annotations
+# podAnnotations:
+#   sidecar.istio.io/proxyCPU: "600m"
+#   sidecar.istio.io/proxyMemory: "512Mi"
 
 ### default update strategy
 updateStrategy:
@@ -158,7 +162,7 @@ disruptionBudget:
 #        target:
 #          type: AverageValue
 #          averageValue: 1k
-#  memory: 
+#  memory:
 #    minAllowed: 1Gi
 #    maxAllowed: 2Gi
 
