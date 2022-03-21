@@ -110,3 +110,24 @@ toolchain:
         redis:
           settings:
             host: {{ keyOrDefault "staging/redisHost" "redishost" }}
+  haproxyIngress:
+    ingressClass: haproxy
+    annotations:
+      haproxy.com/check: "true"
+      haproxy.com/check-interval: "1000"
+    spec:
+      tls:
+        - hosts:
+            - api.host.com
+          secretName: "wild-crt"
+      rules:
+        - host: api.host.com
+          http:
+            paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: srv
+                  port:
+                    number: 8080
