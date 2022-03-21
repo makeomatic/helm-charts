@@ -1,6 +1,6 @@
 {
   "name": "@makeomatic/helm-charts",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "yarn helm:3",
