@@ -18,6 +18,11 @@ rbac:
   create: false
   rules: []
 
+### https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# securityContext:
+#   runAsUser: 1000
+#   allowPrivilegeEscalation: true
+
 ### Additional annotations for Kind: StatefulSel resource
 # statefulsetExtraAnnotations:
 #  foo: "foo"
