@@ -59,6 +59,9 @@ spec:
       labels:
         app: {{ .Release.Name }}
         version: {{ .Values.image.tag | quote }}
+        {{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+        {{- end }}
     spec:
       {{- if .Values.tolerations }}
       tolerations:

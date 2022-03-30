@@ -33,6 +33,10 @@ rbac:
 #   sidecar.istio.io/proxyCPU: "600m"
 #   sidecar.istio.io/proxyMemory: "512Mi"
 
+### Pod Labels
+# podLabels:
+#   sidecar.istio.io/inject: "true"
+
 ### default update strategy
 updateStrategy:
   type: RollingUpdate
