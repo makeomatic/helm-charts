@@ -4,6 +4,17 @@ image:
   tag: 2.4.0
   pullPolicy: IfNotPresent
 
+# RethinkDB initContainer Resources
+init:
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 512Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 512Mi
+
+
 # RethinkDB Cluster Config
 cluster:
   replicas: 3
