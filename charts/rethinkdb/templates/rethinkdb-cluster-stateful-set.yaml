@@ -34,6 +34,8 @@ spec:
         - name: "{{ template "rethinkdb.name" . }}-init"
           image: "alpine:3.7"
           imagePullPolicy: "IfNotPresent"
+          resources:
+{{ toYaml .Values.init.resources | indent 12 }}
           volumeMounts:
             - name: "config"
               mountPath: "/config"
