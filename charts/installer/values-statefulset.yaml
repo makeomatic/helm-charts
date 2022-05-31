@@ -19,6 +19,9 @@ rbac:
   rules: []
 
 ### https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# podSecurityContext:
+#   fsGroup: 1000
+
 # securityContext:
 #   runAsUser: 1000
 #   allowPrivilegeEscalation: true
