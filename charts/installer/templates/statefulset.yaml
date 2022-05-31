@@ -110,6 +110,10 @@ spec:
       {{- end }}
       {{- end }}
       containers:
+{{- if .Values.podSecurityContext }}
+        securityContext:
+{{ toYaml .Values.podSecurityContext | indent 10 }}
+{{- end }}
         {{- if .Values.additionalContainers }}
 {{ toYaml .Values.additionalContainers | indent 8}}
         {{- end }}
