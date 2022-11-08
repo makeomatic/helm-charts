@@ -5,8 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: yandex/clickhouse-server
-  tag: 19.7.3.9
+  repository: clickhouse/clickhouse-server
+  tag: 22.8.8.3 # lts
   pullPolicy: IfNotPresent
 
 disruptionBudget:
@@ -29,22 +29,22 @@ storage:
 
 config:
   docker.xml: |
-    <yandex>
+    <clickhouse>
         <!-- Listen wildcard address to allow accepting connections from other containers and host network. -->
         <listen_host>0.0.0.0</listen_host>
         <listen_try>1</listen_try>
         <http_port>8123</http_port>
         <tcp_port>9000</tcp_port>
-    </yandex>
+    </clickhouse>
   shards.xml: |
-    <yandex>
+    <clickhouse>
       <macros>
           <shard>$ID</shard>
           <replica>$HOSTNAME</replica>
       </macros>
-    </yandex>
+    </clickhouse>
   logger.xml: |
-    <yandex>
+    <clickhouse>
         <!-- output logs to console -->
         <logger>
             <level>information</level>
@@ -52,9 +52,9 @@ config:
             <log>/dev/null</log>
             <errorlog>/dev/null</errorlog>
         </logger>
-    </yandex>
+    </clickhouse>
   # zookeeper.xml: |
-  #   <yandex>
+  #   <clickhouse>
   #       <zookeeper>
   #           <node index="1">
   #               <host>zookeeper-zookeeper-0.zookeeper-zookeeper-headless.default.svc.cluster.local</host>
@@ -69,7 +69,7 @@ config:
   #               <port>2181</port>
   #           </node>
   #       </zookeeper>
-  #   </yandex>
+  #   </clickhouse>
 
 resources: {}
 
