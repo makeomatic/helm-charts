@@ -4,10 +4,10 @@ kind: Ingress
 metadata:
   name: {{ include "microfleet.fullname" . }}
   annotations:
-    ingress.class: {{.Values.toolchain.haproxyIngress.ingressClass | default "haproxy" }}
     {{- if .Values.toolchain.haproxyIngress.annotations }}
 {{ toYaml .Values.toolchain.haproxyIngress.annotations | indent 4 }}
     {{- end}}
 spec:
+  ingressClassName: {{.Values.toolchain.haproxyIngress.ingressClass | default "haproxy" }}
 {{ toYaml .Values.toolchain.haproxyIngress.spec | indent 2 }}
 {{- end }}
