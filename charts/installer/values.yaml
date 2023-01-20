@@ -4,6 +4,7 @@ name: ""
 
 kind: deployment # deployment, statefulset
 
+### https://helm.sh/docs/topics/charts_hooks/
 hooks: {}
 
 ### amount of service instances

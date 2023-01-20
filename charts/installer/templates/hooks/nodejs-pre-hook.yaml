@@ -1,5 +1,5 @@
 ---
-{{- if and .Values.hooks.nodejs.enabled .Values.toolchain.config.files }}
+{{- if and (((.Values.hooks).nodejs).enabled) .Values.toolchain.config.files }}
 {{ $ctx := . }}
 apiVersion: v1
 kind: ConfigMap
@@ -23,7 +23,7 @@ data:
 {{- end }}
 {{- end }}
 ---
-{{- if and .Values.hooks.nodejs.enabled .Values.toolchain.config.files }}
+{{- if and (((.Values.hooks).nodejs).enabled) .Values.toolchain.config.files }}
 apiVersion: batch/v1
 kind: Job
 metadata:
