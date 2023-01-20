@@ -50,7 +50,7 @@ spec:
       labels:
         app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
         app.kubernetes.io/instance: {{ include "microfleet.fullname" . }}
-        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        helm.sh/chart: {{ template "microfleet.chart" . }}
     spec:
       restartPolicy: Never
       containers:
