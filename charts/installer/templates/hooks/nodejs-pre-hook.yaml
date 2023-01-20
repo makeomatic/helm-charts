@@ -57,7 +57,7 @@ spec:
       - name: config-validator
         image: "node:alpine"
         command: ["/bin/sh"]
-        args: ["-c", "node --check {{ .Values.toolchain.config.path }}/*.js"]
+        args: ["-c", "for FILE in {{ .Values.toolchain.config.path }}/*; do echo syntax check $FILE && node --check $FILE; done"]
         volumeMounts:
         - name: config
           mountPath: {{ .Values.toolchain.config.path }}
