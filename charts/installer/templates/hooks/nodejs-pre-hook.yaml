@@ -1,4 +1,3 @@
----
 {{- if and (((.Values.hooks).nodejs).enabled) .Values.toolchain.config.files }}
 {{ $ctx := . }}
 apiVersion: v1
@@ -22,7 +21,7 @@ data:
     {{ tpl $content $ctx | indent 4 | trim }}
 {{- end }}
 {{- end }}
----
+
 {{- if and (((.Values.hooks).nodejs).enabled) .Values.toolchain.config.files }}
 apiVersion: batch/v1
 kind: Job

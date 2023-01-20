@@ -5,7 +5,9 @@ name: ""
 kind: deployment # deployment, statefulset
 
 ### https://helm.sh/docs/topics/charts_hooks/
-hooks: {}
+hooks:
+  nodejs:
+    enabled: true
 
 ### amount of service instances
 replicaCount: 3
@@ -57,8 +59,8 @@ args: ""
 ### docker image settings
 ### required to set manually
 image:
-  repository: ""
-  tag: ""
+  repository: "nginx"
+  tag: "latest"
   pullPolicy: Always
 
 ### launch init containers before starting main service
