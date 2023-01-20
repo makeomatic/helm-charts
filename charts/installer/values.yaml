@@ -4,6 +4,8 @@ name: ""
 
 kind: deployment # deployment, statefulset
 
+hooks: {}
+
 ### amount of service instances
 replicaCount: 3
 
