@@ -110,7 +110,9 @@ service:
     []
     # - name: http
     #   port: 8080
-    # protocol: TCP
+    #   protocol: TCP
+    ##  Specify custom appProtocol for a service port.
+    #   appProtocol: ""
 
 ### health probes (disabled by default)
 ### default liveness: fail 6 times in 1 minute to trigger

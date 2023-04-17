@@ -18,6 +18,9 @@ spec:
       port: {{ .port }}
       targetPort: {{ default "http" .name }}
       protocol: {{ default "TCP" .protocol }}
+      {{- if .appProtocol }}
+      appProtocol: {{ .appProtocol }}
+      {{- end }}
   {{- end }}
   {{- if .Values.toolchain.monitoring.enabled }}
     - name: metrics
