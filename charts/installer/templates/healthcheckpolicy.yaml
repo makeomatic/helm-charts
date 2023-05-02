@@ -1,0 +1,11 @@
+{{- if .Values.toolchain.healthcheckpolicy -}}
+apiVersion: networking.gke.io/v1
+kind: HealthCheckPolicy
+metadata:
+  name: {{ include "microfleet.fullname" . }}
+  labels:
+    app: {{ .Release.Name }}
+    version: {{ .Values.image.tag | quote }}
+spec:
+{{ toYaml .Values.toolchain.healthcheckpolicy | indent 2 }}
+{{- end }}

@@ -232,6 +232,52 @@ toolchain:
       #       host: grpc
       #       port:
     #         number: 50051
+  httproute:
+    {}
+    # hostnames:
+    # - grpc.staging.streamlayer.io
+    # parentRefs:
+    # - group: gateway.networking.k8s.io
+    #   kind: Gateway
+    #   name: staging-wild
+    # rules:
+    # - backendRefs:
+    #   - group: ""
+    #     kind: Service
+    #     name: grpc
+    #     port: 50051
+    #     weight: 1
+    #   filters: []
+    #   matches:
+    #   - path:
+    #       type: PathPrefix
+    #       value: /
+  healthcheckpolicy:
+    {}
+    # default:
+    #   checkIntervalSec: 15
+    #   config:
+    #     httpHealthCheck:
+    #       port: 3000
+    #       requestPath: /grpc/generic/health
+    #     type: HTTP
+    #   healthyThreshold: 1
+    #   logConfig:
+    #     enabled: true
+    #   timeoutSec: 15
+    #   unhealthyThreshold: 2
+    # targetRef:
+    #   group: ""
+    #   kind: Service
+    #   name: grpc
+  gcpbackendpolicy:
+    {}
+    # default:
+    #   timeoutSec: 2147483640
+    # targetRef:
+    #   group: ""
+    #   kind: Service
+    #   name: grpc
 
   # this service can be a victim of kube-monkey
   monkey:
