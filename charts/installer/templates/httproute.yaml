@@ -1,4 +1,4 @@
-{{- if .Values.toolchain.httproute -}}
+{{- if .Values.toolchain.httpRoute -}}
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
@@ -7,5 +7,5 @@ metadata:
     app: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
-{{ toYaml .Values.toolchain.httproute | indent 2 }}
+{{ toYaml .Values.toolchain.httpRoute | indent 2 }}
 {{- end }}

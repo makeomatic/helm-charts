@@ -1,4 +1,4 @@
-{{- if .Values.toolchain.healthcheckpolicy -}}
+{{- if .Values.toolchain.healthCheckPolicy -}}
 apiVersion: networking.gke.io/v1
 kind: HealthCheckPolicy
 metadata:
@@ -7,5 +7,5 @@ metadata:
     app: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
-{{ toYaml .Values.toolchain.healthcheckpolicy | indent 2 }}
+{{ toYaml .Values.toolchain.healthCheckPolicy | indent 2 }}
 {{- end }}
