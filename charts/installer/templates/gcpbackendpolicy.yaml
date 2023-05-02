@@ -1,11 +1,11 @@
-{{- if .Values.toolchain.gcpbackendpolicy -}}
+{{- if .Values.toolchain.gcpBackendPolicy -}}
 apiVersion: networking.gke.io/v1
-kind: HealthCheckPolicy
+kind: GCPBackendPolicy
 metadata:
   name: {{ include "microfleet.fullname" . }}
   labels:
     app: {{ .Release.Name }}
     version: {{ .Values.image.tag | quote }}
 spec:
-{{ toYaml .Values.toolchain.gcpbackendpolicy | indent 2 }}
+{{ toYaml .Values.toolchain.gcpBackendPolicy | indent 2 }}
 {{- end }}

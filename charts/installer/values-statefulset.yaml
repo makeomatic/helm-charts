@@ -232,7 +232,7 @@ toolchain:
       #       host: grpc
       #       port:
     #         number: 50051
-  httproute:
+  httpRoute:
     {}
     # hostnames:
     # - grpc.staging.streamlayer.io
@@ -252,7 +252,7 @@ toolchain:
     #   - path:
     #       type: PathPrefix
     #       value: /
-  healthcheckpolicy:
+  healthCheckPolicy:
     {}
     # default:
     #   checkIntervalSec: 15
@@ -270,7 +270,7 @@ toolchain:
     #   group: ""
     #   kind: Service
     #   name: grpc
-  gcpbackendpolicy:
+  gcpBackendPolicy:
     {}
     # default:
     #   timeoutSec: 2147483640
