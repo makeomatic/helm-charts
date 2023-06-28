@@ -20,6 +20,7 @@ serviceAccount:
 rbac:
   create: false
   rules: []
+  clusterRole: true
 
 ### https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 # podSecurityContext:

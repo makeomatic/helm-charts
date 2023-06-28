@@ -1,6 +1,6 @@
 {{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: {{ if .Values.rbac.clusterRole }}Cluster{{ end }}RoleBinding
 metadata:
   name: {{ template "microfleet.fullname" . }}
   labels:
@@ -10,7 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: {{ if .Values.rbac.clusterRole }}Cluster{{ end }}Role
   name: {{ template "microfleet.fullname" . }}
 subjects:
   - kind: ServiceAccount

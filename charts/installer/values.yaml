@@ -20,6 +20,7 @@ serviceAccount:
 rbac:
   create: false
   rules: []
+  clusterRole: true
 
 ### Additional annotations for Kind: StatefulSel resource
 # deploymentAnnotations:
