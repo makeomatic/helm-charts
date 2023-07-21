@@ -119,6 +119,7 @@ service:
     #   protocol: TCP
     ##  Specify custom appProtocol for a service port.
     #   appProtocol: ""
+  loadBalancerIP: ""
 
 ### health probes (disabled by default)
 ### default liveness: fail 6 times in 1 minute to trigger
