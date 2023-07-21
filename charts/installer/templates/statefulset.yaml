@@ -214,4 +214,8 @@ spec:
 {{ toYaml .Values.volumes | indent 6 }}
       {{- end }}
       {{- end }}
+  {{- if .Values.volumeClaimTemplates }}
+  volumeClaimTemplates:
+{{ toYaml .Values.volumeClaimTemplates | indent 4 }}
+  {{- end }}
 {{ end }}
