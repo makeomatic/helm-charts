@@ -95,19 +95,38 @@ additionalContainers:
 volumes:
   []
   # - name: config
-#   emptyDir: {}
+  #   emptyDir: {}
 
 ### volumes to mount into service directly
 volumeMounts:
   []
   # - name: volumename
-#   mountPath: /specs
+  #   mountPath: /specs
+
+### Dedicated VolumeClaimTemplates for StatefulSet
+volumeClaimTemplates:
+  []
+  # - apiVersion: v1
+  #   kind: PersistentVolumeClaim
+  #   metadata:
+  #     annotations:
+  #       volume.beta.kubernetes.io/storage-class: standard
+  #     creationTimestamp: null
+  #     name: data
+  #   spec:
+  #     accessModes:
+  #     - ReadWriteOnce
+  #     resources:
+  #       requests:
+  #         storage: 5Gi
+  #     storageClassName: standard
+  #     volumeMode: Filesystem
 
 ### env variables for the service
 env:
   []
   # - name: test
-#   value: test
+  #   value: test
 
 ### ports which service will expose
 service:
