@@ -173,6 +173,16 @@ disruptionBudget:
   {}
 # minAvailable: 1
 
+# hpa:
+#   maxReplicas: 5
+#   behavior:
+#     scaleDown:
+#       stabilizationWindowSeconds: 300
+#       policies:
+#         - type: Pods
+#           value: 4
+#           periodSeconds: 300
+
 #mpa:
 #  policy:
 #    updateMode: "Auto"
