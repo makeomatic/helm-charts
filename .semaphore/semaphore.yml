@@ -46,5 +46,5 @@ blocks:
       - name: release
         commands:
           - sudo snap install google-cloud-cli --classic
-          - gcloud auth activate-service-account --key-file=~/.matic-ninja.json
+          - gcloud auth activate-service-account --key-file ~/.matic-ninja.json
           - pnpm semantic-release
