@@ -1,6 +1,6 @@
 {
   "name": "@makeomatic/helm-charts",
-  "version": "1.8.20",
+  "version": "1.8.21",
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "pnpm helm:3",
