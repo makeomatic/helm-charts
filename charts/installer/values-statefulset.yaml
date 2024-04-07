@@ -131,6 +131,7 @@ env:
 ### ports which service will expose
 service:
   type: ClusterIP
+  headless: false # if true, service will create headless service
   ports:
     []
     # - name: http
