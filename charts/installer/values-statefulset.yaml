@@ -320,11 +320,12 @@ toolchain:
 
   # generate rules for prometheus or prometheus-operator
   monitoring:
+    # portName: "" # default: metrics
     enabled: false
     operator: false
     namespace: monitoring
     scrapeInterval: 10s
-    port: 9102
+    port: 9102 # default: 9102
     path: /metrics
     rules: []
 
