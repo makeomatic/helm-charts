@@ -218,15 +218,15 @@ disruptionBudget:
 ### https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 ### You can use topology spread constraints to control how Pods are spread across your cluster among
 ### failure-domains such as regions, zones, nodes, and other user-defined topology domains. This can help to achieve high availability as well as efficient resource utilization.
-topologySpreadConstraints: |
-  - maxSkew: 1
-    topologyKey: "kubernetes.io/hostname"
-    whenUnsatisfiable: DoNotSchedule
-    labelSelector:
-      matchLabels:
-        app: {{ .Release.Name }}
-    namespaces:
-      - {{ .Release.Namespace }}
+# topologySpreadConstraints: |
+#   - maxSkew: 1
+#     topologyKey: "kubernetes.io/hostname"
+#     whenUnsatisfiable: DoNotSchedule
+#     labelSelector:
+#       matchLabels:
+#         app: {{ .Release.Name }}
+#     namespaces:
+#       - {{ .Release.Namespace }}
 
 ### rules how to spread group of instances between nodes
 ### default: spread instances between nodes
