@@ -192,6 +192,11 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
           {{- end }}
 
+    {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{ tpl .Values.topologySpreadConstraints . | indent 8 | trim }}
+    {{- end }}
+
     {{- if .Values.affinity }}
       affinity:
         {{ tpl .Values.affinity . | indent 8 | trim }}
