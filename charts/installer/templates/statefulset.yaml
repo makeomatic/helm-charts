@@ -162,9 +162,8 @@ spec:
               protocol: {{ default "TCP" .protocol }}
           {{- end }}
           {{- if .Values.toolchain.monitoring.enabled }}
-            - name: metrics
-              containerPort: {{ default .Values.toolchain.monitoring.port 9102 }}
-              protocol: TCP
+            - name: {{ default "metrics" .Values.toolchain.monitoring.portName }}
+              containerPort: {{ default 9102 .Values.toolchain.monitoring.port }}
           {{- end }}
           {{- end }}
 
